@@ -33,6 +33,7 @@ setup(name='yafowil.widget.datetime',
       extras_require = dict(),
       tests_require=[
           'interlude',
+          'bda.intellidatetime',
       ],
       #test_suite = "bdadb.web.backend.tests.test_suite",
       entry_points = """\
