@@ -1,3 +1,4 @@
+from datetime import datetime
 from yafowil.base import (
     factory,
     UNSET,
@@ -20,8 +21,8 @@ from bda.intellidatetime import (
 
 def datetime_extractor(widget, data):
     try:
-        # XXX not only 'iso' date.
-        return convert(data.extracted, time=None, tzinfo=None, locale='iso')
+        # XXX not only 'de' date. read from widget attrs.
+        return convert(data.extracted, time=None, tzinfo=None, locale='de')
     except DateTimeConversionError:
         raise ExtractionError('Not a valid date input.')
 
@@ -29,9 +30,20 @@ def datetime_renderer(widget, data):
     classes = list()
     if widget.attrs.get('datepicker'):
         classes.append('datepicker')
+    value = None
+    if data.value and isinstance(data.value, datetime):
+        value = '%s.%s.%s' % (data.value.day,
+                              data.value.month,
+                              data.value.year)
+    if data.extracted and isinstance(data.extracted, datetime):
+        value = '%s.%s.%s' % (data.extracted.day,
+                              data.extracted.month,
+                              data.extracted.year)
+    if not value:
+        value = _value(widget, data)
     input_attrs = {
         'type': 'text',
-        'value':  _value(widget, data),
+        'value':  value,
         'name_': widget.dottedpath,
         'id': cssid(widget, 'input'),    
         'class_': cssclasses(widget, data, *classes),    
