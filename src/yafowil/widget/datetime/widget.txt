@@ -4,8 +4,6 @@ Datetime widget
 Features
 --------
 
-    - Datepicker Widget
-    
     - Use ``bda.intellidatetime`` for extraction
 
 Load requirements.
@@ -14,15 +12,65 @@ Load requirements.
     >>> import yafowil.loader
     >>> import yafowil.widget.datetime
 
-Import factory.
+Test widget.
 ::
 
     >>> from yafowil.base import factory
     >>> widget = factory('datetime', 'dt')
-
-Render widget.
-::
-
     >>> widget()
-    u'<input id="input-dt" name="dt" type="text" /><img alt="Calendar" 
-    class="triggerdatepicker" src="/calendar16_16.png" title="Choose Date" />'
+    u'<input id="input-dt" name="dt" type="text" />'
+    
+    >>> widget = factory(
+    ...     'datetime',
+    ...     'dt',
+    ...     props = {
+    ...         'datepicker': True,
+    ...     })
+    >>> widget()
+    u'<input class="datepicker" id="input-dt" name="dt" type="text" />'
+    
+    >>> widget = factory(
+    ...     'datetime',
+    ...     'dt',
+    ...     props = {
+    ...         'datepicker': True,
+    ...         'required': 'No date given',
+    ...     })
+    >>> widget()
+    u'<input class="datepicker required" id="input-dt" name="dt" type="text" />'
+    
+    >>> request = {'dt': ''}
+    >>> data = widget.extract(request)
+    >>> data.errors
+    [ExtractionError('No date given',)]
+    
+    >>> data.extracted
+    ''
+    
+    >>> widget(data)
+    u'<input class="datepicker required" id="input-dt" name="dt" 
+    type="text" value="" />'
+    
+    >>> request = {'dt': 'xyz'}
+    >>> data = widget.extract(request)
+    >>> data.errors
+    [ExtractionError('Not a valid date input.',)]
+    
+    >>> data.extracted
+    'xyz'
+    
+    >>> widget(data)
+    u'<input class="datepicker required" id="input-dt" name="dt" 
+    type="text" value="xyz" />'
+    
+    >>> request = {'dt': '2010.1.1'}
+    >>> data = widget.extract(request)
+    >>> data.errors
+    []
+    
+    >>> data.extracted
+    datetime.datetime(2010, 1, 1, 0, 0)
+    
+    >>> widget(data)
+    u'<input class="datepicker required" id="input-dt" name="dt" 
+    type="text" value="2010-01-01 00:00:00" />'
