@@ -16,39 +16,73 @@ from yafowil.utils import (
 )
 from bda.intellidatetime import (
     convert,
+    LocalePattern,
     DateTimeConversionError,
 )
 
 def datetime_extractor(widget, data):
     try:
-        # XXX not only 'de' date. read from widget attrs.
-        return convert(data.extracted, time=None, tzinfo=None, locale='de')
+        locale = widget.attrs.get('locale', 'iso')
+        tzinfo = widget.attrs.get('tzinfo', None)
+        time = None
+        if widget.attrs.get('time'):
+            time = data.request.get('%s.time' % widget.dottedpath)
+        return convert(data.extracted, time=time, tzinfo=tzinfo, locale=locale)
     except DateTimeConversionError:
         raise ExtractionError('Not a valid date input.')
+
+_mapping = {
+    'D': 'day',
+    'M': 'month',
+    'Y': 'year',
+}
+
+def format_date(dt, locale):
+    pattern = LocalePattern().date(locale)
+    ret = ''
+    for char in pattern.split(' '):
+        ret = '%s.%s' % (ret, getattr(dt, _mapping[char]))
+    return ret.strip('.')
+
+def format_time(dt):
+    return '%s:%s' % (dt.hour, dt.minute)
 
 def datetime_renderer(widget, data):
     classes = list()
     if widget.attrs.get('datepicker'):
         classes.append('datepicker')
-    value = None
+    locale = widget.attrs.get('locale', 'iso')
+    date = None
+    time = widget.attrs.get('time')
     if data.value and isinstance(data.value, datetime):
-        value = '%s.%s.%s' % (data.value.day,
-                              data.value.month,
-                              data.value.year)
+        date = format_date(data.value, locale)
+        if time:
+            time = format_time(data.value)
     if data.extracted and isinstance(data.extracted, datetime):
-        value = '%s.%s.%s' % (data.extracted.day,
-                              data.extracted.month,
-                              data.extracted.year)
-    if not value:
-        value = _value(widget, data)
-    input_attrs = {
+        date = format_date(data.extracted, locale)
+        if time:
+            time = format_time(data.extracted)
+    if not date:
+        date = _value(widget, data)
+    timeinput = ''
+    if time:
+        if time is True:
+            time = ''
+        if not time and data.request:
+            time = data.request.get('%s.time' % widget.dottedpath)
+        timeinput = tag('input', **{
+            'type': 'text',
+            'value': time,
+            'name_': '%s.time' % widget.dottedpath,
+            'id': '%s-time' % cssid(widget, 'input'),
+        })
+    return tag('input', **{
         'type': 'text',
-        'value':  value,
+        'value':  date,
         'name_': widget.dottedpath,
         'id': cssid(widget, 'input'),    
         'class_': cssclasses(widget, data, *classes),    
-    }
-    return tag('input', **input_attrs)
+    }) + timeinput
 
 factory.defaults['datetime.required_class'] = 'required'
 factory.defaults['datetime.default'] = ''

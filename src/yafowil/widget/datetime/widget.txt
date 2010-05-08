@@ -5,6 +5,8 @@ Features
 --------
 
     - Use ``bda.intellidatetime`` for extraction
+    
+    - Render with or without time input
 
 Load requirements.
 ::
@@ -16,10 +18,17 @@ Test widget.
 ::
 
     >>> from yafowil.base import factory
+
+Render very base widget.
+::
+
     >>> widget = factory('datetime', 'dt')
     >>> widget()
     u'<input id="input-dt" name="dt" type="text" />'
-    
+
+Render datepicker class. Use this to bind a datepicker JS of your choice.
+::
+  
     >>> widget = factory(
     ...     'datetime',
     ...     'dt',
@@ -28,29 +37,46 @@ Test widget.
     ...     })
     >>> widget()
     u'<input class="datepicker" id="input-dt" name="dt" type="text" />'
-    
+
+Widget without time input.
+::
+
     >>> widget = factory(
     ...     'datetime',
     ...     'dt',
     ...     props = {
-    ...         'datepicker': True,
     ...         'required': 'No date given',
     ...     })
     >>> widget()
-    u'<input class="datepicker required" id="input-dt" name="dt" type="text" />'
-    
+    u'<input class="required" id="input-dt" name="dt" type="text" />'
+
+Widget extraction.
+::
+
     >>> request = {'dt': ''}
     >>> data = widget.extract(request)
+
+No input was given.
+::
+
     >>> data.errors
     [ExtractionError('No date given',)]
-    
+
+Empty string in extracted data.
+::
+
     >>> data.extracted
     ''
-    
+
+Widget renders empty value.
+::
+
     >>> widget(data)
-    u'<input class="datepicker required" id="input-dt" name="dt" 
-    type="text" value="" />'
-    
+    u'<input class="required" id="input-dt" name="dt" type="text" value="" />'
+
+Widget extraction with non-date input.
+::
+
     >>> request = {'dt': 'xyz'}
     >>> data = widget.extract(request)
     >>> data.errors
@@ -60,10 +86,13 @@ Test widget.
     'xyz'
     
     >>> widget(data)
-    u'<input class="datepicker required" id="input-dt" name="dt" 
-    type="text" value="xyz" />'
-    
-    >>> request = {'dt': '1.1.2010'}
+    u'<input class="required" id="input-dt" name="dt" type="text" 
+    value="xyz" />'
+
+Valid widget extraction. Returns datetime instance.
+::
+
+    >>> request = {'dt': '2010.1.1'}
     >>> data = widget.extract(request)
     >>> data.errors
     []
@@ -72,5 +101,82 @@ Test widget.
     datetime.datetime(2010, 1, 1, 0, 0)
     
     >>> widget(data)
+    u'<input class="required" id="input-dt" name="dt" type="text" 
+    value="2010.1.1" />'
+
+Widget with more advanced configuration. Widget now renders time input and
+input converting is locale aware. You can pass ``tzinfo`` property as well if
+you want the conversion to consider timezones.
+::
+
+    >>> widget = factory(
+    ...     'datetime',
+    ...     'dt',
+    ...     props = {
+    ...         'datepicker': True,
+    ...         'required': 'No date given',
+    ...         'locale': 'de',
+    ...         'time': True,
+    ...         'tzinfo': None,
+    ...     })
+    >>> widget()
     u'<input class="datepicker required" id="input-dt" name="dt" 
-    type="text" value="1.1.2010" />'
+    type="text" /><input id="input-dt-time" name="dt.time" type="text" 
+    value="" />'
+
+Widget extraction.
+::
+
+    >>> request = {'dt': '', 'dt.time': ''}
+    >>> data = widget.extract(request)
+
+No input was given.
+::
+
+    >>> data.errors
+    [ExtractionError('No date given',)]
+
+Empty string in extracted data.
+::
+
+    >>> data.extracted
+    ''
+
+Widget renders empty value.
+::
+
+    >>> widget(data)
+    u'<input class="datepicker required" id="input-dt" name="dt" type="text" 
+    value="" /><input id="input-dt-time" name="dt.time" type="text" value="" />'
+
+Widget extraction with non-datetime input.
+::
+
+    >>> request = {'dt': 'xyz', 'dt.time': 'x'}
+    >>> data = widget.extract(request)
+    >>> data.errors
+    [ExtractionError('Not a valid date input.',)]
+    
+    >>> data.extracted
+    'xyz'
+    
+    >>> widget(data)
+    u'<input class="datepicker required" id="input-dt" name="dt" type="text" 
+    value="xyz" /><input id="input-dt-time" name="dt.time" type="text" 
+    value="x" />'
+
+Valid widget extraction. Returns datetime instance.
+::
+
+    >>> request = {'dt': '1.1.2010', 'dt.time': '10:15'}
+    >>> data = widget.extract(request)
+    >>> data.errors
+    []
+    
+    >>> data.extracted
+    datetime.datetime(2010, 1, 1, 10, 15)
+    
+    >>> widget(data)
+    u'<input class="datepicker required" id="input-dt" name="dt" type="text" 
+    value="1.1.2010" /><input id="input-dt-time" name="dt.time" type="text" 
+    value="10:15" />'
