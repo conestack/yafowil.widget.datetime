@@ -1,0 +1,28 @@
+Datetime widget
+===============
+
+Features
+--------
+
+    - Datepicker Widget
+    
+    - Use ``bda.intellidatetime`` for extraction
+
+Load requirements.
+::
+
+    >>> import yafowil.loader
+    >>> import yafowil.widget.datetime
+
+Import factory.
+::
+
+    >>> from yafowil.base import factory
+    >>> widget = factory('datetime', 'dt')
+
+Render widget.
+::
+
+    >>> widget()
+    u'<input id="input-dt" name="dt" type="text" /><img alt="Calendar" 
+    class="triggerdatepicker" src="/calendar16_16.png" title="Choose Date" />'

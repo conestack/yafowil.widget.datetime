@@ -35,7 +35,7 @@ setup(name='yafowil.widget.datetime',
           'interlude',
           'bda.intellidatetime',
       ],
-      #test_suite = "bdadb.web.backend.tests.test_suite",
+      test_suite="yafowil.widget.datetime.tests.test_suite",
       entry_points = """\
       """        
       )
