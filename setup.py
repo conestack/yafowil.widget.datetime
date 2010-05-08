@@ -29,11 +29,11 @@ setup(name='yafowil.widget.datetime',
       install_requires=[
           'setuptools',
           'yafowil',
+          'bda.intellidatetime',
       ],
       extras_require = dict(),
       tests_require=[
           'interlude',
-          'bda.intellidatetime',
       ],
       test_suite="yafowil.widget.datetime.tests.test_suite",
       entry_points = """\
