@@ -45,7 +45,8 @@ def format_date(dt, locale):
     return ret.strip('.')
 
 def format_time(dt):
-    return '%s:%s' % (dt.hour, dt.minute)
+    
+    return '%02i:%02i' % (dt.hour, dt.minute)
 
 def datetime_renderer(widget, data):
     classes = list()
