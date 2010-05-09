@@ -76,13 +76,15 @@ def datetime_renderer(widget, data):
             'value': time,
             'name_': '%s.time' % widget.dottedpath,
             'id': '%s-time' % cssid(widget, 'input'),
+            'size': 5,
         })
     return tag('input', **{
         'type': 'text',
         'value':  date,
         'name_': widget.dottedpath,
         'id': cssid(widget, 'input'),    
-        'class_': cssclasses(widget, data, *classes),    
+        'class_': cssclasses(widget, data, *classes),  
+        'size': 10,
     }) + timeinput
 
 factory.defaults['datetime.required_class'] = 'required'
