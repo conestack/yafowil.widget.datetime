@@ -21,12 +21,14 @@ from bda.intellidatetime import (
 )
 
 def datetime_extractor(widget, data):
+    time = None
+    if widget.attrs.get('time'):
+        time = data.request.get('%s.time' % widget.dottedpath)
+    if not widget.attrs.required and not data.extracted and not time:
+        return ''
     try:
         locale = widget.attrs.get('locale', 'iso')
         tzinfo = widget.attrs.get('tzinfo', None)
-        time = None
-        if widget.attrs.get('time'):
-            time = data.request.get('%s.time' % widget.dottedpath)
         return convert(data.extracted, time=time, tzinfo=tzinfo, locale=locale)
     except DateTimeConversionError:
         raise ExtractionError('Not a valid date input.')
@@ -45,7 +47,6 @@ def format_date(dt, locale):
     return ret.strip('.')
 
 def format_time(dt):
-    
     return '%02i:%02i' % (dt.hour, dt.minute)
 
 def datetime_renderer(widget, data):
