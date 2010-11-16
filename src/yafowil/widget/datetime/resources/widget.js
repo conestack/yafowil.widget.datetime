@@ -6,22 +6,22 @@ if (typeof(window['yafowil']) == "undefined") yafowil = {};
         yafowil.datepicker.binder();
         bdajax.binders.datepicker_binder = yafowil.datepicker.binder;
     });
-	
-	// yafowil datepicker widget
-	$.extend(yafowil, {
-		
-		datepicker: {
-			
-			binder: function(context) {
-	            $('input.datepicker').datepicker({
-	                showAnim: null,
-	                showOn: 'button',
-	                buttonImage: '/static/icons/calendar16_16.gif',
-	                buttonImageOnly: true
-	            });
-	        }
-		}
-	});
+    
+    // yafowil datepicker widget
+    $.extend(yafowil, {
+        
+        datepicker: {
+            
+            binder: function(context) {
+                $('input.datepicker').datepicker({
+                    showAnim: null,
+                    showOn: 'button',
+                    buttonImage: '/static/icons/calendar16_16.gif',
+                    buttonImageOnly: true
+                });
+            }
+        }
+    });
     
     // Configure jQuery.UI datepicker languages.
     $(function() {
