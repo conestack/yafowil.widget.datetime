@@ -2,6 +2,7 @@ import unittest
 import doctest 
 from pprint import pprint
 from interlude import interact
+from yafowil.tests import pxml
 
 optionflags = doctest.NORMALIZE_WHITESPACE | \
               doctest.ELLIPSIS | \
@@ -17,7 +18,8 @@ def test_suite():
             file, 
             optionflags=optionflags,
             globs={'interact': interact,
-                   'pprint': pprint},
+                   'pprint': pprint,
+                   'pxml': pxml},
         ) for file in TESTFILES
     ])
 

@@ -10,7 +10,6 @@ from yafowil.common import (
     generic_required_extractor,
 )
 from yafowil.utils import (
-    tag,
     cssid,
     cssclasses,
 )
@@ -50,6 +49,7 @@ def format_time(dt):
     return '%02i:%02i' % (dt.hour, dt.minute)
 
 def datetime_renderer(widget, data):
+    tag = data.tag
     classes = list()
     if widget.attrs.get('datepicker'):
         classes.append('datepicker')

@@ -34,6 +34,7 @@ setup(name='yafowil.widget.datetime',
       extras_require = dict(),
       tests_require=[
           'interlude',
+          'lxml',
       ],
       test_suite="yafowil.widget.datetime.tests.test_suite",
       entry_points = """\
