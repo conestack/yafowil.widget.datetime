@@ -5,6 +5,7 @@ version = '1.0'
 shortdesc = 'yafowil.widget.datetime'
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'LICENSE.rst')).read()
+tests_require = ['interlude', 'lxml']
 
 setup(name='yafowil.widget.datetime',
       version=version,
@@ -32,11 +33,10 @@ setup(name='yafowil.widget.datetime',
           'yafowil',
           'bda.intellidatetime',
       ],
-      extras_require = dict(),
-      tests_require=[
-          'interlude',
-          'lxml',
-      ],
+      tests_require=tests_require,
+      extras_require = dict(
+          test=tests_require,
+      ),
       test_suite="yafowil.widget.datetime.tests.test_suite",
       entry_points = """\
       """        
