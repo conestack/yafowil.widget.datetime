@@ -1,19 +1,32 @@
+/* 
+ * yafowil datepicker widget
+ * 
+ * Requires: jquery ui datepicker
+ * Optional: bdajax
+ */
+
 if (typeof(window['yafowil']) == "undefined") yafowil = {};
 
 (function($) {
 
     $(document).ready(function() {
+        // initial binding
         yafowil.datepicker.binder();
-        bdajax.binders.datepicker_binder = yafowil.datepicker.binder;
+        
+        // add after ajax binding if bdajax present
+        if (typeof(window['bdajax']) != "undefined") {
+            $.extend(bdajax.binders, {
+                datepicker_binder: yafowil.datepicker.binder
+            });
+        }
     });
     
-    // yafowil datepicker widget
     $.extend(yafowil, {
         
         datepicker: {
             
             binder: function(context) {
-                $('input.datepicker').datepicker({
+                $('input.datepicker', context).datepicker({
                     showAnim: null,
                     showOn: 'button',
                     buttonImage: '/static/icons/calendar16_16.gif',
