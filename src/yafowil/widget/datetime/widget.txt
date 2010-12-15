@@ -104,7 +104,7 @@ Valid widget extraction. Returns datetime instance.
     
     >>> # widget(data) XXX: required renderer invalid
     u'<input class="required" id="input-dt" name="dt" type="text" 
-    value="2010.1.1" />'
+    value="2010.1.1" />'    
 
 Widget with more advanced configuration. Widget now renders time input and
 input converting is locale aware. You can pass ``tzinfo`` property as well if
@@ -122,10 +122,10 @@ you want the conversion to consider timezones.
     ...         'tzinfo': None,
     ...     })
     >>> widget()
-    u'<input class="datepicker required" id="input-dt" name="dt" size="10" 
+    u'<input class="required datepicker" id="input-dt" name="dt" size="10" 
     type="text" /><input id="input-dt-time" name="dt.time" size="5" 
     type="text" value="" />'
-
+    
 Widget extraction.
 ::
 
@@ -148,7 +148,7 @@ Widget renders empty value.
 ::
 
     >>> widget(data)
-    u'<input class="datepicker required" id="input-dt" name="dt" size="10" 
+    u'<input class="required datepicker" id="input-dt" name="dt" size="10" 
     type="text" value="" /><input id="input-dt-time" name="dt.time" size="5" 
     type="text" value="" />'
 
@@ -164,7 +164,7 @@ Widget extraction with non-datetime input.
     'xyz'
     
     >>> widget(data)
-    u'<input class="datepicker required" id="input-dt" name="dt" size="10" 
+    u'<input class="required datepicker" id="input-dt" name="dt" size="10" 
     type="text" value="xyz" /><input id="input-dt-time" name="dt.time" 
     size="5" type="text" value="x" />'
 
@@ -180,6 +180,19 @@ Valid widget extraction. Returns datetime instance.
     datetime.datetime(2010, 1, 1, 10, 15)
     
     >>> widget(data)
-    u'<input class="datepicker required" id="input-dt" name="dt" size="10" 
+    u'<input class="required datepicker" id="input-dt" name="dt" size="10" 
     type="text" value="1.1.2010" /><input id="input-dt-time" name="dt.time" 
     size="5" type="text" value="10:15" />'
+    
+Locale might be a callable.
+::
+    
+    >>> def callable_locale(widget, data):
+    ...     print "locale called"
+    ...     return 'de'
+    >>> widget = factory('datetime', 'dt',
+    ...     props = { 'locale': callable_locale })
+    >>> widget()
+    locale called
+    u'<input id="input-dt" name="dt" size="10" type="text" />'
+    

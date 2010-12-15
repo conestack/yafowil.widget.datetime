@@ -3,9 +3,9 @@ from yafowil.base import (
     factory,
     UNSET,
     ExtractionError,
+    fetch_value
 )
 from yafowil.common import (
-    _value,
     generic_extractor,
     generic_required_extractor,
 )
@@ -50,10 +50,9 @@ def format_time(dt):
 
 def datetime_renderer(widget, data):
     tag = data.tag
-    classes = list()
-    if widget.attrs.get('datepicker'):
-        classes.append('datepicker')
     locale = widget.attrs.get('locale', 'iso')
+    if callable(locale):
+        locale = locale(widget, data)
     date = None
     time = widget.attrs.get('time')
     if data.value and isinstance(data.value, datetime):
@@ -65,7 +64,7 @@ def datetime_renderer(widget, data):
         if time:
             time = format_time(data.extracted)
     if not date:
-        date = _value(widget, data)
+        date = fetch_value(widget, data)
     timeinput = ''
     if time:
         if time is True:
@@ -76,17 +75,23 @@ def datetime_renderer(widget, data):
             'type': 'text',
             'value': time,
             'name_': '%s.time' % widget.dottedpath,
-            'id': '%s-time' % cssid(widget, 'input'),
+            'id': cssid(widget, 'input', 'time'),
             'size': 5,
         })
-    return tag('input', **{
+    attrs = {
         'type': 'text',
         'value':  date,
         'name_': widget.dottedpath,
         'id': cssid(widget, 'input'),    
-        'class_': cssclasses(widget, data, *classes),  
+        'class_': cssclasses(widget, data),  
         'size': 10,
-    }) + timeinput
+    }        
+    if widget.attrs.get('datepicker'):
+        if attrs['class_'] is not None:
+            attrs['class_'] += ' datepicker'
+        else:
+            attrs['class_'] = 'datepicker'
+    return tag('input', **attrs) + timeinput
 
 factory.defaults['datetime.required_class'] = 'required'
 factory.defaults['datetime.default'] = ''
