@@ -122,7 +122,7 @@ you want the conversion to consider timezones.
     ...         'tzinfo': None,
     ...     })
     >>> widget()
-    u'<input class="required datepicker" id="input-dt" name="dt" size="10" 
+    u'<input class="datepicker required" id="input-dt" name="dt" size="10" 
     type="text" /><input id="input-dt-time" name="dt.time" size="5" 
     type="text" value="" />'
     
@@ -148,7 +148,7 @@ Widget renders empty value.
 ::
 
     >>> widget(data)
-    u'<input class="required datepicker" id="input-dt" name="dt" size="10" 
+    u'<input class="datepicker required" id="input-dt" name="dt" size="10" 
     type="text" value="" /><input id="input-dt-time" name="dt.time" size="5" 
     type="text" value="" />'
 
@@ -164,7 +164,7 @@ Widget extraction with non-datetime input.
     'xyz'
     
     >>> widget(data)
-    u'<input class="required datepicker" id="input-dt" name="dt" size="10" 
+    u'<input class="datepicker required" id="input-dt" name="dt" size="10" 
     type="text" value="xyz" /><input id="input-dt-time" name="dt.time" 
     size="5" type="text" value="x" />'
 
@@ -180,7 +180,7 @@ Valid widget extraction. Returns datetime instance.
     datetime.datetime(2010, 1, 1, 10, 15)
     
     >>> widget(data)
-    u'<input class="required datepicker" id="input-dt" name="dt" size="10" 
+    u'<input class="datepicker required" id="input-dt" name="dt" size="10" 
     type="text" value="1.1.2010" /><input id="input-dt-time" name="dt.time" 
     size="5" type="text" value="10:15" />'
     

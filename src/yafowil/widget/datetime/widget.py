@@ -78,22 +78,22 @@ def datetime_renderer(widget, data):
             'id': cssid(widget, 'input', 'time'),
             'size': 5,
         })
+    additional_classes = []
+    if widget.attrs.get('datepicker'):
+        additional_classes.append(widget.attrs.get('datepicker_class'))
+        
     attrs = {
         'type': 'text',
         'value':  date,
         'name_': widget.dottedpath,
         'id': cssid(widget, 'input'),    
-        'class_': cssclasses(widget, data),  
+        'class_': cssclasses(widget, data, additional=additional_classes),  
         'size': 10,
     }        
-    if widget.attrs.get('datepicker'):
-        if attrs['class_'] is not None:
-            attrs['class_'] += ' datepicker'
-        else:
-            attrs['class_'] = 'datepicker'
     return tag('input', **attrs) + timeinput
 
 factory.defaults['datetime.required_class'] = 'required'
+factory.defaults['datetime.datepicker_class'] = 'datepicker'
 factory.defaults['datetime.default'] = ''
 factory.register(
     'datetime', 
