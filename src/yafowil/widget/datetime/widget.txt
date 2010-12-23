@@ -24,7 +24,7 @@ Render very base widget.
 
     >>> widget = factory('datetime', 'dt')
     >>> widget()
-    u'<input id="input-dt" name="dt" size="10" type="text" />'
+    u'<input id="input-dt" name="dt" size="10" type="text" value="" />'
 
 Render datepicker class. Use this to bind a datepicker JS of your choice.
 ::
@@ -37,7 +37,7 @@ Render datepicker class. Use this to bind a datepicker JS of your choice.
     ...     })
     >>> widget()
     u'<input class="datepicker" id="input-dt" name="dt" size="10" 
-    type="text" />'
+    type="text" value="" />'
 
 Widget without time input.
 ::
@@ -49,7 +49,8 @@ Widget without time input.
     ...         'required': 'No date given',
     ...     })
     >>> widget()
-    u'<input class="required" id="input-dt" name="dt" size="10" type="text" />'
+    u'<input class="required" id="input-dt" name="dt" size="10" 
+    type="text" value="" />'
 
 Widget extraction.
 ::
@@ -123,7 +124,7 @@ you want the conversion to consider timezones.
     ...     })
     >>> widget()
     u'<input class="datepicker required" id="input-dt" name="dt" size="10" 
-    type="text" /><input id="input-dt-time" name="dt.time" size="5" 
+    type="text" value="" /><input id="input-dt-time" name="dt.time" size="5" 
     type="text" value="" />'
     
 Widget extraction.
@@ -194,5 +195,5 @@ Locale might be a callable.
     ...     props = { 'locale': callable_locale })
     >>> widget()
     locale called
-    u'<input id="input-dt" name="dt" size="10" type="text" />'
+    u'<input id="input-dt" name="dt" size="10" type="text" value="" />'
     
