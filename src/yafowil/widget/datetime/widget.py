@@ -12,6 +12,8 @@ from yafowil.common import (
 from yafowil.utils import (
     cssid,
     cssclasses,
+    css_managed_props,
+    managedprops,    
 )
 from bda.intellidatetime import (
     convert,
@@ -48,6 +50,8 @@ def format_date(dt, locale):
 def format_time(dt):
     return '%02i:%02i' % (dt.hour, dt.minute)
 
+
+@managedprops('locale', *css_managed_props)
 def datetime_renderer(widget, data):
     tag = data.tag
     locale = widget.attrs.get('locale', 'iso')
@@ -92,7 +96,7 @@ def datetime_renderer(widget, data):
     }        
     return tag('input', **attrs) + timeinput
 
-factory.doc['widget']['dict'] = \
+factory.doc['widget']['datetime'] = \
 """Add-on widget `yafowil.widget.datetime 
 <http://github.com/bluedynamics/yafowil.widget.datetime/>`_ .
 """
