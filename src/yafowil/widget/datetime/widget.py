@@ -21,6 +21,7 @@ from bda.intellidatetime import (
     DateTimeConversionError,
 )
 
+
 def datetime_extractor(widget, data):
     time = None
     if widget.attrs.get('time'):
@@ -34,6 +35,7 @@ def datetime_extractor(widget, data):
     except DateTimeConversionError:
         raise ExtractionError('Not a valid date input.')
 
+
 _mapping = {
     'D': 'day',
     'M': 'month',
@@ -46,6 +48,7 @@ def format_date(dt, locale):
     for char in pattern.split(' '):
         ret = '%s.%s' % (ret, getattr(dt, _mapping[char]))
     return ret.strip('.')
+
 
 def format_time(dt):
     return '%02i:%02i' % (dt.hour, dt.minute)

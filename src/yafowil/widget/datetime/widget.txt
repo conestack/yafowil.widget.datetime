@@ -8,26 +8,28 @@ Features
     
     - Render with or without time input
 
-Load requirements.
-::
+Load requirements::
 
     >>> import yafowil.loader
     >>> import yafowil.widget.datetime
 
-Test widget.
-::
+Test widget::
 
     >>> from yafowil.base import factory
 
-Render very base widget.
-::
+Render very base widget::
 
     >>> widget = factory('datetime', 'dt')
     >>> widget()
     u'<input id="input-dt" name="dt" size="10" type="text" value="" />'
 
-Render datepicker class. Use this to bind a datepicker JS of your choice.
-::
+Base extraction::
+
+    >>> data = widget.extract({})
+    >>> data.printtree()
+    <RuntimeData dt, value=<UNSET>, extracted='' at ...>
+
+Render datepicker class. Use this to bind a datepicker JS of your choice::
   
     >>> widget = factory(
     ...     'datetime',
@@ -39,8 +41,7 @@ Render datepicker class. Use this to bind a datepicker JS of your choice.
     u'<input class="datepicker" id="input-dt" name="dt" size="10" 
     type="text" value="" />'
 
-Widget without time input.
-::
+Widget without time input::
 
     >>> widget = factory(
     ...     'datetime',
@@ -52,33 +53,23 @@ Widget without time input.
     u'<input class="required" id="input-dt" name="dt" size="10" 
     type="text" value="" />'
 
-Widget extraction.
-::
+Widget extraction::
 
     >>> request = {'dt': ''}
     >>> data = widget.extract(request)
-
-No input was given.
-::
-
     >>> data.errors
     [ExtractionError('No date given',)]
-
-Empty string in extracted data.
-::
 
     >>> data.extracted
     ''
 
-Widget renders empty value.
-::
+Widget renders empty value::
 
     >>> widget(data)
     u'<input class="required" id="input-dt" name="dt" size="10" 
     type="text" value="" />'
 
-Widget extraction with non-date input.
-::
+Widget extraction with non-date input::
 
     >>> request = {'dt': 'xyz'}
     >>> data = widget.extract(request)
@@ -92,8 +83,7 @@ Widget extraction with non-date input.
     u'<input class="required" id="input-dt" name="dt" size="10" type="text" 
     value="xyz" />'
 
-Valid widget extraction. Returns datetime instance.
-::
+Valid widget extraction. Returns datetime instance::
 
     >>> request = {'dt': '2010.1.1'}
     >>> data = widget.extract(request)
@@ -109,8 +99,7 @@ Valid widget extraction. Returns datetime instance.
 
 Widget with more advanced configuration. Widget now renders time input and
 input converting is locale aware. You can pass ``tzinfo`` property as well if
-you want the conversion to consider timezones.
-::
+you want the conversion to consider timezones::
 
     >>> widget = factory(
     ...     'datetime',
@@ -127,34 +116,29 @@ you want the conversion to consider timezones.
     type="text" value="" /><input id="input-dt-time" name="dt.time" size="5" 
     type="text" value="" />'
     
-Widget extraction.
-::
+Widget extraction::
 
     >>> request = {'dt': '', 'dt.time': ''}
     >>> data = widget.extract(request)
 
-No input was given.
-::
+No input was given::
 
     >>> data.errors
     [ExtractionError('No date given',)]
 
-Empty string in extracted data.
-::
+Empty string in extracted data::
 
     >>> data.extracted
     ''
 
-Widget renders empty value.
-::
+Widget renders empty value::
 
     >>> widget(data)
     u'<input class="datepicker required" id="input-dt" name="dt" size="10" 
     type="text" value="" /><input id="input-dt-time" name="dt.time" size="5" 
     type="text" value="" />'
 
-Widget extraction with non-datetime input.
-::
+Widget extraction with non-datetime input::
 
     >>> request = {'dt': 'xyz', 'dt.time': 'x'}
     >>> data = widget.extract(request)
@@ -169,8 +153,7 @@ Widget extraction with non-datetime input.
     type="text" value="xyz" /><input id="input-dt-time" name="dt.time" 
     size="5" type="text" value="x" />'
 
-Valid widget extraction. Returns datetime instance.
-::
+Valid widget extraction. Returns datetime instance::
 
     >>> request = {'dt': '1.1.2010', 'dt.time': '10:15'}
     >>> data = widget.extract(request)
@@ -185,8 +168,7 @@ Valid widget extraction. Returns datetime instance.
     type="text" value="1.1.2010" /><input id="input-dt-time" name="dt.time" 
     size="5" type="text" value="10:15" />'
     
-Locale might be a callable.
-::
+Locale might be a callable::
     
     >>> def callable_locale(widget, data):
     ...     print "locale called"
@@ -196,4 +178,18 @@ Locale might be a callable.
     >>> widget()
     locale called
     u'<input id="input-dt" name="dt" size="10" type="text" value="" />'
-    
+
+Test widget with given datetime value::
+
+    >>> import datetime
+    >>> widget = factory(
+    ...     'datetime',
+    ...     'dt',
+    ...     value=datetime.datetime(2011, 5, 1),
+    ...     props = {
+    ...         'time': True,
+    ...     })
+    >>> widget()
+    u'<input id="input-dt" name="dt" size="10" type="text" value="2011.5.1" 
+    /><input id="input-dt-time" name="dt.time" size="5" type="text" 
+    value="00:00" />'
