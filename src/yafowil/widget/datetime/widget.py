@@ -99,22 +99,20 @@ def datetime_renderer(widget, data):
     }        
     return tag('input', **attrs) + timeinput
 
+
+factory.register(
+    'datetime', 
+    extractors=[generic_extractor, generic_required_extractor,
+                datetime_extractor], 
+    edit_renderers=[datetime_renderer])
+
 factory.doc['widget']['datetime'] = \
 """Add-on widget `yafowil.widget.datetime 
 <http://github.com/bluedynamics/yafowil.widget.datetime/>`_ .
 """
 
 factory.defaults['datetime.required_class'] = 'required'
+
 factory.defaults['datetime.datepicker_class'] = 'datepicker'
+
 factory.defaults['datetime.default'] = ''
-factory.register(
-    'datetime', 
-    [
-        generic_extractor,
-        generic_required_extractor,
-        datetime_extractor,
-    ], 
-    [
-        datetime_renderer,
-    ],
-)
