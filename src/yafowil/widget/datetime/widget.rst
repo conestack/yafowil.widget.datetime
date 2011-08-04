@@ -193,3 +193,24 @@ Test widget with given datetime value::
     u'<input id="input-dt" name="dt" size="10" type="text" value="2011.5.1" 
     /><input id="input-dt-time" name="dt.time" size="5" type="text" 
     value="00:00" />'
+
+Test widget in display mode::
+
+    >>> widget = factory(
+    ...     'datetime',
+    ...     'dt',
+    ...     value=datetime.datetime(2011, 5, 1),
+    ...     mode='display')
+    >>> widget()
+    '2011.05.01 - 00:00'
+    
+    >>> widget = factory(
+    ...     'datetime',
+    ...     'dt',
+    ...     value=datetime.datetime(2011, 5, 1),
+    ...     props = {
+    ...         'format': '%Y.%m.%d',
+    ...     },
+    ...     mode='display')
+    >>> widget()
+    '2011.05.01'

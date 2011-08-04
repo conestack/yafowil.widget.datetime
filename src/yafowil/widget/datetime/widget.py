@@ -55,7 +55,7 @@ def format_time(dt):
 
 
 @managedprops('locale', *css_managed_props)
-def datetime_renderer(widget, data):
+def datetime_edit_renderer(widget, data):
     tag = data.tag
     locale = widget.attrs.get('locale', 'iso')
     if callable(locale):
@@ -100,11 +100,20 @@ def datetime_renderer(widget, data):
     return tag('input', **attrs) + timeinput
 
 
+def datetime_display_renderer(widget, data):
+    value = data.value
+    if not value:
+        return u''
+    format = widget.attrs['format']
+    return value.strftime(format)
+
+
 factory.register(
     'datetime', 
     extractors=[generic_extractor, generic_required_extractor,
                 datetime_extractor], 
-    edit_renderers=[datetime_renderer])
+    edit_renderers=[datetime_edit_renderer],
+    display_renderers=[datetime_display_renderer])
 
 factory.doc['widget']['datetime'] = \
 """Add-on widget `yafowil.widget.datetime 
@@ -116,3 +125,8 @@ factory.defaults['datetime.required_class'] = 'required'
 factory.defaults['datetime.datepicker_class'] = 'datepicker'
 
 factory.defaults['datetime.default'] = ''
+
+factory.defaults['datetime.format'] = '%Y.%m.%d - %H:%M'
+factory.doc['props']['datetime.format'] = \
+"""Pattern accepted by ``datetime.strftime``.
+"""
