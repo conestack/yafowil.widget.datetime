@@ -2,8 +2,8 @@
 History
 =======
 
-1.0dev
-------
+1.0
+---
 
 - add display renderer
   [rnix, 2011-08-04]
