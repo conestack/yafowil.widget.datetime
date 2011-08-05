@@ -214,3 +214,10 @@ Test widget in display mode::
     ...     mode='display')
     >>> widget()
     '2011.05.01'
+    
+    >>> widget = factory(
+    ...     'datetime',
+    ...     'dt',
+    ...     mode='display')
+    >>> widget()
+    u''
