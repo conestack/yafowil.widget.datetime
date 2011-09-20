@@ -4,9 +4,9 @@ Datetime widget
 Features
 --------
 
-    - Use ``bda.intellidatetime`` for extraction
-    
-    - Render with or without time input
+- Use ``bda.intellidatetime`` for extraction
+
+- Render with or without time input
 
 Load requirements::
 
@@ -17,7 +17,7 @@ Test widget::
 
     >>> from yafowil.base import factory
 
-Render very base widget::
+Render very basic widget::
 
     >>> widget = factory('datetime', 'dt')
     >>> widget()

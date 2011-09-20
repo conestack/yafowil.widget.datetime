@@ -115,8 +115,8 @@ factory.register(
     edit_renderers=[datetime_edit_renderer],
     display_renderers=[datetime_display_renderer])
 
-factory.doc['widget']['datetime'] = \
-"""Add-on widget `yafowil.widget.datetime 
+factory.doc['blueprint']['datetime'] = \
+"""Add-on blueprint `yafowil.widget.datetime 
 <http://github.com/bluedynamics/yafowil.widget.datetime/>`_ .
 """
 
