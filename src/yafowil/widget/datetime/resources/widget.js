@@ -19,6 +19,13 @@ if (typeof(window['yafowil']) == "undefined") yafowil = {};
                 datepicker_binder: yafowil.datepicker.binder
             });
         }
+        
+        // add binder to yafowil.widget.array binders
+        if (typeof(window.yafowil['array']) != "undefined") {
+            $.extend(yafowil.array.binders, {
+                datepicker_binder: yafowil.datepicker.binder
+            });
+        }
     });
     
     $.extend(yafowil, {
