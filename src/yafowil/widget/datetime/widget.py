@@ -105,7 +105,11 @@ def datetime_display_renderer(widget, data):
     if not value:
         return u''
     format = widget.attrs['format']
-    return value.strftime(format)
+    attrs = {
+        'id': cssid(widget, 'display'),
+        'class_': 'display-%s' % widget.attrs['class']
+    }
+    return data.tag('div', value.strftime(format), **attrs)
 
 
 factory.register(
@@ -119,6 +123,8 @@ factory.doc['blueprint']['datetime'] = \
 """Add-on blueprint `yafowil.widget.datetime 
 <http://github.com/bluedynamics/yafowil.widget.datetime/>`_ .
 """
+
+factory.defaults['datetime.class'] = 'datetime'
 
 factory.defaults['datetime.required_class'] = 'required'
 

@@ -21,7 +21,7 @@ Render very basic widget::
 
     >>> widget = factory('datetime', 'dt')
     >>> widget()
-    u'<input id="input-dt" name="dt" size="10" type="text" value="" />'
+    u'<input class="datetime" id="input-dt" name="dt" size="10" type="text" value="" />'
 
 Base extraction::
 
@@ -38,7 +38,7 @@ Render datepicker class. Use this to bind a datepicker JS of your choice::
     ...         'datepicker': True,
     ...     })
     >>> widget()
-    u'<input class="datepicker" id="input-dt" name="dt" size="10" 
+    u'<input class="datepicker datetime" id="input-dt" name="dt" size="10" 
     type="text" value="" />'
 
 Widget without time input::
@@ -50,7 +50,7 @@ Widget without time input::
     ...         'required': 'No date given',
     ...     })
     >>> widget()
-    u'<input class="required" id="input-dt" name="dt" size="10" 
+    u'<input class="datetime required" id="input-dt" name="dt" size="10" 
     type="text" value="" />'
 
 Widget extraction::
@@ -66,7 +66,7 @@ Widget extraction::
 Widget renders empty value::
 
     >>> widget(data)
-    u'<input class="required" id="input-dt" name="dt" size="10" 
+    u'<input class="datetime required" id="input-dt" name="dt" size="10" 
     type="text" value="" />'
 
 Widget extraction with non-date input::
@@ -80,7 +80,7 @@ Widget extraction with non-date input::
     'xyz'
     
     >>> widget(data)
-    u'<input class="required" id="input-dt" name="dt" size="10" type="text" 
+    u'<input class="datetime required" id="input-dt" name="dt" size="10" type="text" 
     value="xyz" />'
 
 Valid widget extraction. Returns datetime instance::
@@ -112,7 +112,7 @@ you want the conversion to consider timezones::
     ...         'tzinfo': None,
     ...     })
     >>> widget()
-    u'<input class="datepicker required" id="input-dt" name="dt" size="10" 
+    u'<input class="datepicker datetime required" id="input-dt" name="dt" size="10" 
     type="text" value="" /><input id="input-dt-time" name="dt.time" size="5" 
     type="text" value="" />'
     
@@ -134,7 +134,7 @@ Empty string in extracted data::
 Widget renders empty value::
 
     >>> widget(data)
-    u'<input class="datepicker required" id="input-dt" name="dt" size="10" 
+    u'<input class="datepicker datetime required" id="input-dt" name="dt" size="10" 
     type="text" value="" /><input id="input-dt-time" name="dt.time" size="5" 
     type="text" value="" />'
 
@@ -149,7 +149,7 @@ Widget extraction with non-datetime input::
     'xyz'
     
     >>> widget(data)
-    u'<input class="datepicker required" id="input-dt" name="dt" size="10" 
+    u'<input class="datepicker datetime required" id="input-dt" name="dt" size="10" 
     type="text" value="xyz" /><input id="input-dt-time" name="dt.time" 
     size="5" type="text" value="x" />'
 
@@ -164,7 +164,7 @@ Valid widget extraction. Returns datetime instance::
     datetime.datetime(2010, 1, 1, 10, 15)
     
     >>> widget(data)
-    u'<input class="datepicker required" id="input-dt" name="dt" size="10" 
+    u'<input class="datepicker datetime required" id="input-dt" name="dt" size="10" 
     type="text" value="1.1.2010" /><input id="input-dt-time" name="dt.time" 
     size="5" type="text" value="10:15" />'
     
@@ -177,7 +177,7 @@ Locale might be a callable::
     ...     props = { 'locale': callable_locale })
     >>> widget()
     locale called
-    u'<input id="input-dt" name="dt" size="10" type="text" value="" />'
+    u'<input class="datetime" id="input-dt" name="dt" size="10" type="text" value="" />'
 
 Test widget with given datetime value::
 
@@ -190,7 +190,7 @@ Test widget with given datetime value::
     ...         'time': True,
     ...     })
     >>> widget()
-    u'<input id="input-dt" name="dt" size="10" type="text" value="2011.5.1" 
+    u'<input class="datetime" id="input-dt" name="dt" size="10" type="text" value="2011.5.1" 
     /><input id="input-dt-time" name="dt.time" size="5" type="text" 
     value="00:00" />'
 
@@ -202,7 +202,7 @@ Test widget in display mode::
     ...     value=datetime.datetime(2011, 5, 1),
     ...     mode='display')
     >>> widget()
-    '2011.05.01 - 00:00'
+    u'<div class="display-datetime" id="display-dt">2011.05.01 - 00:00</div>'
     
     >>> widget = factory(
     ...     'datetime',
@@ -213,7 +213,7 @@ Test widget in display mode::
     ...     },
     ...     mode='display')
     >>> widget()
-    '2011.05.01'
+    u'<div class="display-datetime" id="display-dt">2011.05.01</div>'
     
     >>> widget = factory(
     ...     'datetime',
