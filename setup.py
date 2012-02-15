@@ -40,9 +40,11 @@ setup(name='yafowil.widget.datetime',
       ),
       test_suite="yafowil.widget.datetime.tests.test_suite",
       entry_points="""
-      # plone specific, ignore if not available
-      [z3c.autoinclude.plugin]
-      target = plone
-      """,       
+      [yafowil.plugin]
+      register = yafowil.widget.datetime:register
+      resourcedir = yafowil.widget.datetime:get_resource_dir
+      javascripts = yafowil.widget.datetime:get_js
+      stylesheets = yafowil.widget.datetime:get_css
+      """,
       )
 
