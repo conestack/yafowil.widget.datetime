@@ -1,7 +1,8 @@
 jQuery UI custom compilation
 ============================
 
-The jQuery UI custom compilation contained in ``cone.app`` contains the
-``autocomplete`` and  ``datepicker`` widgets and their dependencies.
+The jQuery UI custom compilation contained in ``yafowil.widget.datetime``
+contains the ``autocomplete`` and  ``datepicker`` widgets and their
+dependencies.
 
-No effects are included at the moment.
+No effects plugins included.
