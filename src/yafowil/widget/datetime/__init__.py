@@ -15,3 +15,4 @@ def get_js(thirdparty=True):
 def get_css(thirdparty=True):
     if thirdparty:
         return ['jquery-ui-1.8.1.custom.css']
+    return []
