@@ -9,7 +9,7 @@ def get_resource_dir():
 def get_js(thirdparty=True):
     js = ['widget.js']
     if thirdparty:
-        js.append['jquery-ui-1.8.1.custom.min.js']
+        js.append('jquery-ui-1.8.1.custom.min.js')
     return js
 
 def get_css(thirdparty=True):
