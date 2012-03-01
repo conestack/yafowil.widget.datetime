@@ -5,14 +5,16 @@ def register():
     
 def get_resource_dir():
     return os.path.join(os.path.dirname(__file__), 'resources')
-        
+
 def get_js(thirdparty=True):
-    js = ['widget.js']
+    js = list()
     if thirdparty:
-        js.append('jquery-ui-1.8.1.custom.min.js')
+        js.append('jquery-ui-1.8.18.datepicker.min.js')
+    js.append('widget.js')
     return js
 
 def get_css(thirdparty=True):
+    css = list()
     if thirdparty:
-        return ['jquery-ui-1.8.1.custom.css']
-    return []
+        css.append('jquery-ui-1.8.18.datepicker.css')
+    return css
