@@ -5,8 +5,8 @@ History
 1.1.1dev
 --------
 
-- Add ``render_datetime_input`` helper function. Useful for custom widgets
-  with different data preperation.
+- Add ``render_datetime_input`` and ``render_datetime_display`` helper
+  functions. Useful for custom widgets with different data preperation.
   [rnix, 2012-03-06]
 
 - Extend display renderer to wrap value like generic_display_renderer.

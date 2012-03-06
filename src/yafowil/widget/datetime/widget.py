@@ -103,16 +103,20 @@ def datetime_edit_renderer(widget, data):
     return render_datetime_input(widget, data, date, time)
 
 
-def datetime_display_renderer(widget, data):
-    value = data.value
-    if not value:
-        return u''
+def render_datetime_display(widget, data, value):
     format = widget.attrs['format']
     attrs = {
         'id': cssid(widget, 'display'),
         'class_': 'display-%s' % widget.attrs['class']
     }
     return data.tag('div', value.strftime(format), **attrs)
+
+
+def datetime_display_renderer(widget, data):
+    value = data.value
+    if not value:
+        return u''
+    return render_datetime_display(widget, data, value)
 
 
 factory.register(
