@@ -54,24 +54,8 @@ def format_time(dt):
     return '%02i:%02i' % (dt.hour, dt.minute)
 
 
-@managedprops('locale', *css_managed_props)
-def datetime_edit_renderer(widget, data):
+def render_datetime_input(widget, data, date, time):
     tag = data.tag
-    locale = widget.attrs.get('locale', 'iso')
-    if callable(locale):
-        locale = locale(widget, data)
-    date = None
-    time = widget.attrs.get('time')
-    if data.value and isinstance(data.value, datetime):
-        date = format_date(data.value, locale)
-        if time:
-            time = format_time(data.value)
-    if data.extracted and isinstance(data.extracted, datetime):
-        date = format_date(data.extracted, locale)
-        if time:
-            time = format_time(data.extracted)
-    if not date:
-        date = fetch_value(widget, data)
     timeinput = ''
     if time:
         if time is True:
@@ -88,7 +72,6 @@ def datetime_edit_renderer(widget, data):
     additional_classes = []
     if widget.attrs.get('datepicker'):
         additional_classes.append(widget.attrs.get('datepicker_class'))
-        
     attrs = {
         'type': 'text',
         'value':  date,
@@ -98,6 +81,26 @@ def datetime_edit_renderer(widget, data):
         'size': 10,
     }        
     return tag('input', **attrs) + timeinput
+
+
+@managedprops('locale', *css_managed_props)
+def datetime_edit_renderer(widget, data):
+    locale = widget.attrs.get('locale', 'iso')
+    if callable(locale):
+        locale = locale(widget, data)
+    date = None
+    time = widget.attrs.get('time')
+    if data.value and isinstance(data.value, datetime):
+        date = format_date(data.value, locale)
+        if time:
+            time = format_time(data.value)
+    if data.extracted and isinstance(data.extracted, datetime):
+        date = format_date(data.extracted, locale)
+        if time:
+            time = format_time(data.extracted)
+    if not date:
+        date = fetch_value(widget, data)
+    return render_datetime_input(widget, data, date, time)
 
 
 def datetime_display_renderer(widget, data):
