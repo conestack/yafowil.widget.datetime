@@ -104,6 +104,8 @@ def datetime_edit_renderer(widget, data):
 
 
 def render_datetime_display(widget, data, value):
+    if not value:
+        return u''
     format = widget.attrs['format']
     attrs = {
         'id': cssid(widget, 'display'),
@@ -113,10 +115,7 @@ def render_datetime_display(widget, data, value):
 
 
 def datetime_display_renderer(widget, data):
-    value = data.value
-    if not value:
-        return u''
-    return render_datetime_display(widget, data, value)
+    return render_datetime_display(widget, data, data.value)
 
 
 factory.register(
