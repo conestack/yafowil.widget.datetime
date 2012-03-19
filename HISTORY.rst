@@ -2,12 +2,15 @@
 History
 =======
 
-1.1.1dev
---------
+1.2
+---
 
 - Add ``render_datetime_input`` and ``render_datetime_display`` helper
   functions. Useful for custom widgets with different data preperation.
   [rnix, 2012-03-06]
+
+- Modified to work with YAFOWIL 1.3
+  [agitator, 2012-02-19]
 
 - Extend display renderer to wrap value like generic_display_renderer.
   [rnix, 2011-12-18]

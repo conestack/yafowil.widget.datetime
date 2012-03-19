@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '1.1.1htug1'
-shortdesc = 'Datetime Widget for YAFOWIL - Yet Another Form Widget Library (Python, Web)'
+version = '1.2'
+shortdesc = 'Datetime Widget for YAFOWIL'
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'HISTORY.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'LICENSE.rst')).read()
@@ -47,4 +47,3 @@ setup(name='yafowil.widget.datetime',
       stylesheets = yafowil.widget.datetime:get_css
       """,
       )
-

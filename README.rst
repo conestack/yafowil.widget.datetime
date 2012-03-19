@@ -1,6 +1,6 @@
 
 This is a **datetime widget** for for `YAFOWIL 
-<http://pypi.python.org/pypi/yafowil>`_ - Yet Another Form WIdget Library.
+<http://pypi.python.org/pypi/yafowil>`_ 
 
 It utilizes/integrates `jquery.ui.datepicker 
 <http://docs.jquery.com/UI/Datepicker>`_ for/in YAFOWIL providing a 
