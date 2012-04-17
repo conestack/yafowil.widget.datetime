@@ -2,6 +2,15 @@
 History
 =======
 
+1.3dev
+------
+
+- Add documentation for ``datetime`` blueprint properties.
+  [rnix, 2012-04-17]
+
+- Add ``delimiter`` blueprint property.
+  [rnix, 2012-04-17]
+
 1.2
 ---
 
@@ -12,7 +21,7 @@ History
 - Modified to work with YAFOWIL 1.3
   [agitator, 2012-02-19]
 
-- Extend display renderer to wrap value like generic_display_renderer.
+- Extend display renderer to wrap value like ``generic_display_renderer``.
   [rnix, 2011-12-18]
 
 - Add default css class to datetime blueprint.

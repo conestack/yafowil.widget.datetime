@@ -24,13 +24,13 @@ from bda.intellidatetime import (
 
 def datetime_extractor(widget, data):
     time = None
-    if widget.attrs.get('time'):
+    if widget.attrs['time']:
         time = data.request.get('%s.time' % widget.dottedpath)
-    if not widget.attrs.get('required') and not data.extracted and not time:
+    if not widget.attrs['required'] and not data.extracted and not time:
         return ''
     try:
-        locale = widget.attrs.get('locale', 'iso')
-        tzinfo = widget.attrs.get('tzinfo', None)
+        locale = widget.attrs['locale']
+        tzinfo = widget.attrs['tzinfo']
         return convert(data.extracted, time=time, tzinfo=tzinfo, locale=locale)
     except DateTimeConversionError:
         raise ExtractionError('Not a valid date input.')
@@ -42,12 +42,12 @@ _mapping = {
     'Y': 'year',
 }
 
-def format_date(dt, locale):
+def format_date(dt, locale, delim):
     pattern = LocalePattern().date(locale)
     ret = ''
     for char in pattern.split(' '):
-        ret = '%s.%s' % (ret, getattr(dt, _mapping[char]))
-    return ret.strip('.')
+        ret = '%s%s%s' % (ret, delim, getattr(dt, _mapping[char]))
+    return ret.strip(delim)
 
 
 def format_time(dt):
@@ -70,8 +70,8 @@ def render_datetime_input(widget, data, date, time):
             'size': 5,
         })
     additional_classes = []
-    if widget.attrs.get('datepicker'):
-        additional_classes.append(widget.attrs.get('datepicker_class'))
+    if widget.attrs['datepicker']:
+        additional_classes.append(widget.attrs['datepicker_class'])
     attrs = {
         'type': 'text',
         'value':  date,
@@ -85,17 +85,18 @@ def render_datetime_input(widget, data, date, time):
 
 @managedprops('locale', *css_managed_props)
 def datetime_edit_renderer(widget, data):
-    locale = widget.attrs.get('locale', 'iso')
+    locale = widget.attrs['locale']
+    delim = widget.attrs['delimiter']
     if callable(locale):
         locale = locale(widget, data)
     date = None
-    time = widget.attrs.get('time')
+    time = widget.attrs['time']
     if data.value and isinstance(data.value, datetime):
-        date = format_date(data.value, locale)
+        date = format_date(data.value, locale, delim)
         if time:
             time = format_time(data.value)
     if data.extracted and isinstance(data.extracted, datetime):
-        date = format_date(data.extracted, locale)
+        date = format_date(data.extracted, locale, delim)
         if time:
             time = format_time(data.extracted)
     if not date:
@@ -130,15 +131,43 @@ factory.doc['blueprint']['datetime'] = \
 <http://github.com/bluedynamics/yafowil.widget.datetime/>`_ .
 """
 
+factory.defaults['datetime.default'] = ''
+
 factory.defaults['datetime.class'] = 'datetime'
 
 factory.defaults['datetime.required_class'] = 'required'
 
 factory.defaults['datetime.datepicker_class'] = 'datepicker'
 
-factory.defaults['datetime.default'] = ''
+factory.defaults['datetime.datepicker'] = False
+factory.doc['props']['datetime.datepicker'] = \
+"""Flag whether datepicker should be rendered.
+"""
+
+factory.defaults['datetime.time'] = False
+factory.doc['props']['datetime.time'] = \
+"""Flag whether time input should be rendered.
+"""
+
+factory.defaults['datetime.tzinfo'] = None
+factory.doc['props']['datetime.tzinfo'] = \
+"""Python datetime tzinfo object.
+"""
+
+factory.defaults['datetime.locale'] = 'iso'
+factory.doc['props']['datetime.locale'] = \
+"""Date input format locale. ``yafowil.widget.array`` uses
+`bda.intellidatetime <http://pypi.python.org/pypi/bda.intellidatetime/>`_ for
+input parsing. Take a look at this package for available locales.
+"""
+
+factory.defaults['datetime.delimiter'] = '.'
+factory.doc['props']['datetime.delimiter'] = \
+"""Delimiter used to render date in input field.
+"""
 
 factory.defaults['datetime.format'] = '%Y.%m.%d - %H:%M'
 factory.doc['props']['datetime.format'] = \
-"""Pattern accepted by ``datetime.strftime``.
+"""Pattern accepted by ``datetime.strftime``. Used if widget mode is
+``display``.
 """
