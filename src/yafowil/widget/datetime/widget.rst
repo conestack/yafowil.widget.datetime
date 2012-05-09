@@ -107,6 +107,7 @@ you want the conversion to consider timezones::
     ...     props = {
     ...         'datepicker': True,
     ...         'required': 'No date given',
+    ...         'delimiter': '.',
     ...         'locale': 'de',
     ...         'time': True,
     ...         'tzinfo': None,
@@ -190,7 +191,7 @@ Test widget with given datetime value::
     ...         'time': True,
     ...     })
     >>> widget()
-    u'<input class="datetime" id="input-dt" name="dt" size="10" type="text" value="2011.5.1" 
+    u'<input class="datetime" id="input-dt" name="dt" size="10" type="text" value="2011-5-1" 
     /><input id="input-dt-time" name="dt.time" size="5" type="text" 
     value="00:00" />'
 
@@ -202,7 +203,7 @@ Test widget in display mode::
     ...     value=datetime.datetime(2011, 5, 1),
     ...     mode='display')
     >>> widget()
-    u'<div class="display-datetime" id="display-dt">2011.05.01 - 00:00</div>'
+    u'<div class="display-datetime" id="display-dt">2011-05-01 00:00</div>'
     
     >>> widget = factory(
     ...     'datetime',
@@ -221,3 +222,19 @@ Test widget in display mode::
     ...     mode='display')
     >>> widget()
     u''
+
+    >>> def custom_formatter(widget, data):
+    ...      return data.value.strftime('at year %Y at month %m at day %d')
+    
+    >>> widget = factory(
+    ...     'datetime',
+    ...     'dt',
+    ...     value=datetime.datetime(2011, 5, 1),
+    ...     props = {
+    ...         'format': custom_formatter,
+    ...     },
+    ...     mode='display')
+    >>> widget()
+    u'<div class="display-datetime" id="display-dt">at year 2011 at month 05 at day 01</div>'
+    
+    

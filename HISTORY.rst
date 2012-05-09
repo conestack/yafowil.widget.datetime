@@ -5,6 +5,15 @@ History
 1.3dev
 ------
 
+- Sanitize formatting of date: iso always uses dash now, defaults to
+  international iso format using dash.
+  [jensens, 2012-05-09]
+
+- property ``format`` can be callable now. Expect to returns formatted date.
+  properties ``delimiter``, ``time``, ``tzinfo`` or ``locale`` can be callables 
+  too now. All callables taking ``widget, data`` as parameters.
+  [jensens, 2012-05-09]
+
 - Add documentation for ``datetime`` blueprint properties.
   [rnix, 2012-04-17]
 
