@@ -107,14 +107,20 @@ def datetime_edit_renderer(widget, data):
     return render_datetime_input(widget, data, date, time)
 
 
-def datetime_display_renderer(widget, data):
-    if not data.value:
+def datetime_display_renderer(widget, data, value=None):
+    """Note: This renderer function optionally accepts value as parameter,
+    which is used in favor of data.value if defined. Thus it can be used as
+    utility function inside custom blueprints with the need of datetime
+    display rendering.
+    """
+    value = value and value or data.value
+    if not value:
         return u''
     format = widget.attrs['format']
     if callable(format):
         value = format(widget, data)
     else:
-        value = data.value.strftime(format)
+        value = value.strftime(format)
     attrs = {
         'id': cssid(widget, 'display'),
         'class_': 'display-%s' % widget.attrs['class']
