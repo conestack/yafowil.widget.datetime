@@ -2,8 +2,8 @@
 History
 =======
 
-1.3dev
-------
+1.3
+---
 
 - Sanitize formatting of date: iso always uses dash now, defaults to
   international iso format using dash.
