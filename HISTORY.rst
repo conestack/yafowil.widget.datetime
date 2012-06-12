@@ -8,7 +8,7 @@ History
 - Adopt resource providing
   [rnix, 2012-06-12]
 
-- Remove example app
+- Add example widget
   [rnix, 2012-06-12]
 
 1.3
