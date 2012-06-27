@@ -42,9 +42,6 @@ setup(name='yafowil.widget.datetime',
       entry_points="""
       [yafowil.plugin]
       register = yafowil.widget.datetime:register
-      resourcedir = yafowil.widget.datetime:get_resource_dir
-      javascripts = yafowil.widget.datetime:get_js
-      stylesheets = yafowil.widget.datetime:get_css
       example = yafowil.widget.datetime.example:get_example
       """,
       )
