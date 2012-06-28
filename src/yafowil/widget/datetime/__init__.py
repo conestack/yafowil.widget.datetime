@@ -14,10 +14,15 @@ js = [{
     'order': 21,
 }]
 
-css = [{
-    #'resource': 'jquery-ui-1.8.18.datepicker.css',
+default_css = [{
+    'resource': 'jquery-ui-1.8.18.datepicker.css',
+    'thirdparty': False,
+    'order': 20,
+}]
+
+bootstrap_css = [{
     'resource': 'jquery-ui-1.8.16.datepicker.bootstrap.css',
-    'thirdparty': True,
+    'thirdparty': False,
     'order': 20,
 }]
 
@@ -25,4 +30,6 @@ css = [{
 def register():
     import widget
     factory.register_theme('default', 'yafowil.widget.datetime',
-                           resourcedir, js=js, css=css)
+                           resourcedir, js=js, css=default_css)
+    factory.register_theme('bootstrap', 'yafowil.widget.datetime',
+                           resourcedir, js=js, css=bootstrap_css)
