@@ -9,6 +9,10 @@ js = [{
     'thirdparty': True,
     'order': 20,
 }, {
+    'resource': 'jquery.ui.timepicker.js',
+    'thirdparty': True,
+    'order': 20,
+}, {
     'resource': 'widget.js',
     'thirdparty': False,
     'order': 21,
@@ -18,10 +22,18 @@ default_css = [{
     'resource': 'jquery-ui-1.8.18.datepicker.css',
     'thirdparty': False,
     'order': 20,
+}, {
+    'resource': 'jquery.ui.timepicker.css',
+    'thirdparty': False,
+    'order': 20,
 }]
 
 bootstrap_css = [{
     'resource': 'jquery-ui-1.8.16.datepicker.bootstrap.css',
+    'thirdparty': False,
+    'order': 20,
+}, {
+    'resource': 'jquery.ui.timepicker.bootstrap.css',
     'thirdparty': False,
     'order': 20,
 }]

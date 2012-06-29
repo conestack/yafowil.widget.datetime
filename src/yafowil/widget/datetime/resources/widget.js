@@ -37,9 +37,13 @@ if (typeof(window['yafowil']) == "undefined") yafowil = {};
             binder: function(context) {
                 $('input.datepicker', context).datepicker({
                     showAnim: null,
-                    showOn: 'button',
+                    showOn: 'both',
                     buttonImage: yafowil.datepicker.icon,
                     buttonImageOnly: true
+                });
+                $('input.timepicker').timepicker({
+                    showPeriodLabels: false,
+                    showOn: 'both'
                 });
             }
         }
@@ -88,6 +92,16 @@ if (typeof(window['yafowil']) == "undefined") yafowil = {};
             isRTL: false
         };
         $.datepicker.setDefaults($.datepicker.regional['de']);
+        
+        $.timepicker.regional['de'] = {
+            hourText: 'Stunde',
+            minuteText: 'Minuten',
+            amPmText: ['AM', 'PM'] ,
+            closeButtonText: 'Beenden',
+            nowButtonText: 'Aktuelle Zeit',
+            deselectButtonText: 'Wischen'
+        };
+        $.timepicker.setDefaults($.timepicker.regional['de']);
     });
 
 })(jQuery);

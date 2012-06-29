@@ -67,13 +67,16 @@ def render_datetime_input(widget, data, date, time):
             time = ''
         if not time and data.request:
             time = data.request.get('%s.time' % widget.dottedpath)
-        timeinput = tag('input', **{
+        attrs = {
             'type': 'text',
             'value': time,
             'name_': '%s.time' % widget.dottedpath,
             'id': cssid(widget, 'input', 'time'),
             'size': 5,
-        })
+        }
+        if widget.attrs['timepicker']:
+            attrs['class_'] = widget.attrs['timepicker_class']
+        timeinput = tag('input', **attrs)
     additional_classes = []
     if widget.attrs['datepicker']:
         additional_classes.append(widget.attrs['datepicker_class'])
@@ -148,9 +151,11 @@ factory.defaults['datetime.required_class'] = 'required'
 
 factory.defaults['datetime.datepicker_class'] = 'datepicker'
 
+factory.defaults['datetime.timepicker_class'] = 'timepicker'
+
 factory.defaults['datetime.datepicker'] = False
 factory.doc['props']['datetime.datepicker'] = \
-"""Flag whether datepicker should be rendered.
+"""Flag whether date picker is enabled.
 """
 
 factory.defaults['datetime.time'] = False
@@ -159,6 +164,11 @@ factory.doc['props']['datetime.time'] = \
 
 ``time`` may be a callable taking widget and data as parameters expect to return 
 a boolean.
+"""
+
+factory.defaults['datetime.timepicker'] = False
+factory.doc['props']['datetime.timepicker'] = \
+"""Flag whether time picker is enabled.
 """
 
 factory.defaults['datetime.tzinfo'] = None
