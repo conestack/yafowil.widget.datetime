@@ -2,39 +2,40 @@ import os
 from yafowil.base import factory
 
 
+# XXX: use fanstatic
 resourcedir = os.path.join(os.path.dirname(__file__), 'resources')
 
 js = [{
+    'group': 'datepicker',
     'resource': 'jquery-ui-1.8.18.datepicker.min.js',
-    'thirdparty': True,
     'order': 20,
 }, {
+    'group': 'timepicker',
     'resource': 'jquery.ui.timepicker.js',
-    'thirdparty': True,
     'order': 20,
 }, {
+    'group': 'yafowil.widget.datepicker',
     'resource': 'widget.js',
-    'thirdparty': False,
     'order': 21,
 }]
 
 default_css = [{
+    'group': 'datepicker',
     'resource': 'jquery-ui-1.8.18.datepicker.css',
-    'thirdparty': False,
     'order': 20,
 }, {
+    'group': 'timepicker',
     'resource': 'jquery.ui.timepicker.css',
-    'thirdparty': False,
     'order': 20,
 }]
 
 bootstrap_css = [{
+    'group': 'datepicker',
     'resource': 'jquery-ui-1.8.16.datepicker.bootstrap.css',
-    'thirdparty': False,
     'order': 20,
 }, {
+    'group': 'timepicker',
     'resource': 'jquery.ui.timepicker.bootstrap.css',
-    'thirdparty': False,
     'order': 20,
 }]
 
