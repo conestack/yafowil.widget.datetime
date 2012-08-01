@@ -1,4 +1,3 @@
-
 This is a **datetime widget** for for `YAFOWIL 
 <http://pypi.python.org/pypi/yafowil>`_ 
 
@@ -9,4 +8,4 @@ datepicker function on a text input.
 Contributors
 ============
 
-- Robert Niederrreiter <rnix@squarewave.at>
+- Robert Niederrreiter <rnix [at] squarewave [dot] at>
