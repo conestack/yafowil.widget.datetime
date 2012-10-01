@@ -93,9 +93,9 @@ Valid widget extraction. Returns datetime instance::
     >>> data.extracted
     datetime.datetime(2010, 1, 1, 0, 0)
     
-    >>> # widget(data) XXX: required renderer invalid
-    u'<input class="required" id="input-dt" name="dt" type="text" 
-    value="2010.1.1" />'    
+    >>> widget(data)
+    u'<input class="datetime required" id="input-dt" name="dt" size="10" 
+    type="text" value="2010-1-1" />'
 
 Widget with more advanced configuration. Widget now renders time input and
 input converting is locale aware. You can pass ``tzinfo`` property as well if
@@ -110,12 +110,13 @@ you want the conversion to consider timezones::
     ...         'delimiter': '.',
     ...         'locale': 'de',
     ...         'time': True,
+    ...         'timepicker': True,
     ...         'tzinfo': None,
     ...     })
     >>> widget()
     u'<input class="datepicker datetime required" id="input-dt" name="dt" size="10" 
-    type="text" value="" /><input id="input-dt-time" name="dt.time" size="5" 
-    type="text" value="" />'
+    type="text" value="" /><input class="timepicker" id="input-dt-time" 
+    name="dt.time" size="5" type="text" value="" />'
     
 Widget extraction::
 
@@ -136,7 +137,7 @@ Widget renders empty value::
 
     >>> widget(data)
     u'<input class="datepicker datetime required" id="input-dt" name="dt" size="10" 
-    type="text" value="" /><input id="input-dt-time" name="dt.time" size="5" 
+    type="text" value="" /><input class="timepicker" id="input-dt-time" name="dt.time" size="5" 
     type="text" value="" />'
 
 Widget extraction with non-datetime input::
@@ -151,7 +152,7 @@ Widget extraction with non-datetime input::
     
     >>> widget(data)
     u'<input class="datepicker datetime required" id="input-dt" name="dt" size="10" 
-    type="text" value="xyz" /><input id="input-dt-time" name="dt.time" 
+    type="text" value="xyz" /><input class="timepicker" id="input-dt-time" name="dt.time" 
     size="5" type="text" value="x" />'
 
 Valid widget extraction. Returns datetime instance::
@@ -166,7 +167,7 @@ Valid widget extraction. Returns datetime instance::
     
     >>> widget(data)
     u'<input class="datepicker datetime required" id="input-dt" name="dt" size="10" 
-    type="text" value="1.1.2010" /><input id="input-dt-time" name="dt.time" 
+    type="text" value="1.1.2010" /><input class="timepicker" id="input-dt-time" name="dt.time" 
     size="5" type="text" value="10:15" />'
     
 Locale might be a callable::
