@@ -73,12 +73,13 @@ def render_datetime_input(widget, data, date, time):
             'name_': '%s.time' % widget.dottedpath,
             'id': cssid(widget, 'input', 'time'),
             'size': 5,
+            'disabled': widget.attrs['disabled'] and 'disabled' or None,
         }
-        if widget.attrs['timepicker']:
+        if widget.attrs['timepicker'] and not widget.attrs['disabled']:
             attrs['class_'] = widget.attrs['timepicker_class']
         timeinput = tag('input', **attrs)
     additional_classes = []
-    if widget.attrs['datepicker']:
+    if widget.attrs['datepicker'] and not widget.attrs['disabled']:
         additional_classes.append(widget.attrs['datepicker_class'])
     attrs = {
         'type': 'text',
@@ -87,6 +88,7 @@ def render_datetime_input(widget, data, date, time):
         'id': cssid(widget, 'input'),
         'class_': cssclasses(widget, data, additional=additional_classes),
         'size': 10,
+        'disabled': widget.attrs['disabled'] and 'disabled' or None,
     }
     return tag('input', **attrs) + timeinput
 
@@ -152,6 +154,8 @@ factory.defaults['datetime.required_class'] = 'required'
 factory.defaults['datetime.datepicker_class'] = 'datepicker'
 
 factory.defaults['datetime.timepicker_class'] = 'timepicker'
+
+factory.defaults['datetime.disabled'] = False
 
 factory.defaults['datetime.datepicker'] = False
 factory.doc['props']['datetime.datepicker'] = \
