@@ -155,6 +155,8 @@ factory.defaults['datetime.datepicker_class'] = 'datepicker'
 
 factory.defaults['datetime.timepicker_class'] = 'timepicker'
 
+factory.defaults['datetime.disabled'] = False
+
 factory.defaults['datetime.datepicker'] = False
 factory.doc['props']['datetime.datepicker'] = \
 """Flag whether date picker is enabled.

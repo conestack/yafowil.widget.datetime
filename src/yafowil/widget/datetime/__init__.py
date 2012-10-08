@@ -4,33 +4,33 @@ from yafowil.base import factory
 
 resourcedir = os.path.join(os.path.dirname(__file__), 'resources')
 js = [{
-    'group': 'datepicker',
+    'group': 'yafowil.widget.datetime.datepicker',
     'resource': 'jquery-ui-1.8.18.datepicker.min.js',
     'order': 20,
 }, {
-    'group': 'timepicker',
+    'group': 'yafowil.widget.datetime.timepicker',
     'resource': 'jquery.ui.timepicker.js',
     'order': 20,
 }, {
-    'group': 'yafowil.widget.datepicker',
+    'group': 'yafowil.widget.datetime.common',
     'resource': 'widget.js',
     'order': 21,
 }]
 default_css = [{
-    'group': 'datepicker',
+    'group': 'yafowil.widget.datetime.datepicker',
     'resource': 'jquery-ui-1.8.18.datepicker.css',
     'order': 20,
 }, {
-    'group': 'timepicker',
+    'group': 'yafowil.widget.datetime.timepicker',
     'resource': 'jquery.ui.timepicker.css',
     'order': 20,
 }]
 bootstrap_css = [{
-    'group': 'datepicker',
+    'group': 'yafowil.widget.datetime.datepicker',
     'resource': 'jquery-ui-1.8.16.datepicker.bootstrap.css',
     'order': 20,
 }, {
-    'group': 'timepicker',
+    'group': 'yafowil.widget.datetime.timepicker',
     'resource': 'jquery.ui.timepicker.bootstrap.css',
     'order': 20,
 }]
