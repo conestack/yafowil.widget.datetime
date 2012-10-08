@@ -5,7 +5,7 @@ It utilizes/integrates `jquery.ui.datepicker
 <http://docs.jquery.com/UI/Datepicker>`_ for/in YAFOWIL providing a 
 datepicker function on a text input.
 
-- `Documentation <http://yafowil.info/yafowil/blueprints.html#datetime>`_
+- `Documentation <http://docs.yafowil.info/yafowil/blueprints.html#datetime>`_
 - `DEMO - see it Live <http://demo.yafowil.info/++widget++yafowil.widget.datetime/index.html>`_
 
 
