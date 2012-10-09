@@ -27,6 +27,7 @@ def call_if_callable(key, widget, data):
         return attr(widget, data)
     return attr
 
+@managedprops('required', 'time', 'locale', 'tzinfo')
 def datetime_extractor(widget, data):
     time = None
     if call_if_callable('time', widget, data):
@@ -93,7 +94,8 @@ def render_datetime_input(widget, data, date, time):
     return tag('input', **attrs) + timeinput
 
 
-@managedprops('locale', *css_managed_props)
+@managedprops('locale', 'delimiter', 'time', 'disabled', 'timepicker',
+              'timepicker_class', 'datepicker', 'datepicker_class', *css_managed_props)
 def datetime_edit_renderer(widget, data):
     locale = call_if_callable('locale', widget, data)
     delim = call_if_callable('delimiter', widget, data)
@@ -111,7 +113,7 @@ def datetime_edit_renderer(widget, data):
         date = fetch_value(widget, data)
     return render_datetime_input(widget, data, date, time)
 
-
+@managedprops('format', 'class')
 def datetime_display_renderer(widget, data, value=None):
     """Note: This renderer function optionally accepts value as parameter,
     which is used in favor of data.value if defined. Thus it can be used as
@@ -152,13 +154,19 @@ factory.defaults['datetime.class'] = 'datetime'
 factory.defaults['datetime.required_class'] = 'required'
 
 factory.defaults['datetime.datepicker_class'] = 'datepicker'
+factory.doc['props']['datetime.time'] = \
+"""jquery.ui datepicker binds to this class.
+"""
 
 factory.defaults['datetime.timepicker_class'] = 'timepicker'
+factory.doc['props']['datetime.timepicker_class'] = \
+"""jquery.ui timepicker binds to this class.
+"""
 
 factory.defaults['datetime.disabled'] = False
 
 factory.defaults['datetime.datepicker'] = False
-factory.doc['props']['datetime.datepicker'] = \
+factory.doc['props']['datetime.datepicker_class'] = \
 """Flag whether date picker is enabled.
 """
 
@@ -173,6 +181,11 @@ a boolean.
 factory.defaults['datetime.timepicker'] = False
 factory.doc['props']['datetime.timepicker'] = \
 """Flag whether time picker is enabled.
+"""
+
+factory.defaults['datetime.datepicker'] = False
+factory.doc['props']['datetime.datepicker'] = \
+"""Flag whether date picker is enabled.
 """
 
 factory.defaults['datetime.tzinfo'] = None
