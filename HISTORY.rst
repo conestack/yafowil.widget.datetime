@@ -2,7 +2,7 @@
 History
 =======
 
-1.4dev
+1.4
 ------
 
 - Adopt resource providing
