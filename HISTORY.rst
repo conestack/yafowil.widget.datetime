@@ -2,8 +2,14 @@
 History
 =======
 
-1.4
+1.5dev
 ------
+
+- Add ``time`` blueprint.
+  [rnix, 2012-10-23]
+
+1.4
+---
 
 - Adopt resource providing
   [rnix, 2012-06-12]

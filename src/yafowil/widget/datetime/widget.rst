@@ -12,10 +12,10 @@ Load requirements::
 
     >>> import yafowil.loader
     >>> import yafowil.widget.datetime
-
-Test widget::
-
     >>> from yafowil.base import factory
+
+Datetime
+--------
 
 Render very basic widget::
 
@@ -237,5 +237,187 @@ Test widget in display mode::
     ...     mode='display')
     >>> widget()
     u'<div class="display-datetime" id="display-dt">at year 2011 at month 05 at day 01</div>'
+
+Time
+----
+
+Render base widget::
+
+    >>> widget = factory('time', 't')
+    >>> widget()
+    u'<input class="time" id="input-t" name="t" size="5" type="text" value="" />'
+
+Extract empty::
+
+    >>> data = widget.extract({})
+    >>> data.printtree()
+    <RuntimeData t, value=<UNSET>, extracted=<UNSET> at ...>
+
+Invalid time input::
+
+    >>> data = widget.extract({'t': 'abcdef'})
+    >>> data.errors
+    [ExtractionError('Not a valid time input.',)]
+
+Parsinf Failure::
+
+    >>> data = widget.extract({'t': 'abc'})
+    >>> data.errors
+    [ExtractionError('Failed to parse time input.',)]
+
+Hours not a number::
+
+    >>> data = widget.extract({'t': 'aa00'})
+    >>> data.errors
+    [ExtractionError('Hours not a number.',)]
+
+Minutes not a number::
+
+    >>> data = widget.extract({'t': '00:aa'})
+    >>> data.errors
+    [ExtractionError('Minutes not a number.',)]
+
+Extract hours and minute without delimiter. Only wotks for 4-character values.
+Widget format is ``string`` by default::
+
+    >>> data = widget.extract({'t': '0101'})
+    >>> data.printtree()
+    <RuntimeData t, value=<UNSET>, extracted='01:01' at ...>
+
+Extract with delimiter::
+
+    >>> data = widget.extract({'t': '1:1'})
+    >>> data.printtree()
+    <RuntimeData t, value=<UNSET>, extracted='01:01' at ...>
+
+Validate day time. triggers if ``daytime`` or ``timepicker`` set to ``True``::
+
+    >>> widget = factory('time', 't', value='02:02', props={
+    ...     'daytime': True})
+    >>> data = widget.extract({'t': '25:1'})
+    >>> data.errors
+    [ExtractionError('Hours must be in range 0..23.',)]
+
+    >>> data = widget.extract({'t': '1:61'})
+    >>> data.errors
+    [ExtractionError('Minutes must be in range 0..59.',)]
+
+    >>> widget = factory('time', 't', value='02:02', props={
+    ...     'timepicker': True})
+    >>> data = widget.extract({'t': '25:1'})
+    >>> data.errors
+    [ExtractionError('Hours must be in range 0..23.',)]
+
+    >>> data = widget.extract({'t': '1:61'})
+    >>> data.errors
+    [ExtractionError('Minutes must be in range 0..59.',)]
+
+Additional CSS class is rendered for timepicker if ``timepicker`` set::
+
+    >>> widget()
+    u'<input class="time timepicker" id="input-t" name="t" size="5" 
+    type="text" value="02:02" />'
+
+Value rendering if preset and extracted::
+
+    >>> widget = factory('time', 't', value='02:02')
+    >>> widget()
+    u'<input class="time" id="input-t" name="t" size="5" 
+    type="text" value="02:02" />'
+
+    >>> data = widget.extract({'t': '1:12'})
+    >>> data.extracted
+    '01:12'
     
-    
+    >>> widget(data)
+    u'<input class="time" id="input-t" name="t" size="5" 
+    type="text" value="01:12" />'
+
+Render display mode without value::
+
+    >>> widget = factory('time', 't', mode='display')
+    >>> widget()
+    u''
+
+Render display mode with value::
+
+    >>> widget = factory('time', 't', value='02:02', mode='display')
+    >>> widget()
+    u'<div class="display-time" id="display-t">02:02</div>'
+
+Invalid ``format``::
+
+    >>> widget = factory('time', 't', props={'format': 'inexistent'})
+    >>> data = widget.extract({'t': '1:12'})
+    Traceback (most recent call last):
+      ...
+    ValueError: Unknown format 'inexistent'
+
+Number ``format``. Default unit is ``hours``::
+
+    >>> widget = factory('time', 't', props={'format': 'number'})
+    >>> data = widget.extract({'t': '1:12'})
+    >>> data.printtree()
+    <RuntimeData t, value=<UNSET>, extracted=1.2 at ...>
+
+Number format with preset value::
+
+    >>> widget = factory('time', 't', value=1.2, props={'format': 'number'})
+    >>> widget()
+    u'<input class="time" id="input-t" name="t" size="5" 
+    type="text" value="01:12" />'
+
+    >>> data = widget.extract({'t': '0:12'})
+    >>> data.extracted
+    0.2
+
+    >>> widget(data)
+    u'<input class="time" id="input-t" name="t" size="5" 
+    type="text" value="00:12" />'
+
+    >>> widget = factory('time', 't', value=1.2, mode='display', props={
+    ...     'format': 'number'})
+    >>> widget()
+    u'<div class="display-time" id="display-t">01:12</div>'
+
+Invalid ``unit``::
+
+    >>> widget = factory('time', 't', props={
+    ...     'format': 'number',
+    ...     'unit': 'inexistent'})
+    >>> data = widget.extract({'t': '1:12'})
+    Traceback (most recent call last):
+      ...
+    ValueError: Unknown unit 'inexistent'
+
+Minutes ``unit``::
+
+    >>> widget = factory('time', 't', props={
+    ...     'format': 'number',
+    ...     'unit': 'minutes'})
+    >>> data = widget.extract({'t': '1:12'})
+    >>> data.printtree()
+    <RuntimeData t, value=<UNSET>, extracted=72 at ...>
+
+Minutes unit with preset value::
+
+    >>> widget = factory('time', 't', value=12, props={
+    ...     'format': 'number',
+    ...     'unit': 'minutes'})
+    >>> widget()
+    u'<input class="time" id="input-t" name="t" size="5" 
+    type="text" value="00:12" />'
+
+    >>> data = widget.extract({'t': '2:30'})
+    >>> data.extracted
+    150
+
+    >>> widget(data)
+    u'<input class="time" id="input-t" name="t" size="5" 
+    type="text" value="02:30" />'
+
+    >>> widget = factory('time', 't', value=12, mode='display', props={
+    ...     'format': 'number',
+    ...     'unit': 'minutes'})
+    >>> widget()
+    u'<div class="display-time" id="display-t">00:12</div>'
