@@ -3,7 +3,7 @@ from yafowil.base import (
     factory,
     UNSET,
     ExtractionError,
-    fetch_value
+    fetch_value,
 )
 from yafowil.common import (
     generic_extractor,
@@ -14,6 +14,7 @@ from yafowil.utils import (
     cssclasses,
     css_managed_props,
     managedprops,
+    attr_value,
 )
 from bda.intellidatetime import (
     convert,
@@ -22,18 +23,11 @@ from bda.intellidatetime import (
 )
 
 
-def call_if_callable(key, widget, data):
-    attr = widget.attrs[key]
-    if callable(attr):
-        return attr(widget, data)
-    return attr
-
-
 def time_data_defs(widget, data):
-    format = call_if_callable('format', widget, data)
+    format = attr_value('format', widget, data)
     if format not in ['number', 'string']:
         raise ValueError(u"Unknown format '%s'" % format)
-    unit = call_if_callable('unit', widget, data)
+    unit = attr_value('unit', widget, data)
     if unit not in ['minutes', 'hours']:
         raise ValueError(u"Unknown unit '%s'" % unit)
     return format, unit
@@ -66,7 +60,9 @@ def time_extractor(widget, data):
         minutes = int(minutes)
     except ValueError:
         raise ExtractionError(u"Minutes not a number.")
-    if widget.attrs['daytime'] or widget.attrs['timepicker']:
+    daytime = attr_value('daytime', widget, data)
+    timepicker = attr_value('timepicker', widget, data)
+    if daytime or timepicker:
         if hours < 0 or hours > 23:
             raise ExtractionError(u"Hours must be in range 0..23.")
         if minutes < 0 or minutes > 59:
@@ -87,17 +83,19 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
         value = ''
     if not value and data.request:
         value = data.request.get(widgetname)
+    disabled = attr_value('disabled', widget, data) and 'disabled' or None
     attrs = {
         'type': 'text',
         'value': value,
         'name_': widgetname,
         'id': cssid(widget, 'input', postfix),
         'size': 5,
-        'disabled': widget.attrs['disabled'] and 'disabled' or None,
+        'disabled': disabled,
     }
     class_ = ''
-    if widget.attrs['timepicker'] and not widget.attrs['disabled']:
-        class_ = widget.attrs['timepicker_class']
+    timepicker = attr_value('timepicker', widget, data)
+    if timepicker and not disabled:
+        class_ = attr_value('timepicker_class', widget, data)
     if css_class:
         additional = class_ and [class_] or list()
         attrs['class_'] = cssclasses(widget, data, additional=additional)
@@ -135,7 +133,7 @@ def time_display_renderer(widget, data):
         return u''
     attrs = {
         'id': cssid(widget, 'display'),
-        'class_': 'display-%s' % widget.attrs['class']
+        'class_': 'display-%s' % attr_value('class', widget, data)
     }
     return data.tag('div', time_value(format, unit, value), **attrs)
 
@@ -191,12 +189,13 @@ property above to True results in day time range validation.
 @managedprops('required', 'time', 'locale', 'tzinfo')
 def datetime_extractor(widget, data):
     time = None
-    if call_if_callable('time', widget, data):
+    if attr_value('time', widget, data):
         time = data.request.get('%s.time' % widget.dottedpath)
-    if not widget.attrs['required'] and not data.extracted and not time:
+    required = attr_value('required', widget, data)
+    if not required and not data.extracted and not time:
         return ''
-    locale = call_if_callable('locale', widget, data)
-    tzinfo = call_if_callable('tzinfo', widget, data)
+    locale = attr_value('locale', widget, data)
+    tzinfo = attr_value('tzinfo', widget, data)
     try:
         return convert(data.extracted, time=time, tzinfo=tzinfo, locale=locale)
     except DateTimeConversionError:
@@ -228,8 +227,11 @@ def render_datetime_input(widget, data, date, time):
     if time:
         timeinput = render_time_input(widget, data, time, 'time')
     additional_classes = []
-    if widget.attrs['datepicker'] and not widget.attrs['disabled']:
-        additional_classes.append(widget.attrs['datepicker_class'])
+    datepicker = attr_value('datepicker', widget, data)
+    disabled = attr_value('disabled', widget, data)
+    if datepicker and not disabled:
+        datepicker_class = attr_value('datepicker_class', widget, data)
+        additional_classes.append(datepicker_class)
     attrs = {
         'type': 'text',
         'value':  date,
@@ -237,7 +239,7 @@ def render_datetime_input(widget, data, date, time):
         'id': cssid(widget, 'input'),
         'class_': cssclasses(widget, data, additional=additional_classes),
         'size': 10,
-        'disabled': widget.attrs['disabled'] and 'disabled' or None,
+        'disabled': disabled and 'disabled' or None,
     }
     return tag('input', **attrs) + timeinput
 
@@ -246,9 +248,9 @@ def render_datetime_input(widget, data, date, time):
               'timepicker_class', 'datepicker', 'datepicker_class',
               *css_managed_props)
 def datetime_edit_renderer(widget, data):
-    locale = call_if_callable('locale', widget, data)
-    delim = call_if_callable('delimiter', widget, data)
-    time = call_if_callable('time', widget, data)
+    locale = attr_value('locale', widget, data)
+    delim = attr_value('delimiter', widget, data)
+    time = attr_value('time', widget, data)
     date = None
     if data.value and isinstance(data.value, datetime):
         date = format_date(data.value, locale, delim)
@@ -280,7 +282,7 @@ def datetime_display_renderer(widget, data, value=None):
         value = value.strftime(format)
     attrs = {
         'id': cssid(widget, 'display'),
-        'class_': 'display-%s' % widget.attrs['class']
+        'class_': 'display-%s' % attr_value('class', widget, data)
     }
     return data.tag('div', value, **attrs)
 

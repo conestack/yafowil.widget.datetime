@@ -5,6 +5,9 @@ History
 1.5dev
 ------
 
+- use ``yafowil.utils.attr_value`` wherever possible.
+  [rnix, 2012-10-25]
+
 - Add ``time`` blueprint.
   [rnix, 2012-10-23]
 
