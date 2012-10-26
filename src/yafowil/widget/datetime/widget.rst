@@ -373,6 +373,13 @@ Number ``format``. Default unit is ``hours``::
     >>> data.printtree()
     <RuntimeData t, value=<UNSET>, extracted=1.2 at ...>
 
+Number format without preset value::
+
+    >>> widget = factory('time', 't', props={'format': 'number'})
+    >>> widget()
+    u'<input class="time" id="input-t" name="t" size="5" type="text" 
+    value="" />'
+
 Number format with preset value::
 
     >>> widget = factory('time', 't', value=1.2, props={'format': 'number'})
@@ -434,3 +441,24 @@ Minutes unit with preset value::
     ...     'unit': 'minutes'})
     >>> widget()
     u'<div class="display-time" id="display-t">00:12</div>'
+
+Format tuple. Preset and extraction value is (hh, mm)::
+
+    >>> widget = factory('time', 't', props={'format': 'tuple'})
+    >>> widget()
+    u'<input class="time" id="input-t" name="t" size="5" type="text" 
+    value="" />'
+
+    >>> data = widget.extract({'t': '2:30'})
+    >>> data.extracted
+    (2, 30)
+
+    >>> widget = factory('time', 't', value=(5, 30), props={'format': 'tuple'})
+    >>> widget()
+    u'<input class="time" id="input-t" name="t" size="5" type="text" 
+    value="05:30" />'
+
+    >>> data = widget.extract({'t': '2:30'})
+    >>> widget(data=data)
+    u'<input class="time" id="input-t" name="t" size="5" type="text" 
+    value="02:30" />'

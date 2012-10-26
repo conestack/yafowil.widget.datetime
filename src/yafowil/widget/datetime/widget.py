@@ -25,7 +25,7 @@ from bda.intellidatetime import (
 
 def time_data_defs(widget, data):
     format = attr_value('format', widget, data)
-    if format not in ['number', 'string']:
+    if format not in ['number', 'string', 'tuple']:
         raise ValueError(u"Unknown format '%s'" % format)
     unit = attr_value('unit', widget, data)
     if unit not in ['minutes', 'hours']:
@@ -69,6 +69,8 @@ def time_extractor(widget, data):
             raise ExtractionError(u"Minutes must be in range 0..59.")
     if format == 'string':
         return '%02i:%02i' % (hours, minutes)
+    if format == 'tuple':
+        return (hours, minutes)
     if unit == 'hours':
         return hours + (minutes / 60.0)
     return hours * 60 + minutes
@@ -105,7 +107,13 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
 
 
 def time_value(format, unit, time):
-    if format == 'number':
+    if format == 'tuple':
+        if not time:
+            return ''
+        time = '%02i:%02i' % time
+    elif format == 'number':
+        if time is UNSET or time == '':
+            return ''
         if unit == 'hours':
             hours = int(time)
             minutes = int(round((time - int(time)) * 60.0))
@@ -170,7 +178,8 @@ factory.doc['props']['time.timepicker'] = \
 
 factory.defaults['time.format'] = 'string'
 factory.doc['props']['time.format'] = \
-"""Define widget value and extraction format. Either 'string' or 'number'.
+"""Define widget value and extraction format. Either 'string', 'number' or
+'tuple'.
 """
 
 factory.defaults['time.unit'] = 'hours'
