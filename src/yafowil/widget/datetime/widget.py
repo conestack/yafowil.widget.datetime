@@ -37,7 +37,7 @@ def time_data_defs(widget, data):
 def time_extractor(widget, data):
     format, unit = time_data_defs(widget, data)
     extracted = data.extracted
-    if extracted == UNSET:
+    if extracted == UNSET or extracted == '':
         return UNSET
     if len(extracted) > 5:
         raise ExtractionError(u"Not a valid time input.")
