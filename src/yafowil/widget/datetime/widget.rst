@@ -395,6 +395,19 @@ Number format with preset value::
     u'<input class="time" id="input-t" name="t" size="5" 
     type="text" value="00:12" />'
 
+    >>> widget = factory('time', 't', value=0, props={'format': 'number'})
+    >>> widget()
+    u'<input class="time" id="input-t" name="t" 
+    size="5" type="text" value="00:00" />'
+
+    >>> data = widget.extract({'t': '0:0'})
+    >>> data.extracted
+    0.0
+
+    >>> widget(data)
+    u'<input class="time" id="input-t" name="t" size="5" 
+    type="text" value="00:00" />'
+
     >>> widget = factory('time', 't', value=1.2, mode='display', props={
     ...     'format': 'number'})
     >>> widget()
