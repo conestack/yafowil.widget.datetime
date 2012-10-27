@@ -400,6 +400,10 @@ Number format with preset value::
     u'<input class="time" id="input-t" name="t" 
     size="5" type="text" value="00:00" />'
 
+    >>> data = widget.extract({'t': ''})
+    >>> data.extracted
+    <UNSET>
+
     >>> data = widget.extract({'t': '0:0'})
     >>> data.extracted
     0.0
