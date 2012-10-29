@@ -2,8 +2,8 @@
 History
 =======
 
-1.5dev
-------
+1.5
+---
 
 - use ``yafowil.utils.attr_value`` wherever possible.
   [rnix, 2012-10-25]
