@@ -28,6 +28,31 @@ def date_example():
             'title': 'Date'}
 
 
+DOC_TIME = """
+Time
+----
+
+Time input.
+
+.. code-block:: python
+
+    time = factory('#field:time', props={
+         'label': 'Select time',
+         'required': 'Time Field is required',
+         'timepicker': True})
+"""
+
+def time_example():
+    form = factory('fieldset', name='yafowil.widget.datetime.time')
+    form['time'] = factory('#field:time', props={
+         'label': 'Select time',
+         'required': 'Time Field is required',
+         'timepicker': True})
+    return {'widget': form,
+            'doc': DOC_TIME,
+            'title': 'Time'}
+
+
 DOC_DATETIME = """
 Datetime
 --------
@@ -62,5 +87,6 @@ def datetime_example():
 def get_example():
     return [
         date_example(),
+        time_example(),
         datetime_example(),
     ]
