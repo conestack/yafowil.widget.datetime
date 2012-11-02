@@ -1,5 +1,9 @@
-from setuptools import setup, find_packages
-import sys, os
+import os
+from setuptools import (
+    setup,
+    find_packages,
+)
+
 
 version = '1.5'
 shortdesc = 'Datetime Widget for YAFOWIL'
@@ -8,16 +12,17 @@ longdesc += open(os.path.join(os.path.dirname(__file__), 'HISTORY.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'LICENSE.rst')).read()
 tests_require = ['yafowil[test]']
 
+
 setup(name='yafowil.widget.datetime',
       version=version,
       description=shortdesc,
       long_description=longdesc,
       classifiers=[
-            'License :: OSI Approved :: BSD License',
-            'Environment :: Web Environment',
-            'Operating System :: OS Independent',
-            'Programming Language :: Python', 
-            'Topic :: Internet :: WWW/HTTP :: Dynamic Content',        
+          'License :: OSI Approved :: BSD License',
+          'Environment :: Web Environment',
+          'Operating System :: OS Independent',
+          'Programming Language :: Python', 
+          'Topic :: Internet :: WWW/HTTP :: Dynamic Content',        
       ],
       keywords='',
       author='BlueDynamics Alliance',
@@ -43,5 +48,4 @@ setup(name='yafowil.widget.datetime',
       [yafowil.plugin]
       register = yafowil.widget.datetime:register
       example = yafowil.widget.datetime.example:get_example
-      """,
-      )
+      """)
