@@ -2,8 +2,8 @@
 History
 =======
 
-1.5.1dev
---------
+1.5.1
+-----
 
 - Time blueprint example.
   [rnix, 2012-11-03]
