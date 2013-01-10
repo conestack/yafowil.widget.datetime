@@ -388,8 +388,8 @@ Number format with preset value::
     type="text" value="01:12" />'
 
     >>> data = widget.extract({'t': '0:12'})
-    >>> data.extracted
-    0.2
+    >>> '%0.1f' % data.extracted
+    '0.2'
 
     >>> widget(data)
     u'<input class="time" id="input-t" name="t" size="5" 
