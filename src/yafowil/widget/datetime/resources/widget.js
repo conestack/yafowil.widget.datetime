@@ -12,14 +12,14 @@ if (typeof(window['yafowil']) == "undefined") yafowil = {};
     $(document).ready(function() {
         // initial binding
         yafowil.datepicker.binder();
-        
+
         // add after ajax binding if bdajax present
         if (typeof(window['bdajax']) != "undefined") {
             $.extend(bdajax.binders, {
                 datepicker_binder: yafowil.datepicker.binder
             });
         }
-        
+
         // add binder to yafowil.widget.array hooks
         if (typeof(window.yafowil['array']) != "undefined") {
             $.extend(yafowil.array.hooks.add, {
@@ -27,13 +27,13 @@ if (typeof(window['yafowil']) == "undefined") yafowil = {};
             });
         }
     });
-    
+
     $.extend(yafowil, {
-        
+
         datepicker: {
-            
+
         	icon: '/++resource++yafowil.widget.datetime/images/cal16_16.gif',
-            
+
             binder: function(context) {
                 $('input.datepicker', context).datepicker({
                     showAnim: null,
@@ -41,14 +41,14 @@ if (typeof(window['yafowil']) == "undefined") yafowil = {};
                     buttonImage: yafowil.datepicker.icon,
                     buttonImageOnly: true
                 });
-                $('input.timepicker').timepicker({
+                $('input.timepicker', context).timepicker({
                     showPeriodLabels: false,
                     showOn: 'both'
                 });
             }
         }
     });
-    
+
     // Configure jQuery.UI datepicker languages.
     $(function() {
         $.datepicker.regional['de'] = {
@@ -92,7 +92,7 @@ if (typeof(window['yafowil']) == "undefined") yafowil = {};
             isRTL: false
         };
         $.datepicker.setDefaults($.datepicker.regional['de']);
-        
+
         $.timepicker.regional['de'] = {
             hourText: 'Stunde',
             minuteText: 'Minuten',
