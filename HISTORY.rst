@@ -2,8 +2,8 @@
 History
 =======
 
-1.5.2 (unreleased)
-------------------
+1.5.2
+-----
 
 - Restrict timepicker binding to context
   [rnix, 2014-03-19]
