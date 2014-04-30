@@ -16,11 +16,15 @@ from yafowil.utils import (
     managedprops,
     attr_value,
 )
+from yafowil.tsf import TSF
 from bda.intellidatetime import (
     convert,
     LocalePattern,
     DateTimeConversionError,
 )
+
+
+_ = TSF('yafowil.widget.datetime')
 
 
 def time_data_defs(widget, data):
@@ -40,7 +44,8 @@ def time_extractor(widget, data):
     if extracted == UNSET or extracted == '':
         return UNSET
     if len(extracted) > 5:
-        raise ExtractionError(u"Not a valid time input.")
+        message = _('input_not_valid_time', default=u'Not a valid time input.')
+        raise ExtractionError(message)
     elif len(extracted) == 5:
         hours = extracted[:2]
         minutes = extracted[3:]
@@ -50,23 +55,33 @@ def time_extractor(widget, data):
     else:
         extracted = extracted.split(':')
         if len(extracted) != 2:
-            raise ExtractionError(u"Failed to parse time input.")
+            message = _('failed_to_parse_time',
+                        default=u'Failed to parse time input.')
+            raise ExtractionError(message)
         hours, minutes = extracted
     try:
         hours = int(hours)
     except ValueError:
-        raise ExtractionError(u"Hours not a number.")
+        message = _('hours_not_a_number',
+                    default=u'Hours not a number.')
+        raise ExtractionError(message)
     try:
         minutes = int(minutes)
     except ValueError:
-        raise ExtractionError(u"Minutes not a number.")
+        message = _('minutes_not_a_number',
+                    default=u'Minutes not a number.')
+        raise ExtractionError(message)
     daytime = attr_value('daytime', widget, data)
     timepicker = attr_value('timepicker', widget, data)
     if daytime or timepicker:
         if hours < 0 or hours > 23:
-            raise ExtractionError(u"Hours must be in range 0..23.")
+            message = _('invalid_hours_range',
+                        default=u'Hours must be in range 0..23.')
+            raise ExtractionError(message)
         if minutes < 0 or minutes > 59:
-            raise ExtractionError(u"Minutes must be in range 0..59.")
+            message = _('invalid_minutes_range',
+                        default=u'Minutes must be in range 0..59.')
+            raise ExtractionError(message)
     if format == 'string':
         return '%02i:%02i' % (hours, minutes)
     if format == 'tuple':
@@ -208,7 +223,9 @@ def datetime_extractor(widget, data):
     try:
         return convert(data.extracted, time=time, tzinfo=tzinfo, locale=locale)
     except DateTimeConversionError:
-        raise ExtractionError('Not a valid date input.')
+        message = _('input_not_valid_date',
+                    default=u'Not a valid date input.')
+        raise ExtractionError(message)
 
 
 _mapping = {

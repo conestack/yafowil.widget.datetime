@@ -5,7 +5,7 @@ from setuptools import (
 )
 
 
-version = '1.5.2'
+version = '1.6dev'
 shortdesc = 'Datetime Widget for YAFOWIL'
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'HISTORY.rst')).read()
@@ -44,6 +44,11 @@ setup(name='yafowil.widget.datetime',
           test=tests_require,
       ),
       test_suite="yafowil.widget.datetime.tests.test_suite",
+      message_extractors = {
+          '.': [
+              ('**.py', 'lingua_python', None),
+          ]
+      },
       entry_points="""
       [yafowil.plugin]
       register = yafowil.widget.datetime:register
