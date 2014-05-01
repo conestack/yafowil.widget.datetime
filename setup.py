@@ -36,7 +36,7 @@ setup(name='yafowil.widget.datetime',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'yafowil>1.99',
+          'yafowil>2.0.99',
           'bda.intellidatetime',
       ],
       tests_require=tests_require,
