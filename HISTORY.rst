@@ -2,11 +2,18 @@
 History
 =======
 
+1.7 (unreleased)
+----------------
+
+- Nothing changed yet.
+
+
 1.6 (2014-06-03)
 ----------------
 
 - Add translations, package depends now ``yafowil`` >= 2.1
   [rnix, 2014-04-30]
+
 
 1.5.2
 -----
@@ -46,7 +53,7 @@ History
   [jensens, 2012-05-09]
 
 - property ``format`` can be callable now. Expect to returns formatted date.
-  properties ``delimiter``, ``time``, ``tzinfo`` or ``locale`` can be callables 
+  properties ``delimiter``, ``time``, ``tzinfo`` or ``locale`` can be callables
   too now. All callables taking ``widget, data`` as parameters.
   [jensens, 2012-05-09]
 
