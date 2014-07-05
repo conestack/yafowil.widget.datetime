@@ -5,7 +5,9 @@ History
 1.7 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Update jquery UI datepicker to 1.10.3 and use latest jquery ui boostrap
+  styles.
+  [rnix, 2014-07-05]
 
 
 1.6 (2014-06-03)
