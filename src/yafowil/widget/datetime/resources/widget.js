@@ -32,14 +32,10 @@ if (typeof(window['yafowil']) == "undefined") yafowil = {};
 
         datepicker: {
 
-        	icon: '/++resource++yafowil.widget.datetime/images/cal16_16.gif',
-
             binder: function(context) {
                 $('input.datepicker', context).datepicker({
                     showAnim: null,
-                    showOn: 'both',
-                    buttonImage: yafowil.datepicker.icon,
-                    buttonImageOnly: true
+                    showOn: 'both'
                 });
                 $('input.timepicker', context).timepicker({
                     showPeriodLabels: false,

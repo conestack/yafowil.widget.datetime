@@ -5,6 +5,9 @@ History
 1.7 (unreleased)
 ----------------
 
+- Remove calendar icon.
+  [rnix, 2014-07-29]
+
 - Update jquery UI datepicker to 1.10.3 and use latest jquery ui boostrap
   styles.
   [rnix, 2014-07-05]
