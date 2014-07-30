@@ -44,11 +44,6 @@ setup(name='yafowil.widget.datetime',
           test=tests_require,
       ),
       test_suite="yafowil.widget.datetime.tests.test_suite",
-      message_extractors = {
-          '.': [
-              ('**.py', 'lingua_python', None),
-          ]
-      },
       entry_points="""
       [yafowil.plugin]
       register = yafowil.widget.datetime:register
