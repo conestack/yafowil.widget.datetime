@@ -24,6 +24,10 @@ default_css = [{
     'group': 'yafowil.widget.datetime.timepicker',
     'resource': 'jquery.ui.timepicker.css',
     'order': 20,
+}, {
+    'group': 'yafowil.widget.datetime.common',
+    'resource': 'widget.css',
+    'order': 21,
 }]
 bootstrap_css = [{
     'group': 'yafowil.widget.datetime.datepicker',
@@ -33,6 +37,10 @@ bootstrap_css = [{
     'group': 'yafowil.widget.datetime.timepicker',
     'resource': 'jquery.ui.timepicker.bootstrap.css',
     'order': 20,
+}, {
+    'group': 'yafowil.widget.datetime.common',
+    'resource': 'widget-bootstrap.css',
+    'order': 21,
 }]
 
 

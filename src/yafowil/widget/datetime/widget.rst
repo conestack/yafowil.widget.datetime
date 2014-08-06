@@ -76,10 +76,10 @@ Widget extraction with non-date input::
     >>> data = widget.extract(request)
     >>> data.errors
     [ExtractionError('Not a valid date input.',)]
-    
+
     >>> data.extracted
     'xyz'
-    
+
     >>> widget(data)
     u'<input class="datetime required" id="input-dt" name="dt" size="10" 
     type="text" 
@@ -91,10 +91,10 @@ Valid widget extraction. Returns datetime instance::
     >>> data = widget.extract(request)
     >>> data.errors
     []
-    
+
     >>> data.extracted
     datetime.datetime(2010, 1, 1, 0, 0)
-    
+
     >>> widget(data)
     u'<input class="datetime required" id="input-dt" name="dt" size="10" 
     type="text" value="2010-1-1" />'
@@ -120,7 +120,7 @@ you want the conversion to consider timezones::
     size="10" 
     type="text" value="" /><input class="timepicker" id="input-dt-time" 
     name="dt.time" size="5" type="text" value="" />'
-    
+
 Widget extraction::
 
     >>> request = {'dt': '', 'dt.time': ''}
@@ -151,10 +151,10 @@ Widget extraction with non-datetime input::
     >>> data = widget.extract(request)
     >>> data.errors
     [ExtractionError('Not a valid date input.',)]
-    
+
     >>> data.extracted
     'xyz'
-    
+
     >>> widget(data)
     u'<input class="datepicker datetime required" id="input-dt" name="dt" 
     size="10" 
@@ -168,19 +168,19 @@ Valid widget extraction. Returns datetime instance::
     >>> data = widget.extract(request)
     >>> data.errors
     []
-    
+
     >>> data.extracted
     datetime.datetime(2010, 1, 1, 10, 15)
-    
+
     >>> widget(data)
     u'<input class="datepicker datetime required" id="input-dt" name="dt" 
     size="10" 
     type="text" value="1.1.2010" /><input class="timepicker" 
     id="input-dt-time" name="dt.time" 
     size="5" type="text" value="10:15" />'
-    
+
 Locale might be a callable::
-    
+
     >>> def callable_locale(widget, data):
     ...     print "locale called"
     ...     return 'de'
@@ -216,7 +216,7 @@ Test widget in display mode::
     ...     mode='display')
     >>> widget()
     u'<div class="display-datetime" id="display-dt">2011-05-01 00:00</div>'
-    
+
     >>> widget = factory(
     ...     'datetime',
     ...     'dt',
@@ -227,7 +227,7 @@ Test widget in display mode::
     ...     mode='display')
     >>> widget()
     u'<div class="display-datetime" id="display-dt">2011.05.01</div>'
-    
+
     >>> widget = factory(
     ...     'datetime',
     ...     'dt',
@@ -237,7 +237,7 @@ Test widget in display mode::
 
     >>> def custom_formatter(widget, data):
     ...      return data.value.strftime('at year %Y at month %m at day %d')
-    
+
     >>> widget = factory(
     ...     'datetime',
     ...     'dt',
@@ -341,7 +341,7 @@ Value rendering if preset and extracted::
     >>> data = widget.extract({'t': '1:12'})
     >>> data.extracted
     '01:12'
-    
+
     >>> widget(data)
     u'<input class="time" id="input-t" name="t" size="5" 
     type="text" value="01:12" />'
