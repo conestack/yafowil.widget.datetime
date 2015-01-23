@@ -2,7 +2,7 @@
 History
 =======
 
-1.7 (unreleased)
+1.7 (2015-01-23)
 ----------------
 
 - Remove calendar icon.
