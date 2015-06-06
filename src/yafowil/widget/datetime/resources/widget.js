@@ -1,27 +1,35 @@
+/* jslint browser: true */
+/* global jQuery */
+
 /* 
  * yafowil datepicker widget
- * 
+ *
  * Requires: jquery ui datepicker
  * Optional: bdajax
  */
 
-if (typeof(window['yafowil']) == "undefined") yafowil = {};
+if (typeof(window.yafowil) === "undefined") {
+    window.yafowil = {};
+}
 
 (function($) {
+    "use strict";
+
+    var yafowil = window.yafowil;
 
     $(document).ready(function() {
         // initial binding
         yafowil.datepicker.binder();
 
         // add after ajax binding if bdajax present
-        if (typeof(window['bdajax']) != "undefined") {
-            $.extend(bdajax.binders, {
+        if (typeof(window.bdajax) !== "undefined") {
+            $.extend(window.bdajax.binders, {
                 datepicker_binder: yafowil.datepicker.binder
             });
         }
 
         // add binder to yafowil.widget.array hooks
-        if (typeof(window.yafowil['array']) != "undefined") {
+        if (typeof(window.yafowil.array) !== "undefined") {
             $.extend(yafowil.array.hooks.add, {
                 datepicker_binder: yafowil.datepicker.binder
             });
@@ -47,7 +55,7 @@ if (typeof(window['yafowil']) == "undefined") yafowil = {};
 
     // Configure jQuery.UI datepicker languages.
     $(function() {
-        $.datepicker.regional['de'] = {
+        $.datepicker.regional.de = {
             clearText: 'löschen',
             clearStatus: 'aktuelles Datum löschen',
             closeText: 'schließen',
@@ -60,7 +68,8 @@ if (typeof(window['yafowil']) == "undefined") yafowil = {};
             currentStatus: '',
             monthNames: [
                 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
-                'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'
+                'Juli', 'August', 'September', 'Oktober', 'November',
+                'Dezember'
             ],
             monthNamesShort: [
                 'Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun',
@@ -83,21 +92,21 @@ if (typeof(window['yafowil']) == "undefined") yafowil = {};
             dayStatus: 'Setze DD als ersten Wochentag',
             dateStatus: 'Wähle D, M d',
             dateFormat: 'dd.mm.yy',
-            firstDay: 1, 
+            firstDay: 1,
             initStatus: 'Wähle ein Datum',
             isRTL: false
         };
-        $.datepicker.setDefaults($.datepicker.regional['de']);
+        $.datepicker.setDefaults($.datepicker.regional.de);
 
-        $.timepicker.regional['de'] = {
+        $.timepicker.regional.de = {
             hourText: 'Stunde',
             minuteText: 'Minuten',
-            amPmText: ['AM', 'PM'] ,
+            amPmText: ['AM', 'PM'],
             closeButtonText: 'Beenden',
             nowButtonText: 'Aktuelle Zeit',
             deselectButtonText: 'Wischen'
         };
-        $.timepicker.setDefaults($.timepicker.regional['de']);
+        $.timepicker.setDefaults($.timepicker.regional.de);
     });
 
-})(jQuery);
+}(jQuery));
