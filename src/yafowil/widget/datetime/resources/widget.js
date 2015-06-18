@@ -1,3 +1,5 @@
+/* jslint browser: true */
+/* global jQuery, yafowil */
 /* 
  * yafowil datepicker widget
  * 
@@ -5,23 +7,26 @@
  * Optional: bdajax
  */
 
-if (typeof(window['yafowil']) == "undefined") yafowil = {};
+if (window.yafowil === undefined) {
+    window.yafowil = {};
+}
 
-(function($) {
+(function($, yafowil) {
+    "use strict";
 
     $(document).ready(function() {
         // initial binding
         yafowil.datepicker.binder();
 
         // add after ajax binding if bdajax present
-        if (typeof(window['bdajax']) != "undefined") {
-            $.extend(bdajax.binders, {
+        if (window.bdajax !== undefined) {
+            $.extend(window.bdajax.binders, {
                 datepicker_binder: yafowil.datepicker.binder
             });
         }
 
         // add binder to yafowil.widget.array hooks
-        if (typeof(window.yafowil['array']) != "undefined") {
+        if (yafowil.array !== undefined) {
             $.extend(yafowil.array.hooks.add, {
                 datepicker_binder: yafowil.datepicker.binder
             });
@@ -47,7 +52,7 @@ if (typeof(window['yafowil']) == "undefined") yafowil = {};
 
     // Configure jQuery.UI datepicker languages.
     $(function() {
-        $.datepicker.regional['de'] = {
+        $.datepicker.regional.de = {
             clearText: 'löschen',
             clearStatus: 'aktuelles Datum löschen',
             closeText: 'schließen',
@@ -87,9 +92,9 @@ if (typeof(window['yafowil']) == "undefined") yafowil = {};
             initStatus: 'Wähle ein Datum',
             isRTL: false
         };
-        $.datepicker.setDefaults($.datepicker.regional['de']);
+        $.datepicker.setDefaults($.datepicker.regional.de);
 
-        $.timepicker.regional['de'] = {
+        $.timepicker.regional.de = {
             hourText: 'Stunde',
             minuteText: 'Minuten',
             amPmText: ['AM', 'PM'] ,
@@ -97,7 +102,7 @@ if (typeof(window['yafowil']) == "undefined") yafowil = {};
             nowButtonText: 'Aktuelle Zeit',
             deselectButtonText: 'Wischen'
         };
-        $.timepicker.setDefaults($.timepicker.regional['de']);
+        $.timepicker.setDefaults($.timepicker.regional.de);
     });
 
-})(jQuery);
+})(jQuery, yafowil);
