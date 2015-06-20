@@ -1,35 +1,32 @@
 /* jslint browser: true */
-/* global jQuery */
-
+/* global jQuery, yafowil */
 /* 
  * yafowil datepicker widget
- *
+ * 
  * Requires: jquery ui datepicker
  * Optional: bdajax
  */
 
-if (typeof(window.yafowil) === "undefined") {
+if (window.yafowil === undefined) {
     window.yafowil = {};
 }
 
-(function($) {
+(function($, yafowil) {
     "use strict";
-
-    var yafowil = window.yafowil;
 
     $(document).ready(function() {
         // initial binding
         yafowil.datepicker.binder();
 
         // add after ajax binding if bdajax present
-        if (typeof(window.bdajax) !== "undefined") {
+        if (window.bdajax !== undefined) {
             $.extend(window.bdajax.binders, {
                 datepicker_binder: yafowil.datepicker.binder
             });
         }
 
         // add binder to yafowil.widget.array hooks
-        if (typeof(window.yafowil.array) !== "undefined") {
+        if (yafowil.array !== undefined) {
             $.extend(yafowil.array.hooks.add, {
                 datepicker_binder: yafowil.datepicker.binder
             });
@@ -68,8 +65,7 @@ if (typeof(window.yafowil) === "undefined") {
             currentStatus: '',
             monthNames: [
                 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
-                'Juli', 'August', 'September', 'Oktober', 'November',
-                'Dezember'
+                'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'
             ],
             monthNamesShort: [
                 'Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun',
@@ -92,7 +88,7 @@ if (typeof(window.yafowil) === "undefined") {
             dayStatus: 'Setze DD als ersten Wochentag',
             dateStatus: 'Wähle D, M d',
             dateFormat: 'dd.mm.yy',
-            firstDay: 1,
+            firstDay: 1, 
             initStatus: 'Wähle ein Datum',
             isRTL: false
         };
@@ -101,7 +97,7 @@ if (typeof(window.yafowil) === "undefined") {
         $.timepicker.regional.de = {
             hourText: 'Stunde',
             minuteText: 'Minuten',
-            amPmText: ['AM', 'PM'],
+            amPmText: ['AM', 'PM'] ,
             closeButtonText: 'Beenden',
             nowButtonText: 'Aktuelle Zeit',
             deselectButtonText: 'Wischen'
@@ -109,4 +105,4 @@ if (typeof(window.yafowil) === "undefined") {
         $.timepicker.setDefaults($.timepicker.regional.de);
     });
 
-}(jQuery));
+})(jQuery, yafowil);

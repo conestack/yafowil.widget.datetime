@@ -2,10 +2,10 @@
 History
 =======
 
-1.8 (unreleased)
-----------------
+1.7.1 (unreleased)
+------------------
 
-- JSHint JavaScript resources.
+- Resolve JSHint errors and warnings.
   [thet]
 
 
