@@ -5,7 +5,7 @@ from setuptools import (
 )
 
 
-version = '1.7'
+version = '1.7.1.dev0'
 shortdesc = 'Datetime Widget for YAFOWIL'
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'HISTORY.rst')).read()
