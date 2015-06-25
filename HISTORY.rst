@@ -2,7 +2,7 @@
 History
 =======
 
-1.7.1 (unreleased)
+1.7.1 (2015-06-25)
 ------------------
 
 - Resolve JSHint errors and warnings.
