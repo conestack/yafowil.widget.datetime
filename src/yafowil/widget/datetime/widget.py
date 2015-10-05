@@ -1,27 +1,19 @@
+from bda.intellidatetime import DateTimeConversionError
+from bda.intellidatetime import LocalePattern
+from bda.intellidatetime import convert
 from datetime import datetime
-from yafowil.base import (
-    factory,
-    UNSET,
-    ExtractionError,
-    fetch_value,
-)
-from yafowil.common import (
-    generic_extractor,
-    generic_required_extractor,
-)
-from yafowil.utils import (
-    cssid,
-    cssclasses,
-    css_managed_props,
-    managedprops,
-    attr_value,
-)
+from node.utils import UNSET
+from yafowil.base import ExtractionError
+from yafowil.base import factory
+from yafowil.base import fetch_value
+from yafowil.common import generic_extractor
+from yafowil.common import generic_required_extractor
 from yafowil.tsf import TSF
-from bda.intellidatetime import (
-    convert,
-    LocalePattern,
-    DateTimeConversionError,
-)
+from yafowil.utils import attr_value
+from yafowil.utils import css_managed_props
+from yafowil.utils import cssclasses
+from yafowil.utils import cssid
+from yafowil.utils import managedprops
 
 
 _ = TSF('yafowil.widget.datetime')
