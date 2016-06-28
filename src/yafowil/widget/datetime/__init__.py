@@ -43,6 +43,19 @@ bootstrap_css = [{
     'resource': 'widget-bootstrap.css',
     'order': 21,
 }]
+plone5_css = [{
+    'group': 'yafowil.widget.datetime.datepicker',
+    'resource': 'jquery.ui.datepicker.plone5.css',
+    'order': 20,
+}, {
+    'group': 'yafowil.widget.datetime.timepicker',
+    'resource': 'jquery.ui.timepicker.plone5.css',
+    'order': 20,
+}, {
+    'group': 'yafowil.widget.datetime.common',
+    'resource': 'widget-bootstrap.css',
+    'order': 21,
+}]
 
 
 @entry_point(order=10)
@@ -52,3 +65,5 @@ def register():
                            resourcedir, js=js, css=default_css)
     factory.register_theme('bootstrap', 'yafowil.widget.datetime',
                            resourcedir, js=js, css=bootstrap_css)
+    factory.register_theme('plone5', 'yafowil.widget.datetime',
+                           resourcedir, js=js, css=plone5_css)

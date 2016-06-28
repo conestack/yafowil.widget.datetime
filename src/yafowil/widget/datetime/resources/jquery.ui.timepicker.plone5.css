@@ -1,0 +1,91 @@
+/*
+ * Timepicker stylesheet
+ * Highly inspired from datepicker
+ * FG - Nov 2010 - Web3R 
+ *
+ * version 0.0.3 : Fixed some settings, more dynamic
+ * version 0.0.4 : Removed width:100% on tables
+ * version 0.1.1 : set width 0 on tables to fix an ie6 bug
+ */
+
+.ui-timepicker-inline { display: inline; }
+#ui-timepicker-div {
+    padding: 0.2em;
+    border: 1px solid #AAAAAA;
+    background-color: #FFFFFF;
+}
+table.ui-timepicker-table {
+    border: none;
+    font-size: 0.9em;
+}
+.ui-timepicker .ui-timepicker-title {
+    background-color: #F5F5F5;
+    border: 0 none;
+    color: #808080;
+    font-weight: bold;
+    padding: 6px;
+    position: relative;
+    width: 100%;
+}
+.ui-timepicker td {
+    border: none;
+    padding: 1px;
+}
+.ui-timepicker td .ui-state-default {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: 0 none;
+    color: #808080;
+    filter: none;
+    margin-bottom: 0;
+    padding: 5px 7px;
+    text-align: center;
+}
+.ui-timepicker td .ui-state-hover {
+    background: none repeat scroll 0 0 #428BCA;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+    color: #FFFFFF;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* span for disabled cells */
+.ui-timepicker-table td span {
+    display:block;
+    text-decoration:none;
+}
+
+/* anchors for clickable cells */
+.ui-timepicker-table td a {
+    display:block;
+    cursor: pointer;
+    text-decoration:none;
+}
+
+/* buttons and button pane styling */
+.ui-timepicker .ui-timepicker-buttonpane {
+    background-image: none;
+    margin: .7em 0 0 0;
+    padding:0 .2em;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+}
+.ui-timepicker .ui-timepicker-buttonpane button {
+    margin: .5em .2em .4em;
+    cursor: pointer;
+    padding: .2em .6em .3em .6em;
+    width:auto;
+    overflow:visible;
+}
+
+.ui-timepicker .ui-timepicker-close {
+    float: right
+}
+
+.ui-timepicker .ui-timepicker-now {
+    float: left;
+}
+
+.ui-timepicker .ui-timepicker-deselect {
+    float: left;
+}
