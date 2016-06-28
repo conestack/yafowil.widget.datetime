@@ -3,7 +3,7 @@ from setuptools import setup
 import os
 
 
-version = '1.7.2.dev0'
+version = '1.8.dev0'
 shortdesc = 'Datetime Widget for YAFOWIL'
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'HISTORY.rst')).read()
@@ -35,7 +35,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'setuptools',
-        'yafowil>2.0.99',
+        'yafowil>2.1.99',
         'bda.intellidatetime',
     ],
     tests_require=tests_require,
