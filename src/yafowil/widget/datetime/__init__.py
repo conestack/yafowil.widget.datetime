@@ -53,7 +53,7 @@ plone5_css = [{
     'order': 20,
 }, {
     'group': 'yafowil.widget.datetime.common',
-    'resource': 'widget-bootstrap.css',
+    'resource': 'widget-plone5.css',
     'order': 21,
 }]
 
