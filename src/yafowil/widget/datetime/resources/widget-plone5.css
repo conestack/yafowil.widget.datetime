@@ -1,8 +1,8 @@
-input[type="text"].datepicker {
+input[type="text"].dateinput {
     width:10em;
     display:inline-block;
 }
-input[type="text"].timepicker {
+input[type="text"].timeinput {
     width:5em;
     display:inline-block;
 }

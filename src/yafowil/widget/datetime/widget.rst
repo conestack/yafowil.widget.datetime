@@ -21,8 +21,8 @@ Render very basic widget::
 
     >>> widget = factory('datetime', 'dt')
     >>> widget()
-    u'<input class="datetime" id="input-dt" name="dt" size="10" type="text" 
-    value="" />'
+    u'<input class="dateinput datetime" id="input-dt" name="dt" size="10"
+    type="text" value="" />'
 
 Base extraction::
 
@@ -39,8 +39,8 @@ Render datepicker class. Use this to bind a datepicker JS of your choice::
     ...         'datepicker': True,
     ...     })
     >>> widget()
-    u'<input class="datepicker datetime" id="input-dt" name="dt" size="10" 
-    type="text" value="" />'
+    u'<input class="dateinput datepicker datetime" id="input-dt" name="dt" 
+    size="10" type="text" value="" />'
 
 Widget without time input::
 
@@ -51,8 +51,8 @@ Widget without time input::
     ...         'required': 'No date given',
     ...     })
     >>> widget()
-    u'<input class="datetime required" id="input-dt" name="dt" size="10" 
-    type="text" value="" />'
+    u'<input class="dateinput datetime required" id="input-dt" name="dt" 
+    size="10" type="text" value="" />'
 
 Widget extraction::
 
@@ -67,8 +67,8 @@ Widget extraction::
 Widget renders empty value::
 
     >>> widget(data)
-    u'<input class="datetime required" id="input-dt" name="dt" size="10" 
-    type="text" value="" />'
+    u'<input class="dateinput datetime required" id="input-dt" name="dt" 
+    size="10" type="text" value="" />'
 
 Widget extraction with non-date input::
 
@@ -81,9 +81,8 @@ Widget extraction with non-date input::
     'xyz'
 
     >>> widget(data)
-    u'<input class="datetime required" id="input-dt" name="dt" size="10" 
-    type="text" 
-    value="xyz" />'
+    u'<input class="dateinput datetime required" id="input-dt" name="dt" 
+    size="10" type="text" value="xyz" />'
 
 Valid widget extraction. Returns datetime instance::
 
@@ -96,8 +95,8 @@ Valid widget extraction. Returns datetime instance::
     datetime.datetime(2010, 1, 1, 0, 0)
 
     >>> widget(data)
-    u'<input class="datetime required" id="input-dt" name="dt" size="10" 
-    type="text" value="2010-1-1" />'
+    u'<input class="dateinput datetime required" id="input-dt" name="dt" 
+    size="10" type="text" value="2010.1.1" />'
 
 Widget with more advanced configuration. Widget now renders time input and
 input converting is locale aware. You can pass ``tzinfo`` property as well if
@@ -116,10 +115,10 @@ you want the conversion to consider timezones::
     ...         'tzinfo': None,
     ...     })
     >>> widget()
-    u'<input class="datepicker datetime required" id="input-dt" name="dt" 
-    size="10" 
-    type="text" value="" /><input class="timepicker" id="input-dt-time" 
-    name="dt.time" size="5" type="text" value="" />'
+    u'<input class="dateinput datepicker datetime required" id="input-dt" 
+    name="dt" size="10" type="text" value="" /><input 
+    class="timeinput timepicker" id="input-dt-time" name="dt.time" size="5" 
+    type="text" value="" />'
 
 Widget extraction::
 
@@ -139,10 +138,9 @@ Empty string in extracted data::
 Widget renders empty value::
 
     >>> widget(data)
-    u'<input class="datepicker datetime required" id="input-dt" name="dt" 
-    size="10" 
-    type="text" value="" /><input class="timepicker" id="input-dt-time" 
-    name="dt.time" size="5" 
+    u'<input class="dateinput datepicker datetime required" id="input-dt" 
+    name="dt" size="10" type="text" value="" /><input 
+    class="timeinput timepicker" id="input-dt-time" name="dt.time" size="5" 
     type="text" value="" />'
 
 Widget extraction with non-datetime input::
@@ -156,10 +154,9 @@ Widget extraction with non-datetime input::
     'xyz'
 
     >>> widget(data)
-    u'<input class="datepicker datetime required" id="input-dt" name="dt" 
-    size="10" 
-    type="text" value="xyz" /><input class="timepicker" id="input-dt-time" 
-    name="dt.time" 
+    u'<input class="dateinput datepicker datetime required" id="input-dt" 
+    name="dt" size="10" type="text" value="xyz" /><input 
+    class="timeinput timepicker" id="input-dt-time" name="dt.time" 
     size="5" type="text" value="x" />'
 
 Valid widget extraction. Returns datetime instance::
@@ -173,10 +170,9 @@ Valid widget extraction. Returns datetime instance::
     datetime.datetime(2010, 1, 1, 10, 15)
 
     >>> widget(data)
-    u'<input class="datepicker datetime required" id="input-dt" name="dt" 
-    size="10" 
-    type="text" value="1.1.2010" /><input class="timepicker" 
-    id="input-dt-time" name="dt.time" 
+    u'<input class="dateinput datepicker datetime required" id="input-dt" 
+    name="dt" size="10" type="text" value="1.1.2010" /><input 
+    class="timeinput timepicker" id="input-dt-time" name="dt.time" 
     size="5" type="text" value="10:15" />'
 
 Locale might be a callable::
@@ -188,8 +184,8 @@ Locale might be a callable::
     ...     props = { 'locale': callable_locale })
     >>> widget()
     locale called
-    u'<input class="datetime" id="input-dt" name="dt" size="10" type="text" 
-    value="" />'
+    u'<input class="dateinput datetime" id="input-dt" name="dt" size="10" 
+    type="text" value="" />'
 
 Test widget with given datetime value::
 
@@ -202,10 +198,9 @@ Test widget with given datetime value::
     ...         'time': True,
     ...     })
     >>> widget()
-    u'<input class="datetime" id="input-dt" name="dt" size="10" type="text" 
-    value="2011-5-1" 
-    /><input id="input-dt-time" name="dt.time" size="5" type="text" 
-    value="00:00" />'
+    u'<input class="dateinput datetime" id="input-dt" name="dt" size="10" 
+    type="text" value="2011.5.1" /><input class="timeinput" id="input-dt-time" 
+    name="dt.time" size="5" type="text" value="00:00" />'
 
 Test widget in display mode::
 
@@ -215,7 +210,7 @@ Test widget in display mode::
     ...     value=datetime.datetime(2011, 5, 1),
     ...     mode='display')
     >>> widget()
-    u'<div class="display-datetime" id="display-dt">2011-05-01 00:00</div>'
+    u'<div class="display-datetime" id="display-dt">2011.05.01 00:00</div>'
 
     >>> widget = factory(
     ...     'datetime',
@@ -257,7 +252,7 @@ Render base widget::
 
     >>> widget = factory('time', 't')
     >>> widget()
-    u'<input class="time" id="input-t" name="t" size="5" type="text" 
+    u'<input class="time timeinput" id="input-t" name="t" size="5" type="text" 
     value="" />'
 
 Extract empty::
@@ -328,23 +323,23 @@ Validate day time. triggers if ``daytime`` or ``timepicker`` set to ``True``::
 Additional CSS class is rendered for timepicker if ``timepicker`` set::
 
     >>> widget()
-    u'<input class="time timepicker" id="input-t" name="t" size="5" 
+    u'<input class="time timeinput timepicker" id="input-t" name="t" size="5" 
     type="text" value="02:02" />'
 
 Value rendering if preset and extracted::
 
     >>> widget = factory('time', 't', value='02:02')
     >>> widget()
-    u'<input class="time" id="input-t" name="t" size="5" 
-    type="text" value="02:02" />'
+    u'<input class="time timeinput" id="input-t" name="t" size="5" type="text" 
+    value="02:02" />'
 
     >>> data = widget.extract({'t': '1:12'})
     >>> data.extracted
     '01:12'
 
     >>> widget(data)
-    u'<input class="time" id="input-t" name="t" size="5" 
-    type="text" value="01:12" />'
+    u'<input class="time timeinput" id="input-t" name="t" size="5" type="text" 
+    value="01:12" />'
 
 Render display mode without value::
 
@@ -377,28 +372,28 @@ Number format without preset value::
 
     >>> widget = factory('time', 't', props={'format': 'number'})
     >>> widget()
-    u'<input class="time" id="input-t" name="t" size="5" type="text" 
+    u'<input class="time timeinput" id="input-t" name="t" size="5" type="text" 
     value="" />'
 
 Number format with preset value::
 
     >>> widget = factory('time', 't', value=1.2, props={'format': 'number'})
     >>> widget()
-    u'<input class="time" id="input-t" name="t" size="5" 
-    type="text" value="01:12" />'
+    u'<input class="time timeinput" id="input-t" name="t" size="5" type="text" 
+    value="01:12" />'
 
     >>> data = widget.extract({'t': '0:12'})
     >>> '%0.1f' % data.extracted
     '0.2'
 
     >>> widget(data)
-    u'<input class="time" id="input-t" name="t" size="5" 
-    type="text" value="00:12" />'
+    u'<input class="time timeinput" id="input-t" name="t" size="5" type="text" 
+    value="00:12" />'
 
     >>> widget = factory('time', 't', value=0, props={'format': 'number'})
     >>> widget()
-    u'<input class="time" id="input-t" name="t" 
-    size="5" type="text" value="00:00" />'
+    u'<input class="time timeinput" id="input-t" name="t" size="5" type="text" 
+    value="00:00" />'
 
     >>> data = widget.extract({'t': ''})
     >>> data.extracted
@@ -409,8 +404,8 @@ Number format with preset value::
     0.0
 
     >>> widget(data)
-    u'<input class="time" id="input-t" name="t" size="5" 
-    type="text" value="00:00" />'
+    u'<input class="time timeinput" id="input-t" name="t" size="5" type="text" 
+    value="00:00" />'
 
     >>> widget = factory('time', 't', value=1.2, mode='display', props={
     ...     'format': 'number'})
@@ -442,16 +437,16 @@ Minutes unit with preset value::
     ...     'format': 'number',
     ...     'unit': 'minutes'})
     >>> widget()
-    u'<input class="time" id="input-t" name="t" size="5" 
-    type="text" value="00:12" />'
+    u'<input class="time timeinput" id="input-t" name="t" size="5" type="text" 
+    value="00:12" />'
 
     >>> data = widget.extract({'t': '2:30'})
     >>> data.extracted
     150
 
     >>> widget(data)
-    u'<input class="time" id="input-t" name="t" size="5" 
-    type="text" value="02:30" />'
+    u'<input class="time timeinput" id="input-t" name="t" size="5" type="text" 
+    value="02:30" />'
 
     >>> widget = factory('time', 't', value=12, mode='display', props={
     ...     'format': 'number',
@@ -463,7 +458,7 @@ Format tuple. Preset and extraction value is (hh, mm)::
 
     >>> widget = factory('time', 't', props={'format': 'tuple'})
     >>> widget()
-    u'<input class="time" id="input-t" name="t" size="5" type="text" 
+    u'<input class="time timeinput" id="input-t" name="t" size="5" type="text" 
     value="" />'
 
     >>> data = widget.extract({'t': '2:30'})
@@ -472,18 +467,18 @@ Format tuple. Preset and extraction value is (hh, mm)::
 
     >>> widget = factory('time', 't', value=(5, 30), props={'format': 'tuple'})
     >>> widget()
-    u'<input class="time" id="input-t" name="t" size="5" type="text" 
+    u'<input class="time timeinput" id="input-t" name="t" size="5" type="text" 
     value="05:30" />'
 
     >>> data = widget.extract({'t': '2:30'})
     >>> widget(data=data)
-    u'<input class="time" id="input-t" name="t" size="5" type="text" 
+    u'<input class="time timeinput" id="input-t" name="t" size="5" type="text" 
     value="02:30" />'
 
     >>> widget = factory('time', 't', value=(0, 0), props={'format': 'tuple'})
     >>> widget()
-    u'<input class="time" id="input-t" name="t" size="5" 
-    type="text" value="00:00" />'
+    u'<input class="time timeinput" id="input-t" name="t" size="5" type="text" 
+    value="00:00" />'
 
     >>> data = widget.extract({'t': ''})
     >>> data.extracted

@@ -1,7 +1,7 @@
-.datepicker {
+.dateinput {
     width:10em;
 }
-.timepicker {
+.timeinput {
     width:5em;
 }
 .ui-datepicker-trigger,

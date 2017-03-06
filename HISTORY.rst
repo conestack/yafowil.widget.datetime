@@ -5,7 +5,20 @@ History
 1.9 (unreleased)
 ----------------
 
-- No changes yet.
+- Add dedicated Plone 5 related CSS.
+  [rnix, 2017-03-06]
+
+- Introduce dedicated ``timeinput_class`` and ``dateinput_class`` widget
+  properties. Used for CSS styling. Styling was previously bound to
+  ``datepicker_class`` and ``timepicker_class`` class, but these are skipped
+  if no date and timepicker widgets should be displayed.
+  [rnix, 2017-03-06]
+
+- Change default ``datetime.delimiter`` to ``.``.
+  [rnix, 2017-03-06]
+
+- Change default ``datetime.format`` to ``%Y.%m.%d %H:%M``.
+  [rnix, 2017-03-06]
 
 
 1.8 (2017-03-01)
