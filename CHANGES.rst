@@ -2,7 +2,7 @@
 History
 =======
 
-1.9 (unreleased)
+1.9 (2017-03-10)
 ----------------
 
 - Add dedicated Plone 5 related CSS.
