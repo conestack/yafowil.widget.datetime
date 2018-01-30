@@ -5,7 +5,8 @@ History
 1.10 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Convert doctests to unittests.
+  [rnix]
 
 
 1.9 (2017-03-10)
