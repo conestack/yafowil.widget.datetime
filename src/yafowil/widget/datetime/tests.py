@@ -10,7 +10,7 @@ import yafowil.loader
 
 class TestDatetimeWidget(NodeTestCase):
 
-    def test_datetime_blueprint(self):
+    def test_datetime_basics(self):
         # Render very basic widget
         widget = factory(
             'datetime',
@@ -27,6 +27,7 @@ class TestDatetimeWidget(NodeTestCase):
             ['dt', UNSET, '', []]
         )
 
+    def test_datetime_datepicker_class(self):
         # Render datepicker class. Use this to bind a datepicker JS of your
         # choice
         widget = factory(
@@ -40,6 +41,7 @@ class TestDatetimeWidget(NodeTestCase):
             'name="dt" size="10" type="text" value="" />'
         ))
 
+    def test_datetime_without_time_input(self):
         # Widget without time input
         widget = factory(
             'datetime',
@@ -90,6 +92,7 @@ class TestDatetimeWidget(NodeTestCase):
             'name="dt" size="10" type="text" value="2010.1.1" />'
         ))
 
+    def test_datetime_advanced(self):
         # Widget with more advanced configuration. Widget now renders time
         # input and input converting is locale aware. You can pass ``tzinfo``
         # property as well if you want the conversion to consider timezones
@@ -164,11 +167,13 @@ class TestDatetimeWidget(NodeTestCase):
         </div>
         """, fxml('<div>{}</div>'.format(widget(data))))
 
+    def test_datetime_locale_callable(self):
         # Locale might be a callable
         self.locale_callback_called = False
         def callable_locale(widget, data):
             self.locale_callback_called = True
             return 'de'
+
         widget = factory(
             'datetime',
             name='dt',
@@ -180,8 +185,10 @@ class TestDatetimeWidget(NodeTestCase):
             'size="10" type="text" value="" />'
         ))
         self.assertTrue(self.locale_callback_called)
+
         del self.locale_callback_called
 
+    def test_datetime_with_preset_value(self):
         # Test widget with given datetime value
         widget = factory(
             'datetime',
@@ -199,7 +206,8 @@ class TestDatetimeWidget(NodeTestCase):
         </div>
         """, fxml('<div>{}</div>'.format(widget())))
 
-        # Test widget in display mode
+    def test_datetime_display(self):
+        # display date and time
         widget = factory(
             'datetime',
             name='dt',
@@ -209,6 +217,8 @@ class TestDatetimeWidget(NodeTestCase):
             '<div class="display-datetime" '
             'id="display-dt">2011.05.01 00:00</div>'
         ))
+
+        # display date only
         widget = factory(
             'datetime',
             name='dt',
@@ -220,13 +230,18 @@ class TestDatetimeWidget(NodeTestCase):
         self.assertEqual(widget(),
             '<div class="display-datetime" id="display-dt">2011.05.01</div>'
         )
+
+        # no value, displays nothing
         widget = factory(
             'datetime',
             name='dt',
             mode='display')
         self.assertEqual(widget(), '')
+
+        # display with formatter callback
         def custom_formatter(widget, data):
             return data.value.strftime('at year %Y at month %m at day %d')
+
         widget = factory(
             'datetime',
             name='dt',
@@ -240,7 +255,7 @@ class TestDatetimeWidget(NodeTestCase):
             'month 05 at day 01</div>'
         ))
 
-    def test_time_blueprint(self):
+    def test_time_basics(self):
         # Render base widget
         widget = factory(
             'time',
@@ -256,6 +271,11 @@ class TestDatetimeWidget(NodeTestCase):
             [data.name, data.value, data.extracted, data.errors],
             ['t', UNSET, UNSET, []]
         )
+
+    def test_time_extraction(self):
+        widget = factory(
+            'time',
+            name='t')
 
         # Invalid time input
         data = widget.extract({'t': 'abcdef'})
@@ -297,6 +317,7 @@ class TestDatetimeWidget(NodeTestCase):
             ['t', UNSET, '01:02', []]
         )
 
+    def test_time_daytime_extraction(self):
         # Validate day time. triggers if ``daytime`` or ``timepicker``
         # set to ``True``
         widget = factory(
@@ -337,6 +358,7 @@ class TestDatetimeWidget(NodeTestCase):
             'size="5" type="text" value="02:02" />'
         ))
 
+    def test_time_rendering_if_preset_and_extracted(self):
         # Value rendering if preset and extracted
         widget = factory(
             'time',
@@ -356,6 +378,7 @@ class TestDatetimeWidget(NodeTestCase):
             'type="text" value="01:12" />'
         ))
 
+    def test_time_display(self):
         # Render display mode without value
         widget = factory('time', 't', mode='display')
         self.assertEqual(widget(), '')
@@ -366,6 +389,7 @@ class TestDatetimeWidget(NodeTestCase):
            '<div class="display-time" id="display-t">02:02</div>'
         )
 
+    def test_time_invalid_format(self):
         # Invalid ``format``
         widget = factory(
             'time',
@@ -380,6 +404,7 @@ class TestDatetimeWidget(NodeTestCase):
         )
         self.assertEqual(str(err), "Unknown format 'inexistent'")
 
+    def test_time_default_format(self):
         # Number ``format``. Default unit is ``hours``
         widget = factory(
             'time',
@@ -393,6 +418,7 @@ class TestDatetimeWidget(NodeTestCase):
             ['t', UNSET, 1.2, []]
         )
 
+    def test_time_format_without_preset_value(self):
         # Number format without preset value
         widget = factory(
             'time',
@@ -405,6 +431,7 @@ class TestDatetimeWidget(NodeTestCase):
             'type="text" value="" />'
         ))
 
+    def test_time_format_with_preset_value(self):
         # Number format with preset value
         widget = factory(
             'time',
@@ -450,6 +477,7 @@ class TestDatetimeWidget(NodeTestCase):
             'type="text" value="00:00" />'
         ))
 
+    def test_time_format_display(self):
         widget = factory(
             'time',
             name='t',
@@ -462,6 +490,7 @@ class TestDatetimeWidget(NodeTestCase):
             '<div class="display-time" id="display-t">01:12</div>'
         )
 
+    def test_time_format_invalid_unit(self):
         # Invalid ``unit``
         widget = factory(
             'time',
@@ -477,6 +506,7 @@ class TestDatetimeWidget(NodeTestCase):
         )
         self.assertEqual(str(err), "Unknown unit 'inexistent'")
 
+    def test_time_format_minutes_unit(self):
         # Minutes ``unit``
         widget = factory(
             'time',
@@ -491,6 +521,7 @@ class TestDatetimeWidget(NodeTestCase):
             ['t', UNSET, 72, []]
         )
 
+    def test_time_format_unit_with_preset_value(self):
         # Minutes unit with preset value
         widget = factory(
             'time',
@@ -514,6 +545,7 @@ class TestDatetimeWidget(NodeTestCase):
             'type="text" value="02:30" />'
         ))
 
+    def test_time_display_format_unit_with_preset_value(self):
         widget = factory(
             'time',
             name='t',
@@ -527,6 +559,7 @@ class TestDatetimeWidget(NodeTestCase):
             '<div class="display-time" id="display-t">00:12</div>'
         )
 
+    def test_time_format_tuple(self):
         # Format tuple. Preset and extraction value is (hh, mm)
         widget = factory(
             'time',
