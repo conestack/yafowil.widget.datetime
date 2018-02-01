@@ -1,14 +1,18 @@
-from node.tests import NodeTestCase
 from node.utils import UNSET
 from yafowil.base import ExtractionError
 from yafowil.base import factory
+from yafowil.tests import YafowilTestCase
 from yafowil.tests import fxml
 import datetime
-import yafowil.widget.datetime
 import yafowil.loader
 
 
-class TestDatetimeWidget(NodeTestCase):
+class TestDatetimeWidget(YafowilTestCase):
+
+    def setUp(self):
+        super(TestDatetimeWidget, self).setUp()
+        from yafowil.widget.datetime import widget
+        reload(widget)
 
     def test_datetime_basics(self):
         # Render very basic widget
