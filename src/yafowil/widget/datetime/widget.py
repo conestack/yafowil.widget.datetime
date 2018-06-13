@@ -1,5 +1,3 @@
-from yafowil.compat import IS_PY2
-
 from bda.intellidatetime import DateTimeConversionError
 from bda.intellidatetime import LocalePattern
 from bda.intellidatetime import convert
@@ -10,6 +8,7 @@ from yafowil.base import factory
 from yafowil.base import fetch_value
 from yafowil.common import generic_extractor
 from yafowil.common import generic_required_extractor
+from yafowil.compat import IS_PY2
 from yafowil.tsf import TSF
 from yafowil.utils import attr_value
 from yafowil.utils import css_managed_props
