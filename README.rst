@@ -12,4 +12,6 @@ datepicker function on a text input.
 Contributors
 ============
 
-- Robert Niederrreiter <rnix [at] squarewave [dot] at>
+- Robert Niederrreiter
+
+- Georg Bernhard
