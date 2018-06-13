@@ -1,3 +1,5 @@
+from yafowil.compat import IS_PY2
+
 from bda.intellidatetime import DateTimeConversionError
 from bda.intellidatetime import LocalePattern
 from bda.intellidatetime import convert
@@ -125,7 +127,10 @@ def time_value(format, unit, time):
             minutes = int(round((time - int(time)) * 60.0))
             time = '{:02d}:{:02d}'.format(hours, minutes)
         else:
-            hours = time / 60
+            if IS_PY2:
+                hours = time / 60
+            else:
+                hours = time // 60
             minutes = time % 60
             time = '{:02d}:{:02d}'.format(hours, minutes)
     return time
