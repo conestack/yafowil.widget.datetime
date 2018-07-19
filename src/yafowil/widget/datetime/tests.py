@@ -264,6 +264,24 @@ class TestDatetimeWidget(YafowilTestCase):
             'month 05 at day 01</div>'
         ))
 
+    def test_datetime_emptyvalue(self):
+        # Test widget with emptyvalue
+        emptyvalue = object()
+        widget = factory(
+            'datetime',
+            name='dt',
+            props={
+                'locale': 'de',
+                'time': True,
+                'emptyvalue': emptyvalue
+            })
+        request = {'dt': '1.1.2018', 'dt.time': '12:30'}
+        data = widget.extract(request)
+        self.assertEqual(data.extracted, datetime.datetime(2018, 1, 1, 12, 30))
+        request = {'dt': '', 'dt.time': ''}
+        data = widget.extract(request)
+        self.assertTrue(data.extracted is emptyvalue)
+
     def test_time_basics(self):
         # Render base widget
         widget = factory(
@@ -624,6 +642,23 @@ class TestDatetimeWidget(YafowilTestCase):
             [data.name, data.value, data.extracted, data.errors],
             ['t', (0, 0), (1, 0), []]
         )
+
+    def test_time_emptyvalue(self):
+        # Test widget with emptyvalue
+        emptyvalue = object()
+        widget = factory(
+            'time',
+            name='t',
+            props={
+                'format': 'tuple',
+                'emptyvalue': emptyvalue
+            })
+        request = {'t': '12:30'}
+        data = widget.extract(request)
+        self.assertEqual(data.extracted, (12, 30))
+        request = {'t': ''}
+        data = widget.extract(request)
+        self.assertTrue(data.extracted is emptyvalue)
 
 
 if __name__ == '__main__':
