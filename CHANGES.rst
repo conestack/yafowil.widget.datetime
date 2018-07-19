@@ -5,7 +5,9 @@ History
 1.11 (unreleased)
 -----------------
 
-- No changes yet.
+- Add ``yafowil.common.generic_emptyvalue_extractor`` to ``time`` and
+  ``datetime`` blueprints.
+  [rnix]
 
 
 1.10 (2018-07-16)

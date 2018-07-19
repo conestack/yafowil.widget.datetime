@@ -6,6 +6,7 @@ from node.utils import UNSET
 from yafowil.base import ExtractionError
 from yafowil.base import factory
 from yafowil.base import fetch_value
+from yafowil.common import generic_emptyvalue_extractor
 from yafowil.common import generic_extractor
 from yafowil.common import generic_required_extractor
 from yafowil.compat import IS_PY2
@@ -158,8 +159,12 @@ def time_display_renderer(widget, data):
 
 factory.register(
     'time',
-    extractors=[generic_extractor, generic_required_extractor,
-                time_extractor],
+    extractors=[
+        generic_extractor,
+        generic_required_extractor,
+        time_extractor,
+        generic_emptyvalue_extractor
+    ],
     edit_renderers=[time_edit_renderer],
     display_renderers=[time_display_renderer])
 
@@ -315,8 +320,12 @@ def datetime_display_renderer(widget, data, value=None):
 
 factory.register(
     'datetime',
-    extractors=[generic_extractor, generic_required_extractor,
-                datetime_extractor],
+    extractors=[
+        generic_extractor,
+        generic_required_extractor,
+        datetime_extractor,
+        generic_emptyvalue_extractor
+    ],
     edit_renderers=[datetime_edit_renderer],
     display_renderers=[datetime_display_renderer])
 
