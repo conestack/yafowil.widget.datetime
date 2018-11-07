@@ -3,7 +3,7 @@ from setuptools import setup
 import os
 
 
-version = '1.11'
+version = '1.12.dev0'
 shortdesc = 'Datetime Widget for YAFOWIL'
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'CHANGES.rst')).read()
@@ -33,7 +33,7 @@ setup(
     url=u'http://pypi.python.org/pypi/yafowil.widget.datetime',
     license='Simplified BSD',
     packages=find_packages('src'),
-    package_dir = {'': 'src'},
+    package_dir={'': 'src'},
     namespace_packages=['yafowil', 'yafowil.widget'],
     include_package_data=True,
     zip_safe=False,
@@ -43,7 +43,7 @@ setup(
         'bda.intellidatetime>1.2.99',
     ],
     tests_require=tests_require,
-    extras_require = dict(
+    extras_require=dict(
         test=tests_require,
     ),
     test_suite="yafowil.widget.datetime.tests",
