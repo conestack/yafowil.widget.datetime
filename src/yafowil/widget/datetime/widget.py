@@ -168,8 +168,8 @@ factory.register(
     edit_renderers=[time_edit_renderer],
     display_renderers=[time_display_renderer])
 
-factory.doc['blueprint']['time'] = \
-"""Add-on blueprint `yafowil.widget.datetime 
+factory.doc['blueprint']['time'] = """\
+Add-on blueprint `yafowil.widget.datetime
 <http://github.com/bluedynamics/yafowil.widget.datetime/>`_ .
 """
 
@@ -180,37 +180,37 @@ factory.defaults['time.class'] = 'time'
 factory.defaults['time.required_class'] = 'required'
 
 factory.defaults['time.timeinput_class'] = 'timeinput'
-factory.doc['props']['time.timeinput_class'] = \
-"""CSS class rendered on time input field.
+factory.doc['props']['time.timeinput_class'] = """\
+CSS class rendered on time input field.
 """
 
 factory.defaults['time.timepicker_class'] = 'timepicker'
-factory.doc['props']['time.timepicker_class'] = \
-"""jquery.ui timepicker binds to this class.
+factory.doc['props']['time.timepicker_class'] = """\
+jquery.ui timepicker binds to this class.
 """
 
 factory.defaults['time.disabled'] = False
 
 factory.defaults['time.timepicker'] = False
-factory.doc['props']['time.timepicker'] = \
-"""Flag whether time picker is enabled.
+factory.doc['props']['time.timepicker'] = """\
+Flag whether time picker is enabled.
 """
 
 factory.defaults['time.format'] = 'string'
-factory.doc['props']['time.format'] = \
-"""Define widget value and extraction format. Either 'string', 'number' or
+factory.doc['props']['time.format'] = """\
+Define widget value and extraction format. Either 'string', 'number' or
 'tuple'.
 """
 
 factory.defaults['time.unit'] = 'hours'
-factory.doc['props']['time.unit'] = \
-"""Only considered if 'format' is 'number'. If unit is 'hours' value is float,
+factory.doc['props']['time.unit'] = """\
+Only considered if 'format' is 'number'. If unit is 'hours' value is float,
 otherwise integer.
 """
 
 factory.defaults['time.daytime'] = False
-factory.doc['props']['time.daytime'] = \
-"""Flag whether value is day of time. Setting this property or 'timepicker'
+factory.doc['props']['time.daytime'] = """\
+Flag whether value is day of time. Setting this property or 'timepicker'
 property above to True results in day time range validation.
 """
 
@@ -265,7 +265,7 @@ def render_datetime_input(widget, data, date, time):
         additional_classes.append(datepicker_class)
     attrs = {
         'type': 'text',
-        'value':  date,
+        'value': date,
         'name_': widget.dottedpath,
         'id': cssid(widget, 'input'),
         'class_': cssclasses(widget, data, additional=additional_classes),
@@ -329,8 +329,8 @@ factory.register(
     edit_renderers=[datetime_edit_renderer],
     display_renderers=[datetime_display_renderer])
 
-factory.doc['blueprint']['datetime'] = \
-"""Add-on blueprint `yafowil.widget.datetime 
+factory.doc['blueprint']['datetime'] = """\
+Add-on blueprint `yafowil.widget.datetime
 <http://github.com/bluedynamics/yafowil.widget.datetime/>`_ .
 """
 
@@ -341,79 +341,79 @@ factory.defaults['datetime.class'] = 'datetime'
 factory.defaults['datetime.required_class'] = 'required'
 
 factory.defaults['datetime.dateinput_class'] = 'dateinput'
-factory.doc['props']['datetime.dateinput_class'] = \
-"""CSS class rendered on date input field.
+factory.doc['props']['datetime.dateinput_class'] = """\
+CSS class rendered on date input field.
 """
 
 factory.defaults['datetime.datepicker_class'] = 'datepicker'
-factory.doc['props']['datetime.datepicker_class'] = \
-"""jquery.ui datepicker binds to this class.
+factory.doc['props']['datetime.datepicker_class'] = """\
+jquery.ui datepicker binds to this class.
 """
 
 factory.defaults['datetime.timeinput_class'] = 'timeinput'
-factory.doc['props']['datetime.timeinput_class'] = \
-"""CSS class rendered on time input field.
+factory.doc['props']['datetime.timeinput_class'] = """\
+CSS class rendered on time input field.
 """
 
 factory.defaults['datetime.timepicker_class'] = 'timepicker'
-factory.doc['props']['datetime.timepicker_class'] = \
-"""jquery.ui timepicker binds to this class.
+factory.doc['props']['datetime.timepicker_class'] = """\
+jquery.ui timepicker binds to this class.
 """
 
 factory.defaults['datetime.disabled'] = False
 
 factory.defaults['datetime.datepicker'] = False
-factory.doc['props']['datetime.datepicker_class'] = \
-"""Flag whether date picker is enabled.
+factory.doc['props']['datetime.datepicker_class'] = """\
+Flag whether date picker is enabled.
 """
 
 factory.defaults['datetime.time'] = False
-factory.doc['props']['datetime.time'] = \
-"""Flag whether time input should be rendered.
+factory.doc['props']['datetime.time'] = """\
+Flag whether time input should be rendered.
 
 ``time`` may be a callable taking widget and data as parameters expect to
 return a boolean.
 """
 
 factory.defaults['datetime.timepicker'] = False
-factory.doc['props']['datetime.timepicker'] = \
-"""Flag whether time picker is enabled.
+factory.doc['props']['datetime.timepicker'] = """\
+Flag whether time picker is enabled.
 """
 
 factory.defaults['datetime.datepicker'] = False
-factory.doc['props']['datetime.datepicker'] = \
-"""Flag whether date picker is enabled.
+factory.doc['props']['datetime.datepicker'] = """\
+Flag whether date picker is enabled.
 """
 
 factory.defaults['datetime.tzinfo'] = None
-factory.doc['props']['datetime.tzinfo'] = \
-"""Python datetime tzinfo object.
+factory.doc['props']['datetime.tzinfo'] = """\
+Python datetime tzinfo object.
 
-``tzinfo`` may be a callable taking widget and data as parameters expect to 
+``tzinfo`` may be a callable taking widget and data as parameters expect to
 return a tzinfo instance.
 """
 
 factory.defaults['datetime.locale'] = 'iso'
-factory.doc['props']['datetime.locale'] = \
-"""Date input format locale. ``yafowil.widget.datetime`` uses
+factory.doc['props']['datetime.locale'] = """\
+Date input format locale. ``yafowil.widget.datetime`` uses
 `bda.intellidatetime <http://pypi.python.org/pypi/bda.intellidatetime/>`_ for
 input parsing. Take a look at this package for available locales.
 
-``locale`` may be a callable taking widget and data as parameters expect to 
+``locale`` may be a callable taking widget and data as parameters expect to
 return a locale string.
 """
 
 factory.defaults['datetime.delimiter'] = '.'
-factory.doc['props']['datetime.delimiter'] = \
-"""Delimiter used to render date in input field.
+factory.doc['props']['datetime.delimiter'] = """\
+Delimiter used to render date in input field.
 
-``delimiter`` may be a callable taking widget and data as parameters expect to 
+``delimiter`` may be a callable taking widget and data as parameters expect to
 return a delimiter string.
 """
 
 factory.defaults['datetime.format'] = '%Y.%m.%d %H:%M'
-factory.doc['props']['datetime.format'] = \
-"""Pattern accepted by ``datetime.strftime`` or callable taking widget and 
-data as parameters returning unicode or utf-8 string. Used if widget mode is 
+factory.doc['props']['datetime.format'] = """\
+Pattern accepted by ``datetime.strftime`` or callable taking widget and
+data as parameters returning unicode or utf-8 string. Used if widget mode is
 ``display``.
 """
