@@ -5,7 +5,12 @@ History
 1.12 (unreleased)
 -----------------
 
-- No changes yet.
+- Cast hour and minute values to int in ``time_value`` if ``format`` is
+  ``tuple``.
+  [rnix]
+
+- Do not mask built-in ``format`` function in ``widget`` module.
+  [rnix]
 
 
 1.11 (2018-11-07)

@@ -128,7 +128,7 @@ def time_value(format_, unit, time):
     if format_ == 'tuple':
         if not time:
             return ''
-        time = '{:02d}:{:02d}'.format(*time)
+        time = '{:02d}:{:02d}'.format(*(int(time[0]), int(time[1])))
     elif format_ == 'number':
         if time is UNSET or time == '':
             return ''
