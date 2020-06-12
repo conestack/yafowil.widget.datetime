@@ -2,9 +2,10 @@ from node.utils import UNSET
 from yafowil.base import ExtractionError
 from yafowil.base import factory
 from yafowil.compat import IS_PY2
-from yafowil.tests import YafowilTestCase
 from yafowil.tests import fxml
+from yafowil.tests import YafowilTestCase
 import datetime
+import unittest
 import yafowil.loader
 
 
@@ -179,6 +180,7 @@ class TestDatetimeWidget(YafowilTestCase):
     def test_datetime_locale_callable(self):
         # Locale might be a callable
         self.locale_callback_called = False
+
         def callable_locale(widget, data):
             self.locale_callback_called = True
             return 'de'
@@ -236,7 +238,8 @@ class TestDatetimeWidget(YafowilTestCase):
                 'format': '%Y.%m.%d',
             },
             mode='display')
-        self.assertEqual(widget(),
+        self.assertEqual(
+            widget(),
             '<div class="display-datetime" id="display-dt">2011.05.01</div>'
         )
 
@@ -313,19 +316,22 @@ class TestDatetimeWidget(YafowilTestCase):
 
         # Parsing Failure
         data = widget.extract({'t': 'abc'})
-        self.assertEqual(data.errors,
+        self.assertEqual(
+            data.errors,
             [ExtractionError('Failed to parse time input.')]
         )
 
         # Hours not a number
         data = widget.extract({'t': 'aa00'})
-        self.assertEqual(data.errors,
+        self.assertEqual(
+            data.errors,
             [ExtractionError('Hours not a number.')]
         )
 
         # Minutes not a number
         data = widget.extract({'t': '00:aa'})
-        self.assertEqual(data.errors,
+        self.assertEqual(
+            data.errors,
             [ExtractionError('Minutes not a number.')]
         )
 
@@ -355,11 +361,13 @@ class TestDatetimeWidget(YafowilTestCase):
                 'daytime': True
             })
         data = widget.extract({'t': '25:1'})
-        self.assertEqual(data.errors,
+        self.assertEqual(
+            data.errors,
             [ExtractionError('Hours must be in range 0..23.')]
         )
         data = widget.extract({'t': '1:61'})
-        self.assertEqual(data.errors,
+        self.assertEqual(
+            data.errors,
             [ExtractionError('Minutes must be in range 0..59.')]
         )
 
@@ -371,11 +379,13 @@ class TestDatetimeWidget(YafowilTestCase):
                 'timepicker': True
             })
         data = widget.extract({'t': '26:1'})
-        self.assertEqual(data.errors,
+        self.assertEqual(
+            data.errors,
             [ExtractionError('Hours must be in range 0..23.')]
         )
         data = widget.extract({'t': '1:62'})
-        self.assertEqual(data.errors,
+        self.assertEqual(
+            data.errors,
             [ExtractionError('Minutes must be in range 0..59.')]
         )
 
@@ -412,8 +422,9 @@ class TestDatetimeWidget(YafowilTestCase):
 
         # Render display mode with value
         widget = factory('time', 't', value='02:02', mode='display')
-        self.assertEqual(widget(),
-           '<div class="display-time" id="display-t">02:02</div>'
+        self.assertEqual(
+            widget(),
+            '<div class="display-time" id="display-t">02:02</div>'
         )
 
     def test_time_invalid_format(self):
@@ -513,7 +524,8 @@ class TestDatetimeWidget(YafowilTestCase):
             props={
                 'format': 'number'
             })
-        self.assertEqual(widget(),
+        self.assertEqual(
+            widget(),
             '<div class="display-time" id="display-t">01:12</div>'
         )
 
@@ -581,8 +593,9 @@ class TestDatetimeWidget(YafowilTestCase):
             props={
                 'format': 'number',
                 'unit': 'minutes'
-        })
-        self.assertEqual(widget(),
+            })
+        self.assertEqual(
+            widget(),
             '<div class="display-time" id="display-t">00:12</div>'
         )
 

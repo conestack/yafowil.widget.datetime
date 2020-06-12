@@ -17,6 +17,7 @@ Date input.
     })
 """
 
+
 def date_example():
     form = factory('fieldset', name='yafowil.widget.datetime.date')
     form['date'] = factory('#field:datetime', props={
@@ -46,6 +47,7 @@ Time input.
         'timepicker': True,
     })
 """
+
 
 def time_example():
     form = factory('fieldset', name='yafowil.widget.datetime.time')
@@ -78,6 +80,7 @@ Date and time input.
         'timepicker': True,
     })
 """
+
 
 def datetime_example():
     form = factory('fieldset', name='yafowil.widget.datetime.datetime')

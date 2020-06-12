@@ -49,32 +49,42 @@ def time_extractor(widget, data):
     else:
         extracted = extracted.split(':')
         if len(extracted) != 2:
-            message = _('failed_to_parse_time',
-                        default=u'Failed to parse time input.')
+            message = _(
+                'failed_to_parse_time',
+                default=u'Failed to parse time input.'
+            )
             raise ExtractionError(message)
         hours, minutes = extracted
     try:
         hours = int(hours)
     except ValueError:
-        message = _('hours_not_a_number',
-                    default=u'Hours not a number.')
+        message = _(
+            'hours_not_a_number',
+            default=u'Hours not a number.'
+        )
         raise ExtractionError(message)
     try:
         minutes = int(minutes)
     except ValueError:
-        message = _('minutes_not_a_number',
-                    default=u'Minutes not a number.')
+        message = _(
+            'minutes_not_a_number',
+            default=u'Minutes not a number.'
+        )
         raise ExtractionError(message)
     daytime = attr_value('daytime', widget, data)
     timepicker = attr_value('timepicker', widget, data)
     if daytime or timepicker:
         if hours < 0 or hours > 23:
-            message = _('invalid_hours_range',
-                        default=u'Hours must be in range 0..23.')
+            message = _(
+                'invalid_hours_range',
+                default=u'Hours must be in range 0..23.'
+            )
             raise ExtractionError(message)
         if minutes < 0 or minutes > 59:
-            message = _('invalid_minutes_range',
-                        default=u'Minutes must be in range 0..59.')
+            message = _(
+                'invalid_minutes_range',
+                default=u'Minutes must be in range 0..59.'
+            )
             raise ExtractionError(message)
     if format == 'string':
         return '{:02d}:{:02d}'.format(hours, minutes)
