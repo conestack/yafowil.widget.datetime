@@ -22,18 +22,18 @@ _ = TSF('yafowil.widget.datetime')
 
 
 def time_data_defs(widget, data):
-    format = attr_value('format', widget, data)
-    if format not in ['number', 'string', 'tuple']:
-        raise ValueError(u"Unknown format '{}'".format(format))
+    format_ = attr_value('format', widget, data)
+    if format_ not in ['number', 'string', 'tuple']:
+        raise ValueError(u"Unknown format '{}'".format(format_))
     unit = attr_value('unit', widget, data)
     if unit not in ['minutes', 'hours']:
         raise ValueError(u"Unknown unit '{}'".format(unit))
-    return format, unit
+    return format_, unit
 
 
 @managedprops('format', 'unit', 'daytime')
 def time_extractor(widget, data):
-    format, unit = time_data_defs(widget, data)
+    format_, unit = time_data_defs(widget, data)
     extracted = data.extracted
     if extracted == UNSET or extracted == '':
         return UNSET
@@ -86,9 +86,9 @@ def time_extractor(widget, data):
                 default=u'Minutes must be in range 0..59.'
             )
             raise ExtractionError(message)
-    if format == 'string':
+    if format_ == 'string':
         return '{:02d}:{:02d}'.format(hours, minutes)
-    if format == 'tuple':
+    if format_ == 'tuple':
         return (hours, minutes)
     if unit == 'hours':
         return hours + (minutes / 60.0)
@@ -124,12 +124,12 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
     return tag('input', **attrs)
 
 
-def time_value(format, unit, time):
-    if format == 'tuple':
+def time_value(format_, unit, time):
+    if format_ == 'tuple':
         if not time:
             return ''
         time = '{:02d}:{:02d}'.format(*time)
-    elif format == 'number':
+    elif format_ == 'number':
         if time is UNSET or time == '':
             return ''
         if unit == 'hours':
@@ -149,14 +149,14 @@ def time_value(format, unit, time):
 @managedprops('format', 'unit', 'disabled', 'timepicker',
               'timepicker_class', *css_managed_props)
 def time_edit_renderer(widget, data):
-    format, unit = time_data_defs(widget, data)
-    time = time_value(format, unit, fetch_value(widget, data))
+    format_, unit = time_data_defs(widget, data)
+    time = time_value(format_, unit, fetch_value(widget, data))
     return render_time_input(widget, data, time, css_class=True)
 
 
 @managedprops('format', 'unit', 'class')
 def time_display_renderer(widget, data):
-    format, unit = time_data_defs(widget, data)
+    format_, unit = time_data_defs(widget, data)
     value = data.value
     if not value:
         return u''
@@ -164,7 +164,7 @@ def time_display_renderer(widget, data):
         'id': cssid(widget, 'display'),
         'class_': 'display-{}'.format(attr_value('class', widget, data))
     }
-    return data.tag('div', time_value(format, unit, value), **attrs)
+    return data.tag('div', time_value(format_, unit, value), **attrs)
 
 
 factory.register(
@@ -316,11 +316,11 @@ def datetime_display_renderer(widget, data, value=None):
     value = value if value else data.value
     if not value:
         return u''
-    format = widget.attrs['format']
-    if callable(format):
-        value = format(widget, data)
+    format_ = widget.attrs['format']
+    if callable(format_):
+        value = format_(widget, data)
     else:
-        value = value.strftime(format)
+        value = value.strftime(format_)
     attrs = {
         'id': cssid(widget, 'display'),
         'class_': 'display-{}'.format(attr_value('class', widget, data))
