@@ -20,9 +20,7 @@ if (window.yafowil === undefined) {
 
         // add after ajax binding if bdajax present
         if (window.bdajax !== undefined) {
-            $.extend(window.bdajax.binders, {
-                datepicker_binder: yafowil.datepicker.binder
-            });
+            bdajax.register(yafowil.datepicker.binder, true);
         }
 
         // add binder to yafowil.widget.array hooks

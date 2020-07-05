@@ -6,7 +6,7 @@ from yafowil.tests import fxml
 from yafowil.tests import YafowilTestCase
 import datetime
 import unittest
-import yafowil.loader
+import yafowil.loader  # noqa
 
 
 if not IS_PY2:

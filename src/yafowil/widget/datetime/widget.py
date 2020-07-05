@@ -306,7 +306,7 @@ def datetime_edit_renderer(widget, data):
     return render_datetime_input(widget, data, date, time)
 
 
-@managedprops('format', 'class')
+@managedprops('format', 'class', 'unset_display_value')
 def datetime_display_renderer(widget, data, value=None):
     """Note: This renderer function optionally accepts value as parameter,
     which is used in favor of data.value if defined. Thus it can be used as
@@ -315,12 +315,15 @@ def datetime_display_renderer(widget, data, value=None):
     """
     value = value if value else data.value
     if not value:
-        return u''
-    format_ = widget.attrs['format']
-    if callable(format_):
-        value = format_(widget, data)
+        value = attr_value('empty_display_value', widget, data)
+        if not value:
+            return u''
     else:
-        value = value.strftime(format_)
+        format_ = attr_value('format', widget, data)
+        if callable(format_):
+            value = format_(widget, data)
+        else:
+            value = value.strftime(format_)
     attrs = {
         'id': cssid(widget, 'display'),
         'class_': 'display-{}'.format(attr_value('class', widget, data))
@@ -426,4 +429,9 @@ factory.doc['props']['datetime.format'] = """\
 Pattern accepted by ``datetime.strftime`` or callable taking widget and
 data as parameters returning unicode or utf-8 string. Used if widget mode is
 ``display``.
+"""
+
+factory.defaults['datetime.empty_display_value'] = None
+factory.doc['props']['datetime.empty_display_value'] = """\
+Value to display if no datetime value set. Used if widget mode is ``display``.
 """
