@@ -250,6 +250,35 @@ class TestDatetimeWidget(YafowilTestCase):
             mode='display')
         self.assertEqual(widget(), '')
 
+        # no value, display empty value
+        widget = factory(
+            'datetime',
+            name='dt',
+            props={
+                'empty_display_value': 'N/A'
+            },
+            mode='display')
+        self.assertEqual(
+            widget(),
+            '<div class="display-datetime" id="display-dt">N/A</div>'
+        )
+
+        # no value, display empty value via callback
+        def empty_display_value(widget, data):
+            return 'N/A from CB'
+
+        widget = factory(
+            'datetime',
+            name='dt',
+            props={
+                'empty_display_value': empty_display_value
+            },
+            mode='display')
+        self.assertEqual(
+            widget(),
+            '<div class="display-datetime" id="display-dt">N/A from CB</div>'
+        )
+
         # display with formatter callback
         def custom_formatter(widget, data):
             return data.value.strftime('at year %Y at month %m at day %d')
@@ -675,4 +704,4 @@ class TestDatetimeWidget(YafowilTestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()                                          # pragma: no cover
+    unittest.main()

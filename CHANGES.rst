@@ -1,15 +1,10 @@
-
-History
+Changes
 =======
 
 1.12 (unreleased)
 -----------------
 
 - Add ``datetime.empty_display_value`` property.
-  [rnix]
-
-- Read ``datetime.format`` via ``attr_value`` instead direct access on
-  ``widget.attrs``.
   [rnix]
 
 - Cast hour and minute values to int in ``time_value`` if ``format`` is

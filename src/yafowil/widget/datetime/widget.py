@@ -319,7 +319,7 @@ def datetime_display_renderer(widget, data, value=None):
         if not value:
             return u''
     else:
-        format_ = attr_value('format', widget, data)
+        format_ = widget.attrs['format']
         if callable(format_):
             value = format_(widget, data)
         else:
