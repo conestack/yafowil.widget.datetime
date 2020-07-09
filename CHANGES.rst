@@ -1,7 +1,7 @@
 Changes
 =======
 
-1.12 (unreleased)
+1.12 (2020-07-09)
 -----------------
 
 - Add ``datetime.empty_display_value`` property.
