@@ -180,7 +180,7 @@ factory.register(
 
 factory.doc['blueprint']['time'] = """\
 Add-on blueprint `yafowil.widget.datetime
-<http://github.com/bluedynamics/yafowil.widget.datetime/>`_ .
+<http://github.com/conestack/yafowil.widget.datetime/>`_ .
 """
 
 factory.defaults['time.default'] = ''
@@ -344,7 +344,7 @@ factory.register(
 
 factory.doc['blueprint']['datetime'] = """\
 Add-on blueprint `yafowil.widget.datetime
-<http://github.com/bluedynamics/yafowil.widget.datetime/>`_ .
+<http://github.com/conestack/yafowil.widget.datetime/>`_ .
 """
 
 factory.defaults['datetime.default'] = ''
