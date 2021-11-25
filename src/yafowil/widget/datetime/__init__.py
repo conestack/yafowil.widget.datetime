@@ -5,53 +5,21 @@ import os
 
 resourcedir = os.path.join(os.path.dirname(__file__), 'resources')
 js = [{
-    'group': 'yafowil.widget.datetime.datepicker',
-    'resource': 'jquery.ui.datepicker.min.js',
-    'order': 20,
-}, {
-    'group': 'yafowil.widget.datetime.timepicker',
-    'resource': 'jquery.ui.timepicker.js',
-    'order': 20,
-}, {
     'group': 'yafowil.widget.datetime.common',
-    'resource': 'widget.js',
+    'resource': 'datetime.js',
     'order': 21,
 }]
 default_css = [{
-    'group': 'yafowil.widget.datetime.datepicker',
-    'resource': 'jquery.ui.datepicker.css',
-    'order': 20,
-}, {
-    'group': 'yafowil.widget.datetime.timepicker',
-    'resource': 'jquery.ui.timepicker.css',
-    'order': 20,
-}, {
     'group': 'yafowil.widget.datetime.common',
-    'resource': 'widget.css',
+    'resource': 'datepicker.css',
     'order': 21,
 }]
 bootstrap_css = [{
-    'group': 'yafowil.widget.datetime.datepicker',
-    'resource': 'jquery.ui.datepicker.bootstrap.css',
-    'order': 20,
-}, {
-    'group': 'yafowil.widget.datetime.timepicker',
-    'resource': 'jquery.ui.timepicker.bootstrap.css',
-    'order': 20,
-}, {
     'group': 'yafowil.widget.datetime.common',
-    'resource': 'widget-bootstrap.css',
+    'resource': 'datepicker-bs4.css',
     'order': 21,
 }]
 plone5_css = [{
-    'group': 'yafowil.widget.datetime.datepicker',
-    'resource': 'jquery.ui.datepicker.plone5.css',
-    'order': 20,
-}, {
-    'group': 'yafowil.widget.datetime.timepicker',
-    'resource': 'jquery.ui.timepicker.plone5.css',
-    'order': 20,
-}, {
     'group': 'yafowil.widget.datetime.common',
     'resource': 'widget-plone5.css',
     'order': 21,
