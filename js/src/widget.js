@@ -25,6 +25,7 @@ export class DatePicker {
         // this.foo = new Datepicker(elem, {});
         const element = document.querySelector('input[name="yafowil.widget.datetime.date.yafowil.widget.datetime.date.date"]');
         const datepicker = new Datepicker(element, {
+            orientation: 'bottom'
         });
     }
 }

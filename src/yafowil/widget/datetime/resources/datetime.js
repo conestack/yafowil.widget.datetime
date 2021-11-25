@@ -2058,6 +2058,7 @@
           console.log('AAAAAA');
           const element = document.querySelector('input[name="yafowil.widget.datetime.date.yafowil.widget.datetime.date.date"]');
           new Datepicker(element, {
+              orientation: 'bottom'
           });
       }
   }
