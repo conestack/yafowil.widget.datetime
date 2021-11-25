@@ -1,30 +1,23 @@
-/* jslint browser: true */
-/* global jQuery, yafowil */
-/* 
- * yafowil timepicker widget
- */
-
 import $ from 'jquery';
-// import de from '../../src/yafowil/widget/datetime/resources/i18n/locales/de.js';
-// Object.assign(Datepicker.locales, de);
 
-export class TimePickerWidget {
-
-    static initialize(context) {
-        $('input.timepicker', context).each(function() {
-            let elem = $(this);
-            new TimePickerWidget(elem);
-        });
-    }
+export class Timepicker {
 
     constructor(elem) {
         this.elem = elem;
+        this.hours = [];
+        this.minutes = [];
+
+        this.hour = '00';
+        this.minute = '00';
+        this.elem.val('');
 
         this.dropdown = $(`<div class="timepicker-dropdown"/>`);
         this.dropdown_container = $(`<div class="timepicker-container"/>`);
 
         this.hours_content = $(`<div />`)
             .addClass('hours-content');
+        this.minutes_content = $(`<div />`)
+            .addClass('minutes-content');
         this.hours_elem = $('<div />')
             .addClass('timepicker-hours')
             .append('<div class="header">Hours</div>')
@@ -32,12 +25,28 @@ export class TimePickerWidget {
         this.minutes_elem = $('<div />')
             .addClass('timepicker-minutes')
             .append('<div class="header">Minutes</>')
-            .append('<div class="minutes-content" />');
+            .append(this.minutes_content);
 
-        for (let i = 1; i < 24; i++) {
-            this.hours_content.append(
-                $(`<div class="cell">${i}</div>`)
-            );
+        for (let i = 0; i < 24; i++) {
+            let i_disp = i;
+            if (i < 10) {
+                i_disp = '0' + i;
+            }
+            let elem = $(`<div class="cell">${i_disp}</div>`);
+            this.hours_content.append(elem);
+
+            let cell = new HoursCell(elem, this);
+            this.hours.push(cell);
+        }
+        for (let i = 0; i < 12; i++) {
+            let i_disp = i*5;
+            if (i_disp < 10) {
+                i_disp = '0' + i_disp;
+            }
+            let elem = $(`<div class="cell">${i_disp}</div>`);
+            this.minutes_content.append(elem);
+            let cell = new MinutesCell(elem, this);
+            this.minutes.push(cell);
         }
 
         this.elem.after(this.dropdown);
@@ -48,7 +57,68 @@ export class TimePickerWidget {
         this.elem.on('focus', this.show_dropdown);
     }
 
+    get hour() {
+        return this._hour;
+    }
+
+    set hour(hour) {
+        this._hour = hour;
+        this.set_time();
+    }
+
+    get minute() {
+        return this._minute;
+    }
+
+    set minute(minute) {
+        this._minute = minute;
+        this.set_time();
+    }
+
+    set_time() {
+        this.elem.val(`${this.hour}:${this.minute}`);
+    }
+
     show_dropdown() {
         this.dropdown.show();
+    }
+}
+
+class HoursCell {
+    constructor(elem, picker) {
+        this.elem = elem;
+        this.picker = picker;
+
+        this.click_handle = this.click_handle.bind(this);
+        this.elem.on('click', this.click_handle);
+    }
+
+    click_handle(e) {
+        let hour = this.elem.text();
+        for (let hour of this.picker.hours) {
+            hour.elem.removeClass('selected')
+        }
+        this.elem.addClass('selected');
+        this.picker.hour = hour;
+    }
+}
+
+class MinutesCell {
+    constructor(elem, picker) {
+        this.elem = elem;
+        this.picker = picker;
+
+        this.click_handle = this.click_handle.bind(this);
+        this.elem.on('click', this.click_handle);
+    }
+
+
+    click_handle(e) {
+        let minute = this.elem.text();
+        for (let minute of this.picker.minutes) {
+            minute.elem.removeClass('selected')
+        }
+        this.elem.addClass('selected');
+        this.picker.minute = minute;
     }
 }

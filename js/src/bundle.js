@@ -1,18 +1,15 @@
 import $ from 'jquery';
 
-import {DatePicker} from './datepicker';
-import {TimePickerWidget} from './timepicker';
+import {DateTimeWidget} from './datetime.js';
+import {Timepicker} from './timepicker.js';
 
-export * from './datepicker.js';
+export * from './datetime.js';
 export * from './timepicker.js';
-export * from '../../src/yafowil/widget/datetime/resources/Datepicker.js';
 
 $(function() {
     if (window.ts !== undefined) {
-        ts.ajax.register(DatePicker.initialize, true);
-        ts.ajax.register(TimePickerWidget.initialize, true);
+        ts.ajax.register(DateTimeWidget.initialize, true);
     } else {
-        DatePicker.initialize();
-        TimePickerWidget.initialize();
+        DateTimeWidget.initialize();
     }
 });

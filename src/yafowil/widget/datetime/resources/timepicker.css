@@ -31,13 +31,32 @@
     padding: 5px;
 }
 
-.timepicker-dropdown .header span {
-
+.cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 3px;
+}
+.cell:hover {
+    background:#f9f9f9;
+}
+.cell.selected {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: 600;
 }
 
 .hours-content {
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+
+.minutes-content {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
 }
