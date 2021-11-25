@@ -23,6 +23,12 @@
     display: inline-block;
     border-radius: 0.25rem;
     background-color: #fff;
+    padding: 5px;
+    border-radius: 6px;
+}
+
+.dateinput {
+    width: 10em;
 }
 
 .datepicker-dropdown .datepicker-picker {
@@ -32,6 +38,7 @@
 .datepicker-picker span {
     display: block;
     flex: 1;
+    margin-bottom: 5px;
     border: 0;
     border-radius: 0.25rem;
     cursor: default;
@@ -41,6 +48,11 @@
        -moz-user-select: none;
         -ms-user-select: none;
             user-select: none;
+}
+
+.bs4-btn {
+    border: 0;
+    padding: 5px;
 }
 
 .datepicker-main {
@@ -54,6 +66,7 @@
 
 .datepicker-controls, .datepicker-view, .datepicker-view .days-of-week, .datepicker-grid {
     display: flex;
+    width: 300px;
 }
 
 .datepicker-grid {
@@ -167,7 +180,6 @@
 }
 
 .datepicker-grid {
-    width: 15.75rem;
 }
 
 @media (max-width: 22.5rem) {
@@ -192,11 +204,11 @@
 }
 
 .datepicker-cell.disabled {
-    color: #6c757d;
+    color: #cdd0d4;
 }
 
 .datepicker-cell.prev:not(.disabled), .datepicker-cell.next:not(.disabled) {
-    color: #6c757d;
+    color: #cdd0d4;
 }
 
 .datepicker-cell.prev.selected, .datepicker-cell.next.selected {
@@ -217,7 +229,7 @@
 }
 
 .datepicker-cell.today:not(.selected) {
-    background-color: #20c997;
+    background-color: #8fcdfb;
 }
 
 .datepicker-cell.today:not(.selected):not(.disabled) {
@@ -225,7 +237,7 @@
 }
 
 .datepicker-cell.today.focused:not(.selected) {
-    background-color: #1ebe8f;
+    background-color: #8fcdfb;
 }
 
 .datepicker-cell.range-start:not(.selected), .datepicker-cell.range-end:not(.selected) {

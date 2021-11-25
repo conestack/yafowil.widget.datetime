@@ -9,6 +9,8 @@
 
 import $ from 'jquery';
 import Datepicker from '../../src/yafowil/widget/datetime/resources/Datepicker.js';
+import de from '../../src/yafowil/widget/datetime/resources/i18n/locales/de.js';
+Object.assign(Datepicker.locales, de);
 
 export class DatePicker {
 
@@ -21,11 +23,13 @@ export class DatePicker {
 
     constructor(elem) {
         this.elem = elem;
-        console.log('AAAAAA');
-        // this.foo = new Datepicker(elem, {});
-        const element = document.querySelector('input[name="yafowil.widget.datetime.date.yafowil.widget.datetime.date.date"]');
-        const datepicker = new Datepicker(element, {
-            orientation: 'bottom'
+
+        this.datepicker = new Datepicker(this.elem[0], {
+            orientation: 'bottom',
+            buttonClass: 'bs4-btn',
+            weekStart: 1,
+            todayHighlight: true,
+            language: "de"
         });
     }
 }

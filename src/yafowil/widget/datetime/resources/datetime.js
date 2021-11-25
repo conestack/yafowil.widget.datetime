@@ -2046,6 +2046,22 @@
     }
   }
 
+  var de = {
+    de: {
+      days: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
+      daysShort: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+      daysMin: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+      months: ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
+      monthsShort: ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
+      today: "Heute",
+      monthsTitle: "Monate",
+      clear: "Löschen",
+      weekStart: 1,
+      format: "dd.mm.yyyy"
+    }
+  };
+
+  Object.assign(Datepicker.locales, de);
   class DatePicker {
       static initialize(context) {
           $('input.datepicker', context).each(function() {
@@ -2055,10 +2071,12 @@
       }
       constructor(elem) {
           this.elem = elem;
-          console.log('AAAAAA');
-          const element = document.querySelector('input[name="yafowil.widget.datetime.date.yafowil.widget.datetime.date.date"]');
-          new Datepicker(element, {
-              orientation: 'bottom'
+          this.datepicker = new Datepicker(this.elem[0], {
+              orientation: 'bottom',
+              buttonClass: 'bs4-btn',
+              weekStart: 1,
+              todayHighlight: true,
+              language: "de"
           });
       }
   }
