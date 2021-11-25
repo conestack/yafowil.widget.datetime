@@ -18,6 +18,10 @@ bootstrap_css = [{
     'group': 'yafowil.widget.datetime.common',
     'resource': 'datepicker-bs4.css',
     'order': 21,
+},{
+    'group': 'yafowil.widget.datetime.common',
+    'resource': 'timepicker.css',
+    'order': 21,
 }]
 plone5_css = [{
     'group': 'yafowil.widget.datetime.common',

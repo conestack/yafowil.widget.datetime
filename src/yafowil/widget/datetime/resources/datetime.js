@@ -2046,22 +2046,6 @@
     }
   }
 
-  var de = {
-    de: {
-      days: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
-      daysShort: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
-      daysMin: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
-      months: ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
-      monthsShort: ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
-      today: "Heute",
-      monthsTitle: "Monate",
-      clear: "Löschen",
-      weekStart: 1,
-      format: "dd.mm.yyyy"
-    }
-  };
-
-  Object.assign(Datepicker.locales, de);
   class DatePicker {
       static initialize(context) {
           $('input.datepicker', context).each(function() {
@@ -2081,15 +2065,42 @@
       }
   }
 
+  class TimePickerWidget {
+      static initialize(context) {
+          $('input.timepicker', context).each(function() {
+              let elem = $(this);
+              new TimePickerWidget(elem);
+          });
+      }
+      constructor(elem) {
+          this.elem = elem;
+          this.dropdown = $(`<div class="timepicker-dropdown"/>`);
+          this.dropdown_container = $(`<div class="timepicker-container"/>`);
+          this.hours_elem = $('<div class="timepicker-hours">');
+          this.minutes_elem = $('<div class="timepicker-minutes">');
+          this.elem.after(this.dropdown);
+          this.dropdown.append(this.dropdown_container);
+          this.dropdown_container.append(this.hours_elem).append(this.minutes_elem);
+          this.show_dropdown = this.show_dropdown.bind(this);
+          this.elem.on('focus', this.show_dropdown);
+      }
+      show_dropdown() {
+          this.dropdown.show();
+      }
+  }
+
   $(function() {
       if (window.ts !== undefined) {
           ts.ajax.register(DatePicker.initialize, true);
+          ts.ajax.register(TimePickerWidget.initialize, true);
       } else {
           DatePicker.initialize();
+          TimePickerWidget.initialize();
       }
   });
 
   exports.DatePicker = DatePicker;
+  exports.TimePickerWidget = TimePickerWidget;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
