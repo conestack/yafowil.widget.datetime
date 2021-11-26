@@ -29,6 +29,25 @@
     width: 5em;
 }
 
+div.am, div.pm {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+div.am {
+    border-bottom: 1px solid lightgray;
+}
+
+span.am, span.pm {
+    font-size: 10px;
+    float: right;
+    position: relative;
+    top: 25px;
+    padding: 0 6px;
+    font-weight: 600;
+}
+
 button.timepicker-trigger {
     position: absolute;
     width: 34px;

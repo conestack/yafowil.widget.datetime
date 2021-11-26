@@ -2047,10 +2047,11 @@
   }
 
   class Timepicker {
-      constructor(elem) {
+      constructor(elem, locale) {
           this.elem = elem;
           this.hours = [];
           this.minutes = [];
+          this.locale = locale;
           this.hour = '00';
           this.minute = '00';
           this.elem.val('');
@@ -2064,21 +2065,54 @@
               .addClass('minutes-content');
           this.hours_elem = $('<div />')
               .addClass('timepicker-hours')
-              .append('<div class="header">Hours</div>')
+              .append(`<div class="header">${this.locale.hour}</div>`)
               .append(this.hours_content);
           this.minutes_elem = $('<div />')
               .addClass('timepicker-minutes')
-              .append('<div class="header">Minutes</>')
+              .append(`<div class="header">${this.locale.minute}</>`)
               .append(this.minutes_content);
-          for (let i = 0; i < 24; i++) {
-              let i_disp = i;
-              if (i < 10) {
-                  i_disp = '0' + i;
+          if (this.locale.timeFormat === 'eu') {
+              for (let i = 0; i < 24; i++) {
+                  let i_disp = i;
+                  if (i < 10) {
+                      i_disp = '0' + i;
+                  }
+                  let elem = $(`<div class="cell">${i_disp}</div>`);
+                  this.hours_content.append(elem);
+                  let cell = new HoursCell(elem, this);
+                  this.hours.push(cell);
               }
-              let elem = $(`<div class="cell">${i_disp}</div>`);
-              this.hours_content.append(elem);
-              let cell = new HoursCell(elem, this);
-              this.hours.push(cell);
+          } else if (this.locale.timeFormat === 'us') {
+              this.hours_am = $(`<div class="am" />`);
+              this.hours_pm = $(`<div class="pm" />`);
+              this.hours_content
+                  .css('display', 'block')
+                  .append('<span class="am">A.M.</span>')
+                  .append(this.hours_am)
+                  .append('<span class="pm">P.M.</span>')
+                  .append(this.hours_pm);
+              for (let i = 0; i < 12; i++) {
+                  let i_disp = i;
+                  if (i < 10) {
+                      i_disp = '0' + i;
+                  }
+                  let elem = $(`<div class="cell">${i_disp}</div>`);
+                  this.hours_am.append(elem);
+                  let cell = new HoursCell(elem, this, 'AM');
+                  this.hours.push(cell);
+              }
+              for (let i = 0; i < 12; i++) {
+                  let i_disp = i;
+                  if (i === 0) {
+                      i_disp = '12';
+                  } else if (i < 10) {
+                      i_disp = '0' + i;
+                  }
+                  let elem = $(`<div class="cell">${i_disp}</div>`);
+                  this.hours_pm.append(elem);
+                  let cell = new HoursCell(elem, this, 'PM');
+                  this.hours.push(cell);
+              }
           }
           for (let i = 0; i < 12; i++) {
               let i_disp = i*5;
@@ -2115,8 +2149,18 @@
           this._minute = minute;
           this.set_time();
       }
+      get timeFormat() {
+          return this._timeFormat;
+      }
+      set timeFormat(timeFormat) {
+          this._timeFormat = timeFormat;
+      }
       set_time() {
-          this.elem.val(`${this.hour}:${this.minute}`);
+          if (this.locale.timeFormat === 'eu') {
+              this.elem.val(`${this.hour}:${this.minute}`);
+          } else if (this.locale.timeFormat === 'us') {
+              this.elem.val(`${this.hour}:${this.minute}${this.timeFormat}`);
+          }
       }
       hide_dropdown(e) {
           if (e.target !== this.elem[0] && e.target !== this.btn_trigger[0]) {
@@ -2134,9 +2178,10 @@
       }
   }
   class HoursCell {
-      constructor(elem, picker) {
+      constructor(elem, picker, timeFormat) {
           this.elem = elem;
           this.picker = picker;
+          this.timeFormat = timeFormat;
           this.click_handle = this.click_handle.bind(this);
           this.elem.on('click', this.click_handle);
       }
@@ -2146,6 +2191,7 @@
               hour.elem.removeClass('selected');
           }
           this.elem.addClass('selected');
+          this.picker.timeFormat = this.timeFormat;
           this.picker.hour = hour;
       }
   }
@@ -2166,15 +2212,40 @@
       }
   }
 
+  var date_de = {
+    de: {
+      days: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
+      daysShort: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+      daysMin: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+      months: ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
+      monthsShort: ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
+      today: "Heute",
+      monthsTitle: "Monate",
+      clear: "Löschen",
+      weekStart: 1,
+      format: "dd.mm.yyyy"
+    }
+  };
+
+  var time_us = {
+      lang: "us",
+      hour: "hours",
+      minute: "minutes",
+      timeFormat: "us"
+  };
+
+  Object.assign(Datepicker.locales, date_de);
   class DateTimeWidget {
       static initialize(context) {
           $('input.datepicker', context).each(function() {
               let elem = $(this);
+              let locale = "de";
               let picker = new Datepicker(elem[0], {
                   orientation: 'bottom',
                   buttonClass: 'bs4-btn',
                   weekStart: 1,
-                  todayHighlight: true
+                  todayHighlight: true,
+                  language: locale
               });
               let btn_trigger = $(`<button>...</button>`)
                   .addClass('datepicker-trigger btn btn-default');
@@ -2194,7 +2265,8 @@
           });
           $('input.timepicker', context).each(function() {
               let elem = $(this);
-              new Timepicker(elem);
+              let language = time_us;
+              new Timepicker(elem, language);
           });
       }
   }
