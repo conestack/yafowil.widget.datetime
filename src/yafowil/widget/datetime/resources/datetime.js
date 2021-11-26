@@ -2056,6 +2056,8 @@
           this.elem.val('');
           this.dropdown = $(`<div class="timepicker-dropdown"/>`);
           this.dropdown_container = $(`<div class="timepicker-container"/>`);
+          this.btn_trigger = $(`<button>...</button>`)
+              .addClass('timepicker-trigger btn btn-default');
           this.hours_content = $(`<div />`)
               .addClass('hours-content');
           this.minutes_content = $(`<div />`)
@@ -2089,10 +2091,15 @@
               this.minutes.push(cell);
           }
           this.elem.after(this.dropdown);
+          this.elem.after(this.btn_trigger);
           this.dropdown.append(this.dropdown_container);
           this.dropdown_container.append(this.hours_elem).append(this.minutes_elem);
           this.show_dropdown = this.show_dropdown.bind(this);
+          this.toggle_dropdown = this.toggle_dropdown.bind(this);
+          this.hide_dropdown = this.hide_dropdown.bind(this);
           this.elem.on('focus', this.show_dropdown);
+          this.btn_trigger.on('click', this.toggle_dropdown);
+          $(document).on('click', this.hide_dropdown);
       }
       get hour() {
           return this._hour;
@@ -2111,8 +2118,19 @@
       set_time() {
           this.elem.val(`${this.hour}:${this.minute}`);
       }
+      hide_dropdown(e) {
+          if (e.target !== this.elem[0] && e.target !== this.btn_trigger[0]) {
+              if ($(e.target).closest(this.dropdown).length === 0) {
+                  this.dropdown.hide();
+              }
+          }
+      }
       show_dropdown() {
           this.dropdown.show();
+      }
+      toggle_dropdown(e) {
+          e.preventDefault();
+          this.dropdown.toggle();
       }
   }
   class HoursCell {

@@ -25,6 +25,18 @@
     flex: auto;
 }
 
+.timeinput {
+    width: 5em;
+}
+
+button.timepicker-trigger {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    margin-left: 5px;
+    padding: 0;
+}
+
 .timepicker-dropdown .header {
     height: 30px;
     background: #f1f3f5;
