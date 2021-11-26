@@ -198,7 +198,7 @@
 }
 
 .datepicker-cell.selected, .datepicker-cell.selected:hover {
-    background-color: #007bff;
+    background-color: #00adff;
     color: #fff;
     font-weight: 600;
 }

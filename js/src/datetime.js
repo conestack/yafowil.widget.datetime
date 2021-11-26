@@ -29,7 +29,6 @@ export class DateTimeWidget {
             elem.after(btn_trigger);
 
             let toggle_view = toggle_picker.bind(picker);
-
             btn_trigger.off('mousedown', toggle_view).on('mousedown', toggle_view);
             btn_trigger.on('click', (e) => {e.preventDefault();});
 
@@ -45,6 +44,7 @@ export class DateTimeWidget {
         });
         $('input.timepicker', context).each(function() {
             let elem = $(this);
+            elem.attr('spellcheck', false);
 
             // let locales = [time_de, time_en, time_us];
             // let language;

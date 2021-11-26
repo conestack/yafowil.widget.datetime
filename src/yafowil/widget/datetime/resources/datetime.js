@@ -2125,6 +2125,8 @@
               this.minutes.push(cell);
           }
           this.elem.after(this.dropdown);
+          let offset = this.elem.offset().left - this.elem.parent().offset().left;
+          this.dropdown.css('left', `${offset}px`);
           this.elem.after(this.btn_trigger);
           this.dropdown.append(this.dropdown_container);
           this.dropdown_container.append(this.hours_elem).append(this.minutes_elem);
@@ -2265,6 +2267,7 @@
           });
           $('input.timepicker', context).each(function() {
               let elem = $(this);
+              elem.attr('spellcheck', false);
               let language = time_us;
               new Timepicker(elem, language);
           });

@@ -1,4 +1,5 @@
 .timepicker-dropdown {
+    position: absolute;
     margin-top: 4px;
     display: none;
     background-color: #fff;
@@ -29,6 +30,10 @@
     width: 5em;
 }
 
+input.timeinput, input.dateinput {
+    margin-right: 45px;
+}
+
 div.am, div.pm {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -41,7 +46,7 @@ div.am {
 
 span.am, span.pm {
     font-size: 10px;
-    float: right;
+    float: left;
     position: relative;
     top: 25px;
     padding: 0 6px;
@@ -52,16 +57,18 @@ button.timepicker-trigger {
     position: absolute;
     width: 34px;
     height: 34px;
-    margin-left: 5px;
+    margin: 0;
     padding: 0;
+    transform: translateX(calc(-100% - 5px));
 }
 
 button.datepicker-trigger {
-    position: relative;
+    position: absolute;
     width: 34px;
     height: 34px;
-    margin: 0 5px;
+    margin: 0;
     padding: 0;
+    transform: translateX(calc(-100% - 5px));
 }
 
 .timepicker-dropdown .header {
@@ -80,8 +87,9 @@ button.datepicker-trigger {
 .cell:hover {
     background:#f9f9f9;
 }
+
 .cell.selected {
-    background-color: #007bff;
+    background-color: #00adff;
     color: #fff;
     font-weight: 600;
 }
