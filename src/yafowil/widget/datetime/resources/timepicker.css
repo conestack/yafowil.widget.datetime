@@ -37,6 +37,14 @@ button.timepicker-trigger {
     padding: 0;
 }
 
+button.datepicker-trigger {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    margin: 0 5px;
+    padding: 0;
+}
+
 .timepicker-dropdown .header {
     height: 30px;
     background: #f1f3f5;
