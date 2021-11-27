@@ -1,3 +1,16 @@
+input.dateinput {
+    margin-right: 45px;
+}
+
+button.datepicker-trigger {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    margin: 0;
+    padding: 0;
+    transform: translateX(calc(-100% - 5px));
+}
+
 .datepicker {
     display: none;
 }

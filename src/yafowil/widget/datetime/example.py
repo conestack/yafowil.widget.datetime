@@ -45,6 +45,7 @@ Time input.
         'label': 'Select time',
         'required': 'Time Field is required',
         'timepicker': True,
+        'clock': '12'
     })
 """
 
@@ -55,6 +56,7 @@ def time_example():
         'label': 'Select time',
         'required': 'Time Field is required',
         'timepicker': True,
+        'clock': '12'
     })
     return {
         'widget': form,
