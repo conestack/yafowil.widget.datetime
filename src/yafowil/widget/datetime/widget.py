@@ -112,6 +112,7 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
         'id': cssid(widget, 'input', postfix),
         'size': 5,
         'disabled': disabled,
+        'data-time-clock': attr_value('clock', widget, data)
     }
     class_ = [attr_value('timeinput_class', widget, data)]
     timepicker = attr_value('timepicker', widget, data)
@@ -147,7 +148,7 @@ def time_value(format_, unit, time):
 
 
 @managedprops('format', 'unit', 'disabled', 'timepicker',
-              'timepicker_class', *css_managed_props)
+              'timepicker_class', 'clock', *css_managed_props)
 def time_edit_renderer(widget, data):
     format_, unit = time_data_defs(widget, data)
     time = time_value(format_, unit, fetch_value(widget, data))
@@ -224,6 +225,12 @@ Flag whether value is day of time. Setting this property or 'timepicker'
 property above to True results in day time range validation.
 """
 
+factory.defaults['time.clock'] = '24'
+factory.doc['props']['time.clock'] = """\
+Defines which clock to use. Either `24` for 24-hour-clock or `12` for
+12-hour-clock. Defaults to `24`
+"""
+
 
 @managedprops('required', 'time', 'locale', 'tzinfo')
 def datetime_extractor(widget, data):
@@ -281,6 +288,7 @@ def render_datetime_input(widget, data, date, time):
         'class_': cssclasses(widget, data, additional=additional_classes),
         'size': 10,
         'disabled': 'disabled' if disabled else None,
+        'data-date-locale': attr_value('locale', widget, data)
     }
     return tag('input', **attrs) + timeinput
 
