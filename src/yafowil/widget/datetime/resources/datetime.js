@@ -60,20 +60,41 @@
             this.hour = '';
             this.minute = '';
             this.elem.val('');
-            this.dropdown = $(`<div class="timepicker-dropdown"/>`);
-            this.dropdown_container = $(`<div class="timepicker-container"/>`);
+            this.compile();
+            this.show_dropdown = this.show_dropdown.bind(this);
+            this.elem.on('focus', this.show_dropdown);
+            this.toggle_dropdown = this.toggle_dropdown.bind(this);
+            this.trigger_elem.on('click', this.toggle_dropdown);
+            this.hide_dropdown = this.hide_dropdown.bind(this);
+            $(document).on('click', this.hide_dropdown);
+        }
+        unload() {
+            $(document).off('click', this.hide_dropdown);
+        }
+        compile() {
+            let elem = this.elem;
             this.trigger_elem = $(`<button>...</button>`)
                 .addClass('timepicker-trigger btn btn-default');
-            this.hours_content = $(`<div />`).addClass('hours-content');
-            this.minutes_content = $(`<div />`).addClass('minutes-content');
-            this.hours_elem = $('<div />')
+            elem.after(this.trigger_elem);
+            let dd_elem = this.dd_elem = $(`<div />`).addClass('timepicker-dropdown');
+            elem.after(dd_elem);
+            let offset = elem.offset().left - elem.parent().offset().left;
+            dd_elem.css('left', `${offset}px`);
+            let dd_container = $(`<div />`)
+                .addClass('timepicker-container')
+                .appendTo(dd_elem);
+            let hours_content = $(`<div />`).addClass('hours-content'),
+                minutes_content = $(`<div />`).addClass('minutes-content');
+            $('<div />')
                 .addClass('timepicker-hours')
                 .append(`<div class="header">${this.locale.hour}</div>`)
-                .append(this.hours_content);
-            this.minutes_elem = $('<div />')
+                .append(hours_content)
+                .appendTo(dd_container);
+            $('<div />')
                 .addClass('timepicker-minutes')
-                .append(`<div class="header">${this.locale.minute}</>`)
-                .append(this.minutes_content);
+                .append(`<div class="header">${this.locale.minute}</div>`)
+                .append(minutes_content)
+                .appendTo(dd_container);
             if (this.locale.clock === 24) {
                 for (let i = 0; i < 24; i++) {
                     let i_disp = i;
@@ -81,14 +102,14 @@
                         i_disp = '0' + i;
                     }
                     let elem = $(`<div class="cell">${i_disp}</div>`);
-                    this.hours_content.append(elem);
-                    let cell = new HoursCell(elem, this);
+                    hours_content.append(elem);
+                    let cell = new HourCell(elem, this);
                     this.hours.push(cell);
                 }
             } else if (this.locale.clock === 12) {
                 this.hours_am = $(`<div class="am" />`);
                 this.hours_pm = $(`<div class="pm" />`);
-                this.hours_content
+                hours_content
                     .css('display', 'block')
                     .append('<span class="am">A.M.</span>')
                     .append(this.hours_am)
@@ -101,7 +122,7 @@
                     }
                     let elem = $(`<div class="cell">${i_disp}</div>`);
                     this.hours_am.append(elem);
-                    let cell = new HoursCell(elem, this, 'AM');
+                    let cell = new HourCell(elem, this, 'AM');
                     this.hours.push(cell);
                 }
                 for (let i = 0; i < 12; i++) {
@@ -113,7 +134,7 @@
                     }
                     let elem = $(`<div class="cell">${i_disp}</div>`);
                     this.hours_pm.append(elem);
-                    let cell = new HoursCell(elem, this, 'PM');
+                    let cell = new HourCell(elem, this, 'PM');
                     this.hours.push(cell);
                 }
             }
@@ -123,22 +144,10 @@
                     i_disp = '0' + i_disp;
                 }
                 let elem = $(`<div class="cell">${i_disp}</div>`);
-                this.minutes_content.append(elem);
-                let cell = new MinutesCell(elem, this);
+                minutes_content.append(elem);
+                let cell = new MinuteCell(elem, this);
                 this.minutes.push(cell);
             }
-            this.elem.after(this.dropdown);
-            let offset = this.elem.offset().left - this.elem.parent().offset().left;
-            this.dropdown.css('left', `${offset}px`);
-            this.elem.after(this.trigger_elem);
-            this.dropdown.append(this.dropdown_container);
-            this.dropdown_container.append(this.hours_elem).append(this.minutes_elem);
-            this.show_dropdown = this.show_dropdown.bind(this);
-            this.toggle_dropdown = this.toggle_dropdown.bind(this);
-            this.hide_dropdown = this.hide_dropdown.bind(this);
-            this.elem.on('focus', this.show_dropdown);
-            this.trigger_elem.on('click', this.toggle_dropdown);
-            $(document).on('click', this.hide_dropdown);
         }
         get hour() {
             return this._hour;
@@ -165,24 +174,24 @@
             }
             this.hour = '';
             this.minute = '';
-            this.dropdown.hide();
+            this.dd_elem.hide();
         }
         hide_dropdown(e) {
             if (e.target !== this.elem[0] && e.target !== this.trigger_elem[0]) {
-                if ($(e.target).closest(this.dropdown).length === 0) {
-                    this.dropdown.hide();
+                if ($(e.target).closest(this.dd_elem).length === 0) {
+                    this.dd_elem.hide();
                 }
             }
         }
-        show_dropdown() {
-            this.dropdown.show();
+        show_dropdown(e) {
+            this.dd_elem.show();
         }
         toggle_dropdown(e) {
             e.preventDefault();
-            this.dropdown.toggle();
+            this.dd_elem.toggle();
         }
     }
-    class HoursCell {
+    class HourCell {
         constructor(elem, picker, period) {
             this.elem = elem;
             this.picker = picker;
@@ -200,7 +209,7 @@
             this.picker.hour = hour;
         }
     }
-    class MinutesCell {
+    class MinuteCell {
         constructor(elem, picker) {
             this.elem = elem;
             this.picker = picker;
