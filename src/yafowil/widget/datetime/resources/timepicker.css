@@ -42,6 +42,7 @@ button.timepicker-trigger {
     justify-content: center;
     padding: 5px;
     border-radius: 3px;
+    user-select: none;
 }
 
 .timepicker-container .cell:hover {
