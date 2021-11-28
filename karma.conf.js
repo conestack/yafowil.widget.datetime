@@ -9,6 +9,9 @@ module.exports = function(config) {
             'qunit'
         ],
         files: [{
+            pattern: '../node_modules/vanillajs-datepicker/dist/js/datepicker.js',
+            included: true
+        }, {
             pattern: '../node_modules/jquery/src/**/*.js',
             type: 'module',
             included: false

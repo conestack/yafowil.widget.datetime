@@ -2,24 +2,24 @@ var yafowil_datetime = (function (exports, $) {
     'use strict';
 
     class DatepickerSettings {
-        static default_locale = 'en';
-        static locales = {
-            en: {
-                weekStart: 1,
-                format: 'mm.dd.yyyy'
-            },
-            de: {
-                weekStart: 1,
-                format: 'dd.mm.yyyy'
-            }
-        };
         settings(locale) {
             let locales = this.constructor.locales;
             let settings = locales[locale];
             return settings || locales[this.constructor.default_locale];
         }
     }
+    DatepickerSettings.default_locale = 'en';
+    DatepickerSettings.locales = {};
+    DatepickerSettings.locales.en = {
+        weekStart: 1,
+        format: 'mm.dd.yyyy'
+    };
+    DatepickerSettings.locales.de = {
+        weekStart: 1,
+        format: 'dd.mm.yyyy'
+    };
     let datepicker_settings = new DatepickerSettings();
+
     class DatepickerWidget extends Datepicker {
         static initialize(context) {
             $('input.datepicker', context).each(function() {
@@ -57,24 +57,24 @@ var yafowil_datetime = (function (exports, $) {
     }
 
     class TimepickerI18n {
-        static default_locale = 'en';
-        static messages = {
-            en: {
-                hour: 'Hour',
-                minute: 'Minute'
-            },
-            de: {
-                hour: 'Stunde',
-                minute: 'Minute'
-            }
-        };
         translate(locale, msgid) {
             let messages = this.constructor.messages,
                 lang = messages[locale] || messages[this.constructor.default_locale];
             return lang[msgid];
         }
     }
+    TimepickerI18n.default_locale = 'en';
+    TimepickerI18n.messages = {};
+    TimepickerI18n.messages.en = {
+        hour: 'Hour',
+        minute: 'Minute'
+    };
+    TimepickerI18n.messages.de = {
+        hour: 'Stunde',
+        minute: 'Minute'
+    };
     let timepicker_i18n = new TimepickerI18n();
+
     class TimepickerButton {
         constructor(elem) {
             this.elem = elem;
@@ -302,8 +302,6 @@ var yafowil_datetime = (function (exports, $) {
     exports.TimepickerMinute = TimepickerMinute;
     exports.TimepickerMinutes = TimepickerMinutes;
     exports.TimepickerWidget = TimepickerWidget;
-    exports.datepicker_settings = datepicker_settings;
-    exports.timepicker_i18n = timepicker_i18n;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

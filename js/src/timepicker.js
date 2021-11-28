@@ -1,27 +1,5 @@
 import $ from 'jquery';
-
-export class TimepickerI18n {
-    static default_locale = 'en';
-    static messages = {
-        en: {
-            hour: 'Hour',
-            minute: 'Minute'
-        },
-        de: {
-            hour: 'Stunde',
-            minute: 'Minute'
-        }
-    };
-
-    translate(locale, msgid) {
-        let messages = this.constructor.messages,
-            lang = messages[locale] || messages[this.constructor.default_locale];
-        return lang[msgid];
-    }
-}
-
-let timepicker_i18n = new TimepickerI18n();
-export {timepicker_i18n};
+import timepicker_i18n from './i18n.js';
 
 export class TimepickerButton {
 

@@ -1,27 +1,5 @@
 import $ from 'jquery';
-
-export class DatepickerSettings {
-    static default_locale = 'en';
-    static locales = {
-        en: {
-            weekStart: 1,
-            format: 'mm.dd.yyyy'
-        },
-        de: {
-            weekStart: 1,
-            format: 'dd.mm.yyyy'
-        }
-    };
-
-    settings(locale) {
-        let locales = this.constructor.locales;
-        let settings = locales[locale];
-        return settings || locales[this.constructor.default_locale];
-    }
-}
-
-let datepicker_settings = new DatepickerSettings();
-export {datepicker_settings};
+import datepicker_settings from './settings.js';
 
 // Datepicker base class is global.
 export class DatepickerWidget extends Datepicker {
