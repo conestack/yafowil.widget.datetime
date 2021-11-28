@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import {timepicker_i18n} from './i18n.js';
 
 export class TimepickerButton {
 
@@ -92,7 +91,7 @@ export class TimepickerHours extends TimepickerButtonContainer {
         }
         let header = $('<div />')
             .addClass('header')
-            .text(timepicker_i18n.translate(picker.language, 'hour'));
+            .text(picker.translate('hour'));
         $('<div />')
             .addClass('timepicker-hours')
             .append(header)
@@ -132,7 +131,7 @@ export class TimepickerMinutes extends TimepickerButtonContainer {
         }
         let header = $('<div />')
             .addClass('header')
-            .text(timepicker_i18n.translate(picker.language, 'minute'));
+            .text(picker.translate('minute'));
         $('<div />')
             .addClass('timepicker-minutes')
             .append(header)
@@ -241,4 +240,21 @@ export class TimepickerWidget {
         e.preventDefault();
         this.dd_elem.toggle();
     }
+
+    translate(msgid) {
+        let locales = this.constructor.locales,
+            locale = locales[this.language] || locales.en;
+        return locale[msgid];
+    }
 }
+
+TimepickerWidget.locales = {
+    en: {
+        hour: 'Hour',
+        minute: 'Minute'
+    },
+    de: {
+        hour: 'Stunde',
+        minute: 'Minute'
+    }
+};

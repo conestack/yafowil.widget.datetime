@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import {datepicker_settings} from './settings.js';
 
 // Datepicker base class is global.
 export class DatepickerWidget extends Datepicker {
@@ -12,14 +11,15 @@ export class DatepickerWidget extends Datepicker {
     }
 
     constructor(elem, locale, opts={}) {
-        let opts_ = datepicker_settings.settings(locale);
-        Object.assign(opts_, {
+        let opts_ = {
             language: locale,
             orientation: 'bottom',
             buttonClass: 'btn',
             todayHighlight: true,
             autohide: true
-        });
+        };
+        let locale_options = DatepickerWidget.locale_options;
+        Object.assign(opts_, locale_options[locale] || locale_options.en);
         Object.assign(opts_, opts);
         super(elem[0], opts_);
 
@@ -42,3 +42,14 @@ export class DatepickerWidget extends Datepicker {
         }
     }
 }
+
+DatepickerWidget.locale_options = {
+    en: {
+        weekStart: 1,
+        format: 'mm.dd.yyyy'
+    },
+    de: {
+        weekStart: 1,
+        format: 'dd.mm.yyyy'
+    }
+};

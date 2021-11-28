@@ -4,8 +4,6 @@ import {DatepickerWidget} from './datepicker.js';
 import {TimepickerWidget} from './timepicker.js';
 
 export * from './datepicker.js';
-export * from './i18n.js';
-export * from './settings.js';
 export * from './timepicker.js';
 
 $(function() {
