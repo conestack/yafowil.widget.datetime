@@ -17,7 +17,8 @@ export default args => {
             cleanup()
         ],
         output: [{
-            file: `${out_dir}/datetime.js`,
+            file: `${out_dir}/widget.js`,
+            name: 'yafowil_datetime',
             format: 'iife',
             outro: outro,
             globals: {
@@ -32,7 +33,8 @@ export default args => {
     };
     if (args.configDebug !== true) {
         conf.output.push({
-            file: `${out_dir}/datetime.min.js`,
+            file: `${out_dir}/widget.min.js`,
+            name: 'yafowil_datetime',
             format: 'iife',
             plugins: [
                 terser()

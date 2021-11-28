@@ -1,6 +1,29 @@
 import $ from 'jquery';
 
-class TimepickerButton {
+export class TimepickerI18n {
+    static default_locale = 'en';
+    static messages = {
+        en: {
+            hour: 'Hour',
+            minute: 'Minute'
+        },
+        de: {
+            hour: 'Stunde',
+            minute: 'Minute'
+        }
+    };
+
+    translate(locale, msgid) {
+        let messages = this.constructor.messages,
+            lang = messages[locale] || messages[this.constructor.default_locale];
+        return lang[msgid];
+    }
+}
+
+let timepicker_i18n = new TimepickerI18n();
+export {timepicker_i18n};
+
+export class TimepickerButton {
 
     constructor(elem) {
         this.elem = elem;
@@ -19,7 +42,7 @@ class TimepickerButton {
     }
 }
 
-class TimepickerButtonContainer {
+export class TimepickerButtonContainer {
 
     constructor(picker, elem) {
         this.picker = picker;
@@ -34,7 +57,7 @@ class TimepickerButtonContainer {
     }
 }
 
-class TimepickerHour extends TimepickerButton {
+export class TimepickerHour extends TimepickerButton {
 
     constructor(hours, container, value, period) {
         super($('<div />')
@@ -58,7 +81,7 @@ class TimepickerHour extends TimepickerButton {
     }
 }
 
-class TimepickerMinute extends TimepickerButton {
+export class TimepickerMinute extends TimepickerButton {
 
     constructor(minutes, container, value) {
         super($('<div />')
@@ -84,15 +107,17 @@ export class TimepickerHours extends TimepickerButtonContainer {
 
     constructor(picker, container) {
         super(picker, $(`<div />`).addClass('hours-content'));
-        let locale = picker.locale;
-        if (locale.clock === 24) {
+        if (picker.clock === 24) {
             this.create_clock_24();
-        } else if (locale.clock === 12) {
+        } else if (picker.clock === 12) {
             this.create_clock_12();
         }
+        let header = $('<div />')
+            .addClass('header')
+            .text(timepicker_i18n.translate(picker.language, 'hour'));
         $('<div />')
             .addClass('timepicker-hours')
-            .append(`<div class="header">${locale.hour}</div>`)
+            .append(header)
             .append(this.elem)
             .appendTo(container);
     }
@@ -127,9 +152,12 @@ export class TimepickerMinutes extends TimepickerButtonContainer {
         for (let i = 0; i < 12; i++) {
             this.children.push(new TimepickerMinute(this, this.elem, i));
         }
+        let header = $('<div />')
+            .addClass('header')
+            .text(timepicker_i18n.translate(picker.language, 'minute'));
         $('<div />')
             .addClass('timepicker-minutes')
-            .append(`<div class="header">${picker.locale.minute}</div>`)
+            .append(header)
             .append(this.elem)
             .appendTo(container);
     }
@@ -142,17 +170,16 @@ export class TimepickerWidget {
             let elem = $(this);
             elem.attr('spellcheck', false);
             new TimepickerWidget(elem, {
-                language: elem.data('time-lang'),
-                hour: 'Stunde',
-                minute: 'Minute',
+                language: elem.data('time-locale'),
                 clock: elem.data('time-clock')
             });
         });
     }
 
-    constructor(elem, locale) {
+    constructor(elem, opts) {
         this.elem = elem;
-        this.locale = locale;
+        this.language = opts.language || 'en';
+        this.clock = opts.clock || 24;
 
         this.period = null;
         this.hour = '';
@@ -210,9 +237,9 @@ export class TimepickerWidget {
         if (this.hour === '' || this.minute === '') {
             return;
         }
-        if (this.locale.clock === 24) {
+        if (this.clock === 24) {
             this.elem.val(`${this.hour}:${this.minute}`);
-        } else if (this.locale.clock === 12) {
+        } else if (this.clock === 12) {
             this.elem.val(`${this.hour}:${this.minute}${this.period}`);
         }
         this.hour = '';

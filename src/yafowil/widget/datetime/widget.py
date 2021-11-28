@@ -112,7 +112,7 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
         'id': cssid(widget, 'input', postfix),
         'size': 5,
         'disabled': disabled,
-        'data-time-lang': attr_value('lang', widget, data),
+        'data-time-locale': attr_value('locale', widget, data),
         'data-time-clock': attr_value('clock', widget, data)
     }
     class_ = [attr_value('timeinput_class', widget, data)]
@@ -149,7 +149,7 @@ def time_value(format_, unit, time):
 
 
 @managedprops('format', 'unit', 'disabled', 'timepicker',
-              'timepicker_class', 'clock', 'lang', *css_managed_props)
+              'timepicker_class', 'clock', 'locale', *css_managed_props)
 def time_edit_renderer(widget, data):
     format_, unit = time_data_defs(widget, data)
     time = time_value(format_, unit, fetch_value(widget, data))
@@ -206,11 +206,6 @@ factory.defaults['time.disabled'] = False
 factory.defaults['time.timepicker'] = False
 factory.doc['props']['time.timepicker'] = """\
 Flag whether time picker is enabled.
-"""
-
-factory.defaults['time.lang'] = 'en'
-factory.doc['props']['time.lang'] = """\
-Language for the JS timepicker widget.
 """
 
 factory.defaults['time.format'] = 'string'
@@ -294,14 +289,14 @@ def render_datetime_input(widget, data, date, time):
         'class_': cssclasses(widget, data, additional=additional_classes),
         'size': 10,
         'disabled': 'disabled' if disabled else None,
-        'data-date-lang': attr_value('lang', widget, data)
+        'data-date-locale': attr_value('locale', widget, data)
     }
     return tag('input', **attrs) + timeinput
 
 
 @managedprops('locale', 'delimiter', 'time', 'disabled', 'timepicker',
               'timepicker_class', 'datepicker', 'datepicker_class',
-              'lang', *css_managed_props)
+              *css_managed_props)
 def datetime_edit_renderer(widget, data):
     locale = attr_value('locale', widget, data)
     delim = attr_value('delimiter', widget, data)
@@ -412,11 +407,6 @@ factory.doc['props']['datetime.datepicker'] = """\
 Flag whether date picker is enabled.
 """
 
-factory.defaults['datetime.lang'] = 'en'
-factory.doc['props']['datetime.lang'] = """\
-Language for the JS datepicker and timepicker widgets.
-"""
-
 factory.defaults['datetime.clock'] = '24'
 factory.doc['props']['datetime.clock'] = """\
 Defines which clock to use in timepicker. Either `24` for 24-hour-clock or `12`
@@ -431,14 +421,17 @@ Python datetime tzinfo object.
 return a tzinfo instance.
 """
 
-factory.defaults['datetime.locale'] = 'iso'
+factory.defaults['datetime.locale'] = 'en'
 factory.doc['props']['datetime.locale'] = """\
-Date input format locale. ``yafowil.widget.datetime`` uses
-`bda.intellidatetime <http://pypi.python.org/pypi/bda.intellidatetime/>`_ for
-input parsing. Take a look at this package for available locales.
+Widget locale. Used for translations, calendar weekday start and date input
+format.
 
 ``locale`` may be a callable taking widget and data as parameters expect to
 return a locale string.
+
+This widget uses
+`bda.intellidatetime <http://pypi.python.org/pypi/bda.intellidatetime/>`_ for
+input parsing. Take a look at this package for details about the parsing rules.
 """
 
 factory.defaults['datetime.delimiter'] = '.'

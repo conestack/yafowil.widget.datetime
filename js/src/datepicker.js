@@ -1,27 +1,49 @@
 import $ from 'jquery';
 
+export class DatepickerSettings {
+    static default_locale = 'en';
+    static locales = {
+        en: {
+            weekStart: 1,
+            format: 'mm.dd.yyyy'
+        },
+        de: {
+            weekStart: 1,
+            format: 'dd.mm.yyyy'
+        }
+    };
+
+    settings(locale) {
+        let locales = this.constructor.locales;
+        let settings = locales[locale];
+        return settings || locales[this.constructor.default_locale];
+    }
+}
+
+let datepicker_settings = new DatepickerSettings();
+export {datepicker_settings};
+
 // Datepicker base class is global.
 export class DatepickerWidget extends Datepicker {
 
     static initialize(context) {
         $('input.datepicker', context).each(function() {
             let elem = $(this);
-            new DatepickerWidget(elem, {
-                language: elem.data('date-lang')
-            });
+            new DatepickerWidget(elem, elem.data('date-locale'));
         });
     }
 
-    constructor(elem, opts={}) {
-        Object.assign(opts, {
+    constructor(elem, locale, opts={}) {
+        let opts_ = datepicker_settings.settings(locale);
+        Object.assign(opts_, {
+            language: locale,
             orientation: 'bottom',
             buttonClass: 'btn',
-            weekStart: 1,
             todayHighlight: true,
-            autohide: true,
-            format: 'dd.mm.yyyy'
+            autohide: true
         });
-        super(elem[0], opts);
+        Object.assign(opts_, opts);
+        super(elem[0], opts_);
 
         let trigger = $(`<button>...</button>`)
             .addClass('datepicker-trigger btn btn-default');

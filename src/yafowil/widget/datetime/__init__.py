@@ -10,7 +10,11 @@ js = [{
     'order': 20,
 }, {
     'group': 'yafowil.widget.datetime.common',
-    'resource': 'datetime.js',
+    'resource': 'locales/de.js',
+    'order': 20,
+}, {
+    'group': 'yafowil.widget.datetime.common',
+    'resource': 'widget.js',
     'order': 20,
 }]
 default_css = [{
