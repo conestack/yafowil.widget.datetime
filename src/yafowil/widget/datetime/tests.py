@@ -47,8 +47,9 @@ class TestDatetimeWidget(YafowilTestCase):
                 'datepicker': True,
             })
         self.assertEqual(widget(), (
-            '<input class="dateinput datepicker datetime" id="input-dt" '
-            'name="dt" size="10" type="text" value="" />'
+            '<input class="dateinput datepicker datetime" '
+            'data-date-locale=\'en\' id="input-dt" name="dt" size="10" '
+            'type="text" value="" />'
         ))
 
     def test_datetime_without_time_input(self):
@@ -91,7 +92,7 @@ class TestDatetimeWidget(YafowilTestCase):
         ))
 
         # Valid widget extraction. Returns datetime instance
-        request = {'dt': '2010.1.1'}
+        request = {'dt': '1.1.2010'}
         data = widget.extract(request)
         self.assertEqual(
             [data.name, data.value, data.extracted, data.errors],
@@ -99,7 +100,7 @@ class TestDatetimeWidget(YafowilTestCase):
         )
         self.assertEqual(widget(data), (
             '<input class="dateinput datetime required" id="input-dt" '
-            'name="dt" size="10" type="text" value="2010.1.1" />'
+            'name="dt" size="10" type="text" value="1.1.2010" />'
         ))
 
     def test_datetime_advanced(self):
@@ -121,8 +122,10 @@ class TestDatetimeWidget(YafowilTestCase):
         self.check_output("""
         <div>
           <input class="dateinput datepicker datetime required"
-                 id="input-dt" name="dt" size="10" type="text" value=""/>
-          <input class="timeinput timepicker" id="input-dt-time" name="dt.time"
+                 data-date-locale="de" id="input-dt" name="dt" size="10"
+                 type="text" value=""/>
+          <input class="timeinput timepicker" data-time-clock="24"
+                 data-time-locale="de" id="input-dt-time" name="dt.time"
                  size="5" type="text" value=""/>
         </div>
         """, fxml('<div>{}</div>'.format(widget())))
@@ -138,9 +141,11 @@ class TestDatetimeWidget(YafowilTestCase):
         # Widget renders empty value
         self.check_output("""
         <div>
-          <input class="dateinput datepicker datetime required" id="input-dt"
-                 name="dt" size="10" type="text" value=""/>
-          <input class="timeinput timepicker" id="input-dt-time" name="dt.time"
+          <input class="dateinput datepicker datetime required"
+                 data-date-locale="de" id="input-dt" name="dt" size="10"
+                 type="text" value=""/>
+          <input class="timeinput timepicker" data-time-clock="24"
+                 data-time-locale="de" id="input-dt-time" name="dt.time"
                  size="5" type="text" value=""/>
         </div>
         """, fxml('<div>{}</div>'.format(widget(data))))
@@ -154,9 +159,11 @@ class TestDatetimeWidget(YafowilTestCase):
         )
         self.check_output("""
         <div>
-          <input class="dateinput datepicker datetime required" id="input-dt"
-                 name="dt" size="10" type="text" value="xyz"/>
-          <input class="timeinput timepicker" id="input-dt-time" name="dt.time"
+          <input class="dateinput datepicker datetime required"
+                 data-date-locale="de" id="input-dt" name="dt" size="10"
+                 type="text" value="xyz"/>
+          <input class="timeinput timepicker" data-time-clock="24"
+                 data-time-locale="de" id="input-dt-time" name="dt.time"
                  size="5" type="text" value="x"/>
         </div>
         """, fxml('<div>{}</div>'.format(widget(data))))
@@ -170,9 +177,11 @@ class TestDatetimeWidget(YafowilTestCase):
         )
         self.check_output("""
         <div>
-          <input class="dateinput datepicker datetime required" id="input-dt"
-                 name="dt" size="10" type="text" value="1.1.2010"/>
-          <input class="timeinput timepicker" id="input-dt-time" name="dt.time"
+          <input class="dateinput datepicker datetime required"
+                 data-date-locale="de" id="input-dt" name="dt" size="10"
+                 type="text" value="1.1.2010"/>
+          <input class="timeinput timepicker" data-time-clock="24"
+                 data-time-locale="de" id="input-dt-time" name="dt.time"
                  size="5" type="text" value="10:15"/>
         </div>
         """, fxml('<div>{}</div>'.format(widget(data))))
@@ -211,7 +220,7 @@ class TestDatetimeWidget(YafowilTestCase):
         self.check_output("""
         <div>
           <input class="dateinput datetime" id="input-dt" name="dt" size="10"
-                 type="text" value="2011.5.1"/>
+                 type="text" value="5.1.2011"/>
           <input class="timeinput" id="input-dt-time" name="dt.time" size="5"
                  type="text" value="00:00"/>
         </div>
@@ -420,8 +429,9 @@ class TestDatetimeWidget(YafowilTestCase):
 
         # Additional CSS class is rendered for timepicker if ``timepicker`` set
         self.assertEqual(widget(), (
-            '<input class="time timeinput timepicker" id="input-t" name="t" '
-            'size="5" type="text" value="02:02" />'
+            '<input class="time timeinput timepicker" data-time-clock=\'24\' '
+            'data-time-locale=\'en\' id="input-t" name="t" size="5" type="text" '
+            'value="02:02" />'
         ))
 
     def test_time_rendering_if_preset_and_extracted(self):

@@ -31,7 +31,7 @@ def time_data_defs(widget, data):
     return format_, unit
 
 
-@managedprops('format', 'unit', 'daytime')
+@managedprops('format', 'unit', 'daytime', 'clock')
 def time_extractor(widget, data):
     format_, unit = time_data_defs(widget, data)
     extracted = data.extracted
@@ -111,14 +111,14 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
         'name_': widgetname,
         'id': cssid(widget, 'input', postfix),
         'size': 5,
-        'disabled': disabled,
-        'data-time-locale': attr_value('locale', widget, data),
-        'data-time-clock': attr_value('clock', widget, data)
+        'disabled': disabled
     }
     class_ = [attr_value('timeinput_class', widget, data)]
     timepicker = attr_value('timepicker', widget, data)
     if timepicker and not disabled:
         class_.append(attr_value('timepicker_class', widget, data))
+        attrs['data-time-locale'] = attr_value('locale', widget, data)
+        attrs['data-time-clock'] = attr_value('clock', widget, data)
     if css_class:
         attrs['class_'] = cssclasses(widget, data, additional=class_)
     else:
@@ -232,8 +232,13 @@ Defines which clock to use in timepicker. Either `24` for 24-hour-clock or `12`
 for 12-hour-clock. Defaults to `24`
 """
 
+factory.defaults['time.locale'] = 'en'
+factory.doc['props']['time.locale'] = """\
+Widget locale. Used for translations in timepicker widget.
+"""
 
-@managedprops('required', 'time', 'locale', 'tzinfo')
+
+@managedprops('required', 'time', 'locale', 'tzinfo', 'clock')
 def datetime_extractor(widget, data):
     time = None
     if attr_value('time', widget, data):
@@ -275,22 +280,22 @@ def render_datetime_input(widget, data, date, time):
     timeinput = ''
     if time:
         timeinput = render_time_input(widget, data, time, postfix='time')
-    additional_classes = [attr_value('dateinput_class', widget, data)]
-    datepicker = attr_value('datepicker', widget, data)
     disabled = attr_value('disabled', widget, data)
-    if datepicker and not disabled:
-        datepicker_class = attr_value('datepicker_class', widget, data)
-        additional_classes.append(datepicker_class)
     attrs = {
         'type': 'text',
         'value': date,
         'name_': widget.dottedpath,
         'id': cssid(widget, 'input'),
-        'class_': cssclasses(widget, data, additional=additional_classes),
         'size': 10,
-        'disabled': 'disabled' if disabled else None,
-        'data-date-locale': attr_value('locale', widget, data)
+        'disabled': 'disabled' if disabled else None
     }
+    additional_classes = [attr_value('dateinput_class', widget, data)]
+    datepicker = attr_value('datepicker', widget, data)
+    if datepicker and not disabled:
+        datepicker_class = attr_value('datepicker_class', widget, data)
+        additional_classes.append(datepicker_class)
+        attrs['data-date-locale'] = attr_value('locale', widget, data)
+    attrs['class_'] = cssclasses(widget, data, additional=additional_classes)
     return tag('input', **attrs) + timeinput
 
 
