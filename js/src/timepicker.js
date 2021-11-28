@@ -1,109 +1,195 @@
 import $ from 'jquery';
 
-export class Timepicker {
+export class TimepickerButton {
 
-    constructor(elem, locale) {
+    constructor(elem) {
         this.elem = elem;
-        this.hours = [];
-        this.minutes = [];
-        this.locale = locale;
+    }
 
-        this.hour = '00';
-        this.minute = '00';
-        this.elem.val('');
+    get selected() {
+        return this.elem.hasClass('selected');
+    }
 
-        this.dropdown = $(`<div class="timepicker-dropdown"/>`);
-        this.dropdown_container = $(`<div class="timepicker-container"/>`);
+    set selected(value) {
+        if (value) {
+            this.elem.addClass('selected');
+        } else {
+            this.elem.removeClass('selected');
+        }
+    }
+}
 
-        this.btn_trigger = $(`<button>...</button>`)
-            .addClass('timepicker-trigger btn btn-default');
-        this.hours_content = $(`<div />`)
-            .addClass('hours-content');
-        this.minutes_content = $(`<div />`)
-            .addClass('minutes-content');
-        this.hours_elem = $('<div />')
+export class TimepickerButtonContainer {
+
+    constructor(picker, elem) {
+        this.picker = picker;
+        this.elem = elem;
+        this.children = [];
+    }
+
+    unselect_all() {
+        for (let child of this.children) {
+            child.selected = false;
+        }
+    }
+}
+
+export class TimepickerHour extends TimepickerButton {
+
+    constructor(hours, container, value, period) {
+        super($('<div />')
+            .addClass('cell')
+            .text(new String(value).padStart(2, '0'))
+            .appendTo(container)
+        );
+        this.hours = hours;
+        this.picker = hours.picker;
+        this.period = period;
+        this.click_handle = this.click_handle.bind(this);
+        this.elem.on('click', this.click_handle);
+    }
+
+    click_handle(e) {
+        let hour = this.elem.text();
+        this.hours.unselect_all();
+        this.selected = true;
+        this.picker.period = this.period;
+        this.picker.hour = hour;
+    }
+}
+
+export class TimepickerMinute extends TimepickerButton {
+
+    constructor(minutes, container, value) {
+        super($('<div />')
+            .addClass('cell')
+            .text(new String(value).padStart(2, '0'))
+            .appendTo(container)
+        );
+        this.minutes = minutes;
+        this.picker = minutes.picker;
+        this.click_handle = this.click_handle.bind(this);
+        this.elem.on('click', this.click_handle);
+    }
+
+    click_handle(e) {
+        let minute = this.elem.text();
+        this.minutes.unselect_all();
+        this.selected = true;
+        this.picker.minute = minute;
+    }
+}
+
+export class TimepickerHours extends TimepickerButtonContainer {
+
+    constructor(picker, container) {
+        super(picker, $(`<div />`).addClass('hours-content'));
+        if (picker.clock === 24) {
+            this.create_clock_24();
+        } else if (picker.clock === 12) {
+            this.create_clock_12();
+        }
+        let header = $('<div />')
+            .addClass('header')
+            .text(picker.translate('hour'));
+        $('<div />')
             .addClass('timepicker-hours')
-            .append(`<div class="header">${this.locale.hour}</div>`)
-            .append(this.hours_content);
-        this.minutes_elem = $('<div />')
-            .addClass('timepicker-minutes')
-            .append(`<div class="header">${this.locale.minute}</>`)
-            .append(this.minutes_content);
+            .append(header)
+            .append(this.elem)
+            .appendTo(container);
+    }
 
-        if (this.locale.timeFormat === 'eu') {
-            for (let i = 0; i < 24; i++) {
-                let i_disp = i;
-                if (i < 10) {
-                    i_disp = '0' + i;
-                }
-                let elem = $(`<div class="cell">${i_disp}</div>`);
-                this.hours_content.append(elem);
-
-                let cell = new HoursCell(elem, this);
-                this.hours.push(cell);
-            }
-        } else if (this.locale.timeFormat === 'us') {
-            this.hours_am = $(`<div class="am" />`);
-            this.hours_pm = $(`<div class="pm" />`);
-            this.hours_content
-                .css('display', 'block')
-                .append('<span class="am">A.M.</span>')
-                .append(this.hours_am)
-                .append('<span class="pm">P.M.</span>')
-                .append(this.hours_pm);
-
-            for (let i = 0; i < 12; i++) {
-                let i_disp = i;
-                if (i < 10) {
-                    i_disp = '0' + i;
-                }
-                let elem = $(`<div class="cell">${i_disp}</div>`);
-                this.hours_am.append(elem);
-
-                let cell = new HoursCell(elem, this, 'AM');
-                this.hours.push(cell);
-            }
-            for (let i = 0; i < 12; i++) {
-                let i_disp = i;
-                if (i === 0) {
-                    i_disp = '12';
-                } else if (i < 10) {
-                    i_disp = '0' + i;
-                }
-                let elem = $(`<div class="cell">${i_disp}</div>`);
-                this.hours_pm.append(elem);
-
-                let cell = new HoursCell(elem, this, 'PM');
-                this.hours.push(cell);
-            }
+    create_clock_24() {
+        for (let i = 0; i < 24; i++) {
+            this.children.push(new TimepickerHour(this, this.elem, i));
         }
+    }
 
+    create_clock_12() {
+        let hours_am = $(`<div class="am" />`);
         for (let i = 0; i < 12; i++) {
-            let i_disp = i*5;
-            if (i_disp < 10) {
-                i_disp = '0' + i_disp;
-            }
-            let elem = $(`<div class="cell">${i_disp}</div>`);
-            this.minutes_content.append(elem);
-            let cell = new MinutesCell(elem, this);
-            this.minutes.push(cell);
+            this.children.push(new TimepickerHour(this, hours_am, i, 'AM'));
         }
+        let hours_pm = $(`<div class="pm" />`);
+        for (let i = 0; i < 12; i++) {
+            this.children.push(new TimepickerHour(this, hours_pm, i, 'PM'));
+        }
+        this.elem.css('display', 'block')
+            .append('<span class="am">A.M.</span>')
+            .append(hours_am)
+            .append('<span class="pm">P.M.</span>')
+            .append(hours_pm);
+    }
+}
 
-        this.elem.after(this.dropdown);
-        let offset = this.elem.offset().left - this.elem.parent().offset().left;
-        this.dropdown.css('left', `${offset}px`);
-        this.elem.after(this.btn_trigger);
-        this.dropdown.append(this.dropdown_container);
-        this.dropdown_container.append(this.hours_elem).append(this.minutes_elem);
+export class TimepickerMinutes extends TimepickerButtonContainer {
+
+    constructor(picker, container) {
+        super(picker, $(`<div />`).addClass('minutes-content'));
+        for (let i = 0; i < 12; i++) {
+            this.children.push(new TimepickerMinute(this, this.elem, i));
+        }
+        let header = $('<div />')
+            .addClass('header')
+            .text(picker.translate('minute'));
+        $('<div />')
+            .addClass('timepicker-minutes')
+            .append(header)
+            .append(this.elem)
+            .appendTo(container);
+    }
+}
+
+export class TimepickerWidget {
+
+    static initialize(context) {
+        $('input.timepicker', context).each(function() {
+            let elem = $(this);
+            elem.attr('spellcheck', false);
+            new TimepickerWidget(elem, {
+                language: elem.data('time-locale'),
+                clock: elem.data('time-clock')
+            });
+        });
+    }
+
+    constructor(elem, opts) {
+        this.elem = elem;
+        this.language = opts.language || 'en';
+        this.clock = opts.clock || 24;
+
+        this.period = null;
+        this.hour = '';
+        this.minute = '';
+
+        this.trigger_elem = $(`<button>...</button>`)
+            .addClass('timepicker-trigger btn btn-default');
+        elem.after(this.trigger_elem);
+
+        let dd_elem = this.dd_elem = $(`<div />`).addClass('timepicker-dropdown');
+        elem.after(dd_elem);
+        let offset = elem.offset().left - elem.parent().offset().left;
+        dd_elem.css('left', `${offset}px`);
+
+        let dd_container = $(`<div />`)
+            .addClass('timepicker-container')
+            .appendTo(dd_elem);
+
+        this.hours = new TimepickerHours(this, dd_container);
+        this.minutes = new TimepickerMinutes(this, dd_container);
 
         this.show_dropdown = this.show_dropdown.bind(this);
-        this.toggle_dropdown = this.toggle_dropdown.bind(this);
-        this.hide_dropdown = this.hide_dropdown.bind(this);
-
         this.elem.on('focus', this.show_dropdown);
-        this.btn_trigger.on('click', this.toggle_dropdown);
 
+        this.toggle_dropdown = this.toggle_dropdown.bind(this);
+        this.trigger_elem.on('click', this.toggle_dropdown);
+
+        this.hide_dropdown = this.hide_dropdown.bind(this);
         $(document).on('click', this.hide_dropdown);
+    }
+
+    unload() {
+        $(document).off('click', this.hide_dropdown);
     }
 
     get hour() {
@@ -124,77 +210,51 @@ export class Timepicker {
         this.set_time();
     }
 
-    get timeFormat() {
-        return this._timeFormat;
-    }
-
-    set timeFormat(timeFormat) {
-        this._timeFormat = timeFormat;
-    }
-
     set_time() {
-        if (this.locale.timeFormat === 'eu') {
-            this.elem.val(`${this.hour}:${this.minute}`);
-        } else if (this.locale.timeFormat === 'us') {
-            this.elem.val(`${this.hour}:${this.minute}${this.timeFormat}`);
+        if (this.hour === '' || this.minute === '') {
+            return;
         }
+        if (this.clock === 24) {
+            this.elem.val(`${this.hour}:${this.minute}`);
+        } else if (this.clock === 12) {
+            this.elem.val(`${this.hour}:${this.minute}${this.period}`);
+        }
+        this.hour = '';
+        this.minute = '';
+        this.dd_elem.hide();
     }
 
     hide_dropdown(e) {
-        if (e.target !== this.elem[0] && e.target !== this.btn_trigger[0]) {
-            if ($(e.target).closest(this.dropdown).length === 0) {
-                this.dropdown.hide();
+        if (e.target !== this.elem[0] && e.target !== this.trigger_elem[0]) {
+            if ($(e.target).closest(this.dd_elem).length === 0) {
+                this.dd_elem.hide();
             }
         }
     }
 
-    show_dropdown() {
-        this.dropdown.show();
+    show_dropdown(e) {
+        this.dd_elem.show();
     }
 
     toggle_dropdown(e) {
         e.preventDefault();
-        this.dropdown.toggle();
+        this.dd_elem.toggle();
+    }
+
+    translate(msgid) {
+        let locales = this.constructor.locales,
+            locale = locales[this.language] || locales.en;
+        return locale[msgid];
     }
 }
 
-class HoursCell {
-    constructor(elem, picker, timeFormat) {
-        this.elem = elem;
-        this.picker = picker;
-        this.timeFormat = timeFormat;
-
-        this.click_handle = this.click_handle.bind(this);
-        this.elem.on('click', this.click_handle);
+TimepickerWidget.locales = {
+    en: {
+        hour: 'Hour',
+        minute: 'Minute'
+    },
+    de: {
+        hour: 'Stunde',
+        minute: 'Minute'
     }
-
-    click_handle(e) {
-        let hour = this.elem.text();
-        for (let hour of this.picker.hours) {
-            hour.elem.removeClass('selected')
-        }
-        this.elem.addClass('selected');
-        this.picker.timeFormat = this.timeFormat;
-        this.picker.hour = hour;
-    }
-}
-
-class MinutesCell {
-    constructor(elem, picker) {
-        this.elem = elem;
-        this.picker = picker;
-
-        this.click_handle = this.click_handle.bind(this);
-        this.elem.on('click', this.click_handle);
-    }
-
-
-    click_handle(e) {
-        let minute = this.elem.text();
-        for (let minute of this.picker.minutes) {
-            minute.elem.removeClass('selected')
-        }
-        this.elem.addClass('selected');
-        this.picker.minute = minute;
-    }
-}
+};

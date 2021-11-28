@@ -12,7 +12,6 @@ Date input.
     date = factory('#field:datetime', props={
         'label': 'Enter date or use date picker',
         'required': 'Date Field is required',
-        'locale': 'de',
         'datepicker': True,
     })
 """
@@ -23,7 +22,6 @@ def date_example():
     form['date'] = factory('#field:datetime', props={
         'label': 'Enter date or use date picker',
         'required': 'Date Field is required',
-        'locale': 'de',
         'datepicker': True,
     })
     return {
@@ -45,6 +43,7 @@ Time input.
         'label': 'Select time',
         'required': 'Time Field is required',
         'timepicker': True,
+        'clock': '12'
     })
 """
 
@@ -55,6 +54,7 @@ def time_example():
         'label': 'Select time',
         'required': 'Time Field is required',
         'timepicker': True,
+        'clock': '12'
     })
     return {
         'widget': form,

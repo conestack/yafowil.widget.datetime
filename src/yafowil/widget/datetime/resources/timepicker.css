@@ -1,3 +1,17 @@
+input.timeinput {
+    width: 5em;
+    margin-right: 45px;
+}
+
+button.timepicker-trigger {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    margin: 0;
+    padding: 0;
+    transform: translateX(calc(-100% - 5px));
+}
+
 .timepicker-dropdown {
     position: absolute;
     margin-top: 4px;
@@ -15,36 +29,56 @@
     height: 100%;
 }
 
+.timepicker-container .header {
+    height: 30px;
+    background: #f1f3f5;
+    padding: 5px;
+}
+
+.timepicker-container .cell {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 3px;
+    user-select: none;
+}
+
+.timepicker-container .cell:hover {
+    background:#f9f9f9;
+}
+
+.timepicker-container .cell.selected {
+    background-color: #00adff;
+    color: #fff;
+    font-weight: 600;
+}
+
 .timepicker-hours {
     background: white;
     width: 200px;
     margin-right: 6px;
 }
 
-.timepicker-minutes {
-    background: white;
-    flex: auto;
+.timepicker-hours .hours-content {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
 }
 
-.timeinput {
-    width: 5em;
-}
-
-input.timeinput, input.dateinput {
-    margin-right: 45px;
-}
-
-div.am, div.pm {
+.timepicker-hours div.am, div.pm {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
 }
 
-div.am {
+.timepicker-hours div.am {
     border-bottom: 1px solid lightgray;
 }
 
-span.am, span.pm {
+.timepicker-hours span.am, span.pm {
     font-size: 10px;
     float: left;
     position: relative;
@@ -53,55 +87,12 @@ span.am, span.pm {
     font-weight: 600;
 }
 
-button.timepicker-trigger {
-    position: absolute;
-    width: 34px;
-    height: 34px;
-    margin: 0;
-    padding: 0;
-    transform: translateX(calc(-100% - 5px));
+.timepicker-minutes {
+    background: white;
+    flex: auto;
 }
 
-button.datepicker-trigger {
-    position: absolute;
-    width: 34px;
-    height: 34px;
-    margin: 0;
-    padding: 0;
-    transform: translateX(calc(-100% - 5px));
-}
-
-.timepicker-dropdown .header {
-    height: 30px;
-    background: #f1f3f5;
-    padding: 5px;
-}
-
-.cell {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
-    border-radius: 3px;
-}
-.cell:hover {
-    background:#f9f9f9;
-}
-
-.cell.selected {
-    background-color: #00adff;
-    color: #fff;
-    font-weight: 600;
-}
-
-.hours-content {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
-}
-
-.minutes-content {
+.timepicker-minutes .minutes-content {
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
