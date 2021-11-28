@@ -302,6 +302,8 @@ var yafowil_datetime = (function (exports, $) {
     exports.TimepickerMinute = TimepickerMinute;
     exports.TimepickerMinutes = TimepickerMinutes;
     exports.TimepickerWidget = TimepickerWidget;
+    exports.datepicker_settings = datepicker_settings;
+    exports.timepicker_i18n = timepicker_i18n;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

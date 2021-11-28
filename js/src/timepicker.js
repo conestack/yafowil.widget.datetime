@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import timepicker_i18n from './i18n.js';
+import {timepicker_i18n} from './i18n.js';
 
 export class TimepickerButton {
 

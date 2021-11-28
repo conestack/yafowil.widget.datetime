@@ -23,4 +23,4 @@ TimepickerI18n.messages.de = {
 };
 
 let timepicker_i18n = new TimepickerI18n();
-export default timepicker_i18n;
+export {timepicker_i18n};

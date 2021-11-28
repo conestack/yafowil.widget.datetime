@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import datepicker_settings from './settings.js';
+import {datepicker_settings} from './settings.js';
 
 // Datepicker base class is global.
 export class DatepickerWidget extends Datepicker {

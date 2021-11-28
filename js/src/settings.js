@@ -23,4 +23,4 @@ DatepickerSettings.locales.de = {
 };
 
 let datepicker_settings = new DatepickerSettings();
-export default datepicker_settings;
+export {datepicker_settings};
