@@ -22,6 +22,10 @@ module.exports = function(config) {
         }, {
             pattern: '../js/tests/test_*.js',
             type: 'module'
+        },
+        {
+            pattern: '../src/yafowil/widget/datetime/resources/timepicker.css',
+            included: true
         }],
         browsers: [
             'ChromeHeadless'

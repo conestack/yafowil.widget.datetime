@@ -1,5 +1,5 @@
-import {DatepickerWidget} from '../src/datepicker.js';
+// import {DatepickerWidget} from '../src/datepicker.js';
 
-QUnit.test('test', assert => {
-    assert.ok(true);
-});
+// QUnit.test('test', assert => {
+//     assert.ok(true);
+// });

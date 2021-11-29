@@ -159,6 +159,7 @@ export class TimepickerWidget {
 
     constructor(elem, opts) {
         this.elem = elem;
+        this.elem.data('timepicker', this);
         this.language = opts.language || 'en';
         this.clock = opts.clock || 24;
 
