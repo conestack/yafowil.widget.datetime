@@ -157,7 +157,7 @@ var yafowil_datetime = (function (exports, $) {
         constructor(picker, container) {
             super(picker, $(`<div />`).addClass('minutes-content'));
             for (let i = 0; i < 12; i++) {
-                this.children.push(new TimepickerMinute(this, this.elem, i));
+                this.children.push(new TimepickerMinute(this, this.elem, i * 5));
             }
             let header = $('<div />')
                 .addClass('header')
@@ -190,6 +190,8 @@ var yafowil_datetime = (function (exports, $) {
             this.trigger_elem = $(`<button>...</button>`)
                 .addClass('timepicker-trigger btn btn-default');
             elem.after(this.trigger_elem);
+            this.error_elem = $(`<span />`).addClass('timepicker-error');
+            this.trigger_elem.after(this.error_elem);
             let dd_elem = this.dd_elem = $(`<div />`).addClass('timepicker-dropdown');
             elem.after(dd_elem);
             let offset = elem.offset().left - elem.parent().offset().left;
@@ -199,12 +201,16 @@ var yafowil_datetime = (function (exports, $) {
                 .appendTo(dd_elem);
             this.hours = new TimepickerHours(this, dd_container);
             this.minutes = new TimepickerMinutes(this, dd_container);
+            this.validate();
             this.show_dropdown = this.show_dropdown.bind(this);
             this.elem.on('focus', this.show_dropdown);
             this.toggle_dropdown = this.toggle_dropdown.bind(this);
             this.trigger_elem.on('click', this.toggle_dropdown);
             this.hide_dropdown = this.hide_dropdown.bind(this);
             $(document).on('click', this.hide_dropdown);
+            this.input_handle = this.input_handle.bind(this);
+            this.elem.on('keypress', this.input_handle);
+            this.elem.on('keyup', this.validate.bind(this));
         }
         unload() {
             $(document).off('click', this.hide_dropdown);
@@ -223,6 +229,13 @@ var yafowil_datetime = (function (exports, $) {
             this._minute = minute;
             this.set_time();
         }
+        get time() {
+            return this._time;
+        }
+        set time(time) {
+            this.elem.val(time);
+            this._time = time;
+        }
         set_time() {
             if (this.hour === '' || this.minute === '') {
                 return;
@@ -234,7 +247,6 @@ var yafowil_datetime = (function (exports, $) {
             }
             this.hour = '';
             this.minute = '';
-            this.dd_elem.hide();
         }
         hide_dropdown(e) {
             if (e.target !== this.elem[0] && e.target !== this.trigger_elem[0]) {
@@ -250,6 +262,69 @@ var yafowil_datetime = (function (exports, $) {
             e.preventDefault();
             this.dd_elem.toggle();
         }
+        input_handle(e) {
+            let isNumber = new RegExp("[0-9]");
+            let val = this.elem.val();
+            let cursor_pos = e.target.selectionStart;
+            if (cursor_pos <= 4) {
+                if (!e.key.match(isNumber)) {
+                    e.preventDefault();
+                }
+                if (cursor_pos === 2) {
+                    this.elem.val(`${val}:`);
+                }
+            } else if (cursor_pos === 5 ) {
+                let correct = ["a", "A", "p", "P"];
+                if (!correct.includes(e.key)) {
+                    e.preventDefault();
+                }
+            } else if (cursor_pos === 6) {
+                if (e.key !== "m" && e.key !== "M") {
+                    e.preventDefault();
+                }
+            } else if (cursor_pos > 6) {
+                e.preventDefault();
+            }    }
+        validate() {
+            this.error_elem.empty();
+            if (!this.elem.val()) return;
+            let time = this.elem.val(),
+                match_24 = new RegExp(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/),
+                match_12 = new RegExp(/^(?:0?\d|1[012]):[0-5]\d[apAP][mM]$/),
+                hour = time.substr(0, 2),
+                hour_index = parseInt(hour),
+                minute = time.substr(3, 2),
+                minute_index = parseInt(minute) / 5;
+            if (this.clock === 24) {
+                if (!time.match(match_24) || time.length < 5) {
+                    this.display_error(this.translate('error_time'));
+                    return;
+                }
+            } else if (this.clock === 12) {
+                if (!time.match(match_12) || time.length < 7) {
+                    this.display_error(this.translate('error_time'));
+                    return;
+                }
+                if (hour < 0 || hour > 11) {
+                    this.display_error(this.translate('error_hour'));
+                    return;
+                }
+                let period = time.substr(5).toUpperCase();
+                this.period = (period === "PM") ? "PM" : "AM";
+                if (period === "PM") hour_index += 12;
+            }
+            if (minute.substr(1) !== "0" && minute.substr(1) !== "5") {
+                this.display_error(this.translate('error_minute'));
+                return;
+            }
+            let hour_elem = this.hours.children[hour_index];
+            hour_elem.click_handle();
+            let minute_elem = this.minutes.children[minute_index];
+            minute_elem.click_handle();
+        }
+        display_error(msg) {
+            this.error_elem.text(msg).show();
+        }
         translate(msgid) {
             let locales = this.constructor.locales,
                 locale = locales[this.language] || locales.en;
@@ -259,11 +334,17 @@ var yafowil_datetime = (function (exports, $) {
     TimepickerWidget.locales = {
         en: {
             hour: 'Hour',
-            minute: 'Minute'
+            minute: 'Minute',
+            error_time: 'Please enter a valid time.',
+            error_hour: 'Please enter a valid hour.',
+            error_minute: 'Minutes have to be a multiple of 5.'
         },
         de: {
             hour: 'Stunde',
-            minute: 'Minute'
+            minute: 'Minute',
+            error_time: 'Bitte geben sie eine korrekte Zeit an.',
+            error_hour: 'Bitte geben sie eine korrekte Stunde an.',
+            error_minute: 'Minuten müssen in Fünferschritten angegeben werden.'
         }
     };
 

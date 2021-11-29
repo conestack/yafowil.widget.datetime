@@ -98,3 +98,9 @@ button.timepicker-trigger {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr;
 }
+
+span.timepicker-error {
+    display: none;
+    color: #ef5477;
+    padding: 5px;
+}
