@@ -18,6 +18,12 @@ export class DatepickerWidget extends Datepicker {
             todayHighlight: true,
             autohide: true
         };
+
+        let lower_edge = elem.offset().top + elem.outerHeight() + 250;
+        if (lower_edge > $(document).height()) {
+            opts_.orientation = "top";
+        }
+
         let locale_options = DatepickerWidget.locale_options;
         Object.assign(opts_, locale_options[locale] || locale_options.en);
         Object.assign(opts_, opts);

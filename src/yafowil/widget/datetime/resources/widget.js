@@ -16,6 +16,10 @@ var yafowil_datetime = (function (exports, $) {
                 todayHighlight: true,
                 autohide: true
             };
+            let lower_edge = elem.offset().top + elem.outerHeight() + 250;
+            if (lower_edge > $(document).height()) {
+                opts_.orientation = "top";
+            }
             let locale_options = DatepickerWidget.locale_options;
             Object.assign(opts_, locale_options[locale] || locale_options.en);
             Object.assign(opts_, opts);
@@ -131,6 +135,9 @@ var yafowil_datetime = (function (exports, $) {
                 .append(header)
                 .append(this.elem)
                 .appendTo(container);
+            if (picker.clock === 12) {
+                header.css('margin-left', '34px');
+            }
         }
         create_clock_24() {
             for (let i = 0; i < 24; i++) {
@@ -202,6 +209,10 @@ var yafowil_datetime = (function (exports, $) {
             this.hours = new TimepickerHours(this, dd_container);
             this.minutes = new TimepickerMinutes(this, dd_container);
             this.validate();
+            let lower_edge = elem.offset().top + elem.outerHeight() + 250;
+            if (lower_edge > $(document).height()) {
+                this.dd_elem.css('top', '-170px');
+            }
             this.show_dropdown = this.show_dropdown.bind(this);
             this.elem.on('focus', this.show_dropdown);
             this.toggle_dropdown = this.toggle_dropdown.bind(this);

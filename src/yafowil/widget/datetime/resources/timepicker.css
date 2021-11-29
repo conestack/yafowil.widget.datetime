@@ -31,8 +31,14 @@ button.timepicker-trigger {
 
 .timepicker-container .header {
     height: 30px;
-    background: #f1f3f5;
+    background: none;
     padding: 5px;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.timepicker-container .header:hover {
+    background: #dae0e5;
 }
 
 .timepicker-container .cell {

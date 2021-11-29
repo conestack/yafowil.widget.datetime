@@ -97,6 +97,10 @@ export class TimepickerHours extends TimepickerButtonContainer {
             .append(header)
             .append(this.elem)
             .appendTo(container);
+
+        if (picker.clock === 12) {
+            header.css('margin-left', '34px');
+        }
     }
 
     create_clock_24() {
@@ -183,6 +187,11 @@ export class TimepickerWidget {
         this.minutes = new TimepickerMinutes(this, dd_container);
 
         this.validate();
+
+        let lower_edge = elem.offset().top + elem.outerHeight() + 250;
+        if (lower_edge > $(document).height()) {
+            this.dd_elem.css('top', '-170px');
+        }
 
         this.show_dropdown = this.show_dropdown.bind(this);
         this.elem.on('focus', this.show_dropdown);
