@@ -36,31 +36,19 @@ export class DatepickerWidget extends Datepicker {
         elem.after(trigger);
 
         this.toggle_picker = this.toggle_picker.bind(this);
-        trigger.off('mousedown').on('mousedown', this.toggle_picker);
-        trigger.on('click', (e) => {e.preventDefault();});
-
-        // patch for scrolling on mobile device
-        this.show_touchmove = this.show_touchmove.bind(this);
-        this.elem.on('focus', this.show_touchmove);
-        this.hide_touchmove = this.hide_touchmove.bind(this);
-        this.elem.on('focusout', this.hide_touchmove);
-    }
-
-    show_touchmove() {
-        // $(this.pickerElement).css('display', 'block');
-        this.picker.show();
-    }
-
-    hide_touchmove() {
-        // $(this.pickerElement).css('display', 'none');
+        trigger
+            .off('mousedown touchstart', this.toggle_picker)
+            .on('mousedown touchstart', this.toggle_picker);
+        trigger.on('click', (e) => {e.preventDefault()});
     }
 
     toggle_picker(evt) {
-        // $(this.pickerElement).css('display', 'unset');
         evt.preventDefault();
         evt.stopPropagation();
-        if (this.active) {
+
+        if (this.picker.active || this.active) {
             this.hide();
+            this.elem.blur();
         } else {
             this.show();
         }

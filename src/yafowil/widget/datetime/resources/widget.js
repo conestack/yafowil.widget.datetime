@@ -29,23 +29,17 @@ var yafowil_datetime = (function (exports, $) {
                 .addClass('datepicker-trigger btn btn-default');
             elem.after(trigger);
             this.toggle_picker = this.toggle_picker.bind(this);
-            trigger.off('mousedown').on('mousedown', this.toggle_picker);
+            trigger
+                .off('mousedown touchstart', this.toggle_picker)
+                .on('mousedown touchstart', this.toggle_picker);
             trigger.on('click', (e) => {e.preventDefault();});
-            this.show_touchmove = this.show_touchmove.bind(this);
-            this.elem.on('focus', this.show_touchmove);
-            this.hide_touchmove = this.hide_touchmove.bind(this);
-            this.elem.on('focusout', this.hide_touchmove);
-        }
-        show_touchmove() {
-            this.picker.show();
-        }
-        hide_touchmove() {
         }
         toggle_picker(evt) {
             evt.preventDefault();
             evt.stopPropagation();
-            if (this.active) {
+            if (this.picker.active || this.active) {
                 this.hide();
+                this.elem.blur();
             } else {
                 this.show();
             }
