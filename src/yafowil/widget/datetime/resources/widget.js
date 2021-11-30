@@ -31,17 +31,15 @@ var yafowil_datetime = (function (exports, $) {
             this.toggle_picker = this.toggle_picker.bind(this);
             trigger.off('mousedown').on('mousedown', this.toggle_picker);
             trigger.on('click', (e) => {e.preventDefault();});
+            this.show_touchmove = this.show_touchmove.bind(this);
+            this.elem.on('focus', this.show_touchmove);
+            this.hide_touchmove = this.hide_touchmove.bind(this);
+            this.elem.on('focusout', this.hide_touchmove);
         }
-        hide() {
-            console.log('WHATTUP YO');
-            if (this.inline) {
-                return;
-            }
-            if (this.elem.is(':focus')) {
-                return;
-            }
-            this.picker.hide();
-            this.picker.update().changeView(this.config.startView).render();
+        show_touchmove() {
+            this.picker.show();
+        }
+        hide_touchmove() {
         }
         toggle_picker(evt) {
             evt.preventDefault();
