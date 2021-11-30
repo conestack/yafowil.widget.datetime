@@ -190,6 +190,10 @@ export class TimepickerWidget {
         if (lower_edge > $(document).height()) {
             this.dd_elem.css('top', '-170px');
         }
+        let right_edge = elem.offset().left + this.dd_elem.outerWidth();
+        if (right_edge > $(document).width()) {
+            this.dd_elem.css('left', '0px');
+        }
 
         this.show_dropdown = this.show_dropdown.bind(this);
         this.elem.on('focus', this.show_dropdown);
@@ -318,10 +322,6 @@ export class TimepickerWidget {
             let period = time.substr(5).toUpperCase();
             this.period = (period === "PM") ? "PM" : "AM";
             if (period === "PM") hour_index += 12;
-        }
-
-        if (minute.substr(1) !== "0" && minute.substr(1) !== "5") {
-            return;
         }
 
         let hour_elem = this.hours.children[hour_index];

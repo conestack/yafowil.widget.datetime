@@ -102,6 +102,7 @@ def datetime_example():
 def get_example():
     return [
         date_example(),
+        date_example(),
         time_example(),
         datetime_example(),
     ]

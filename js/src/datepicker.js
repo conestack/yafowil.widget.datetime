@@ -29,6 +29,8 @@ export class DatepickerWidget extends Datepicker {
         Object.assign(opts_, opts);
         super(elem[0], opts_);
 
+        this.elem = elem;
+
         let trigger = $(`<button>...</button>`)
             .addClass('datepicker-trigger btn btn-default');
         elem.after(trigger);
@@ -36,6 +38,29 @@ export class DatepickerWidget extends Datepicker {
         this.toggle_picker = this.toggle_picker.bind(this);
         trigger.off('mousedown').on('mousedown', this.toggle_picker);
         trigger.on('click', (e) => {e.preventDefault();});
+
+        // patch onClickOutside to prevent outside touch when scrolling
+        this.onTouchOutside = this.onTouchOutside.bind(this);
+        $(document).off('touchstart touchend', this.onTouchOutside).on('touchstart touchend', this.onTouchOutside);
+    }
+
+    onTouchOutside(e) {
+        // let elem = $(document.activeElement);
+        // console.log($('input:focus'));
+        if (this.elem.is(':focus')) {
+            console.log('FOCUS')
+            // this.show();
+        }
+    }
+
+    hide() {
+        console.log('WHATTUP YO')
+        if (this.inline) {
+            return;
+        }
+
+        this.picker.hide();
+        this.picker.update().changeView(this.config.startView).render();
     }
 
     toggle_picker(evt) {

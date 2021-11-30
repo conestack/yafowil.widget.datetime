@@ -2365,6 +2365,7 @@ var Datepicker = (function () {
      * Not available on inline picker
      */
     hide() {
+      console.log('HIDE')
       if (this.inline) {
         return;
       }

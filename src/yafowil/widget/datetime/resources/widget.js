@@ -24,12 +24,24 @@ var yafowil_datetime = (function (exports, $) {
             Object.assign(opts_, locale_options[locale] || locale_options.en);
             Object.assign(opts_, opts);
             super(elem[0], opts_);
+            this.elem = elem;
             let trigger = $(`<button>...</button>`)
                 .addClass('datepicker-trigger btn btn-default');
             elem.after(trigger);
             this.toggle_picker = this.toggle_picker.bind(this);
             trigger.off('mousedown').on('mousedown', this.toggle_picker);
             trigger.on('click', (e) => {e.preventDefault();});
+        }
+        hide() {
+            console.log('WHATTUP YO');
+            if (this.inline) {
+                return;
+            }
+            if (this.elem.is(':focus')) {
+                return;
+            }
+            this.picker.hide();
+            this.picker.update().changeView(this.config.startView).render();
         }
         toggle_picker(evt) {
             evt.preventDefault();
@@ -212,6 +224,10 @@ var yafowil_datetime = (function (exports, $) {
             if (lower_edge > $(document).height()) {
                 this.dd_elem.css('top', '-170px');
             }
+            let right_edge = elem.offset().left + this.dd_elem.outerWidth();
+            if (right_edge > $(document).width()) {
+                this.dd_elem.css('left', '0px');
+            }
             this.show_dropdown = this.show_dropdown.bind(this);
             this.elem.on('focus', this.show_dropdown);
             this.toggle_dropdown = this.toggle_dropdown.bind(this);
@@ -319,9 +335,6 @@ var yafowil_datetime = (function (exports, $) {
                 let period = time.substr(5).toUpperCase();
                 this.period = (period === "PM") ? "PM" : "AM";
                 if (period === "PM") hour_index += 12;
-            }
-            if (minute.substr(1) !== "0" && minute.substr(1) !== "5") {
-                return;
             }
             let hour_elem = this.hours.children[hour_index];
             hour_elem.click_handle();
