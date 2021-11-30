@@ -198,8 +198,6 @@ var yafowil_datetime = (function (exports, $) {
             this.trigger_elem = $(`<button>...</button>`)
                 .addClass('timepicker-trigger btn btn-default');
             elem.after(this.trigger_elem);
-            this.error_elem = $(`<span />`).addClass('timepicker-error');
-            this.trigger_elem.after(this.error_elem);
             let dd_elem = this.dd_elem = $(`<div />`).addClass('timepicker-dropdown');
             elem.after(dd_elem);
             let offset = elem.offset().left - elem.parent().offset().left;
@@ -259,6 +257,7 @@ var yafowil_datetime = (function (exports, $) {
             }
             this.hour = '';
             this.minute = '';
+            this.dd_elem.hide();
         }
         hide_dropdown(e) {
             if (e.target !== this.elem[0] && e.target !== this.trigger_elem[0]) {
@@ -298,7 +297,6 @@ var yafowil_datetime = (function (exports, $) {
                 e.preventDefault();
             }    }
         validate() {
-            this.error_elem.empty();
             if (!this.elem.val()) return;
             let time = this.elem.val(),
                 match_24 = new RegExp(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/),
@@ -309,16 +307,13 @@ var yafowil_datetime = (function (exports, $) {
                 minute_index = parseInt(minute) / 5;
             if (this.clock === 24) {
                 if (!time.match(match_24) || time.length < 5) {
-                    this.display_error(this.translate('error_time'));
                     return;
                 }
             } else if (this.clock === 12) {
                 if (!time.match(match_12) || time.length < 7) {
-                    this.display_error(this.translate('error_time'));
                     return;
                 }
                 if (hour < 0 || hour > 11) {
-                    this.display_error(this.translate('error_hour'));
                     return;
                 }
                 let period = time.substr(5).toUpperCase();
@@ -326,16 +321,12 @@ var yafowil_datetime = (function (exports, $) {
                 if (period === "PM") hour_index += 12;
             }
             if (minute.substr(1) !== "0" && minute.substr(1) !== "5") {
-                this.display_error(this.translate('error_minute'));
                 return;
             }
             let hour_elem = this.hours.children[hour_index];
             hour_elem.click_handle();
             let minute_elem = this.minutes.children[minute_index];
             minute_elem.click_handle();
-        }
-        display_error(msg) {
-            this.error_elem.text(msg).show();
         }
         translate(msgid) {
             let locales = this.constructor.locales,
@@ -346,17 +337,11 @@ var yafowil_datetime = (function (exports, $) {
     TimepickerWidget.locales = {
         en: {
             hour: 'Hour',
-            minute: 'Minute',
-            error_time: 'Please enter a valid time.',
-            error_hour: 'Please enter a valid hour.',
-            error_minute: 'Minutes have to be a multiple of 5.'
+            minute: 'Minute'
         },
         de: {
             hour: 'Stunde',
-            minute: 'Minute',
-            error_time: 'Bitte geben sie eine korrekte Zeit an.',
-            error_hour: 'Bitte geben sie eine korrekte Stunde an.',
-            error_minute: 'Minuten müssen in Fünferschritten angegeben werden.'
+            minute: 'Minute'
         }
     };
 

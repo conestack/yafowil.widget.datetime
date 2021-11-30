@@ -171,9 +171,6 @@ export class TimepickerWidget {
             .addClass('timepicker-trigger btn btn-default');
         elem.after(this.trigger_elem);
 
-        this.error_elem = $(`<span />`).addClass('timepicker-error');
-        this.trigger_elem.after(this.error_elem);
-
         let dd_elem = this.dd_elem = $(`<div />`).addClass('timepicker-dropdown');
         elem.after(dd_elem);
 
@@ -250,7 +247,7 @@ export class TimepickerWidget {
         }
         this.hour = '';
         this.minute = '';
-        // this.dd_elem.hide();
+        this.dd_elem.hide();
     }
 
     hide_dropdown(e) {
@@ -297,7 +294,6 @@ export class TimepickerWidget {
     }
 
     validate() {
-        this.error_elem.empty();
         if (!this.elem.val()) return;
 
         let time = this.elem.val(),
@@ -310,16 +306,13 @@ export class TimepickerWidget {
 
         if (this.clock === 24) {
             if (!time.match(match_24) || time.length < 5) {
-                this.display_error(this.translate('error_time'));
                 return;
             }
         } else if (this.clock === 12) {
             if (!time.match(match_12) || time.length < 7) {
-                this.display_error(this.translate('error_time'));
                 return;
             }
             if (hour < 0 || hour > 11) {
-                this.display_error(this.translate('error_hour'));
                 return;
             }
             let period = time.substr(5).toUpperCase();
@@ -328,7 +321,6 @@ export class TimepickerWidget {
         }
 
         if (minute.substr(1) !== "0" && minute.substr(1) !== "5") {
-            this.display_error(this.translate('error_minute'));
             return;
         }
 
@@ -337,10 +329,6 @@ export class TimepickerWidget {
 
         let minute_elem = this.minutes.children[minute_index];
         minute_elem.click_handle();
-    }
-
-    display_error(msg) {
-        this.error_elem.text(msg).show();
     }
 
     translate(msgid) {
@@ -353,16 +341,10 @@ export class TimepickerWidget {
 TimepickerWidget.locales = {
     en: {
         hour: 'Hour',
-        minute: 'Minute',
-        error_time: 'Please enter a valid time.',
-        error_hour: 'Please enter a valid hour.',
-        error_minute: 'Minutes have to be a multiple of 5.'
+        minute: 'Minute'
     },
     de: {
         hour: 'Stunde',
-        minute: 'Minute',
-        error_time: 'Bitte geben sie eine korrekte Zeit an.',
-        error_hour: 'Bitte geben sie eine korrekte Stunde an.',
-        error_minute: 'Minuten müssen in Fünferschritten angegeben werden.'
+        minute: 'Minute'
     }
 };
