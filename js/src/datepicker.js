@@ -41,18 +41,18 @@ export class DatepickerWidget extends Datepicker {
             .on('mousedown touchstart', this.toggle_picker);
         this.trigger.on('click', (e) => {e.preventDefault()});
 
-        /**
-          * Patch for onClickOutside function in anonymous Datepicker function.
-          * Allows the user to adjust the dropdown position on mobile
-          * by preventing the default hide() on initial touchstart after focus.
-        */
-        this.allow_hide = true;
-        this.enable_hide = this.enable_hide.bind(this);
-        this.prevent_hide = this.prevent_hide.bind(this);
-        this.enable_hide();
+        // /**
+        //   * Patch for onClickOutside function in anonymous Datepicker function.
+        //   * Allows the user to adjust the dropdown position on mobile
+        //   * by preventing the default hide() on initial touchstart after focus.
+        // */
+        // this.allow_hide = true;
+        // this.enable_hide = this.enable_hide.bind(this);
+        // this.prevent_hide = this.prevent_hide.bind(this);
+        // this.enable_hide();
 
-        this.elem.on('focus', this.prevent_hide);
-        $(document).on('touchmove touchend', this.enable_hide);
+        // this.elem.on('focus', this.prevent_hide);
+        // $(document).on('touchmove touchend', this.enable_hide);
     }
 
     unload() {
@@ -69,11 +69,11 @@ export class DatepickerWidget extends Datepicker {
         this.allow_hide = true;
     }
 
-    hide() {
-        if (this.allow_hide) {
-            super.hide();
-        }
-    }
+    // hide() {
+    //     if (this.allow_hide) {
+    //         super.hide();
+    //     }
+    // }
 
     toggle_picker(evt) {
         evt.preventDefault();
