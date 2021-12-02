@@ -33,12 +33,6 @@ var yafowil_datetime = (function (exports, $) {
                 .off('mousedown touchstart', this.toggle_picker)
                 .on('mousedown touchstart', this.toggle_picker);
             this.trigger.on('click', (e) => {e.preventDefault();});
-            this.allow_hide = true;
-            this.enable_hide = this.enable_hide.bind(this);
-            this.prevent_hide = this.prevent_hide.bind(this);
-            this.enable_hide();
-            this.elem.on('focus', this.prevent_hide);
-            $(document).on('touchmove touchend', this.enable_hide);
         }
         unload() {
             this.trigger.off('mousedown touchstart', this.toggle_picker);
@@ -50,11 +44,6 @@ var yafowil_datetime = (function (exports, $) {
         }
         enable_hide(e) {
             this.allow_hide = true;
-        }
-        hide() {
-            if (this.allow_hide) {
-                super.hide();
-            }
         }
         toggle_picker(evt) {
             evt.preventDefault();
@@ -98,6 +87,11 @@ var yafowil_datetime = (function (exports, $) {
             this.picker = picker;
             this.elem = elem;
             this.children = [];
+        }
+        unload_all() {
+            for (let child of this.children) {
+                child.elem.off('click', child.click_handle);
+            }
         }
         unselect_all() {
             for (let child of this.children) {
@@ -226,22 +220,13 @@ var yafowil_datetime = (function (exports, $) {
             elem.after(this.trigger_elem);
             let dd_elem = this.dd_elem = $(`<div />`).addClass('timepicker-dropdown');
             elem.after(dd_elem);
-            let offset = elem.offset().left - elem.parent().offset().left;
-            dd_elem.css('left', `${offset}px`);
             let dd_container = $(`<div />`)
                 .addClass('timepicker-container')
                 .appendTo(dd_elem);
             this.hours = new TimepickerHours(this, dd_container);
             this.minutes = new TimepickerMinutes(this, dd_container);
             this.validate();
-            let lower_edge = elem.offset().top + elem.outerHeight() + 250;
-            if (lower_edge > $(document).height()) {
-                this.dd_elem.css('top', '-170px');
-            }
-            let right_edge = elem.offset().left + this.dd_elem.outerWidth();
-            if (right_edge > $(document).width()) {
-                this.dd_elem.css('left', '0px');
-            }
+            this.place();
             this.show_dropdown = this.show_dropdown.bind(this);
             this.elem.on('focus', this.show_dropdown);
             this.toggle_dropdown = this.toggle_dropdown.bind(this);
@@ -250,10 +235,17 @@ var yafowil_datetime = (function (exports, $) {
             $(document).on('click', this.hide_dropdown);
             this.input_handle = this.input_handle.bind(this);
             this.elem.on('keypress', this.input_handle);
-            this.elem.on('keyup', this.validate.bind(this));
+            this.validate = this.validate.bind(this);
+            this.elem.on('keyup', this.validate);
         }
         unload() {
+            this.elem.off('focus', this.show_dropdown);
+            this.trigger_elem.off('click', this.toggle_dropdown);
             $(document).off('click', this.hide_dropdown);
+            this.elem.off('keypress', this.input_handle);
+            this.elem.off('keyup', this.validate);
+            this.hours.unload_all();
+            this.minutes.unload_all();
         }
         get hour() {
             return this._hour;
@@ -275,6 +267,27 @@ var yafowil_datetime = (function (exports, $) {
         set time(time) {
             this.elem.val(time);
             this._time = time;
+        }
+        place() {
+            let offset = this.elem.offset().left - this.elem.parent().offset().left;
+            this.dd_elem.css('left', `${offset}px`);
+            let offset_left = this.elem.offset().left,
+                offset_top = this.elem.offset().top,
+                dd_width = this.dd_elem.outerWidth(),
+                dd_height = this.dd_elem.outerHeight(),
+                elem_width = this.elem.outerWidth();
+            let lower_edge = offset_top + this.elem.outerHeight() + dd_height;
+            let right_edge = offset_left + dd_width;
+            if (lower_edge > $(document).height()) {
+                this.dd_elem.css('top', '-170px');
+            }
+            if (offset_left + elem_width - dd_width < 0) {
+                this.dd_elem.css('left', 'unset');
+            } else if (right_edge > $(window).width()) {
+                this.dd_elem
+                    .css('transform',
+                        `translateX(calc(-100% + ${elem_width}px))`);
+            }
         }
         set_time() {
             if (this.hour === '' || this.minute === '') {
@@ -304,27 +317,30 @@ var yafowil_datetime = (function (exports, $) {
             this.dd_elem.toggle();
         }
         input_handle(e) {
+            e.preventDefault();
             let isNumber = new RegExp("[0-9]");
             let val = this.elem.val();
             let cursor_pos = e.target.selectionStart;
+            if (e.key === 'Enter') {
+                this.dd_elem.hide();
+                this.elem.blur();
+            }
             if (cursor_pos <= 4) {
-                if (!e.key.match(isNumber)) {
-                    e.preventDefault();
+                if (e.key.match(isNumber)) {
+                    this.elem.val(val + e.key);
+                    if (cursor_pos === 2) {
+                        this.elem.val(`${val}:${e.key}`);
+                    }
                 }
-                if (cursor_pos === 2) {
-                    this.elem.val(`${val}:`);
-                }
-            } else if (cursor_pos === 5 ) {
+            } else if (cursor_pos === 5 && this.clock === 12) {
                 let correct = ["a", "A", "p", "P"];
-                if (!correct.includes(e.key)) {
-                    e.preventDefault();
+                if (correct.includes(e.key)) {
+                    this.elem.val(val + e.key);
                 }
-            } else if (cursor_pos === 6) {
-                if (e.key !== "m" && e.key !== "M") {
-                    e.preventDefault();
+            } else if (cursor_pos === 6 && this.clock === 12) {
+                if (e.key === "m" || e.key === "M") {
+                    this.elem.val(val + e.key);
                 }
-            } else if (cursor_pos > 6) {
-                e.preventDefault();
             }    }
         validate() {
             if (!this.elem.val()) return;
@@ -341,9 +357,6 @@ var yafowil_datetime = (function (exports, $) {
                 }
             } else if (this.clock === 12) {
                 if (!time.match(match_12) || time.length < 7) {
-                    return;
-                }
-                if (hour < 0 || hour > 11) {
                     return;
                 }
                 let period = time.substr(5).toUpperCase();
