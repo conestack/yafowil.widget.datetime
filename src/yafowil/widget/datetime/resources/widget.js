@@ -25,14 +25,36 @@ var yafowil_datetime = (function (exports, $) {
             Object.assign(opts_, opts);
             super(elem[0], opts_);
             this.elem = elem;
-            let trigger = $(`<button>...</button>`)
+            let trigger = this.trigger = $(`<button>...</button>`)
                 .addClass('datepicker-trigger btn btn-default');
             elem.after(trigger);
             this.toggle_picker = this.toggle_picker.bind(this);
-            trigger
+            this.trigger
                 .off('mousedown touchstart', this.toggle_picker)
                 .on('mousedown touchstart', this.toggle_picker);
-            trigger.on('click', (e) => {e.preventDefault();});
+            this.trigger.on('click', (e) => {e.preventDefault();});
+            this.allow_hide = true;
+            this.enable_hide = this.enable_hide.bind(this);
+            this.prevent_hide = this.prevent_hide.bind(this);
+            this.enable_hide();
+            this.elem.on('focus', this.prevent_hide);
+            $(document).on('touchmove touchend', this.enable_hide);
+        }
+        unload() {
+            this.trigger.off('mousedown touchstart', this.toggle_picker);
+            this.elem.off('focus', this.prevent_hide);
+            $(document).off('touchmove touchend', this.enable_hide);
+        }
+        prevent_hide(e) {
+            this.allow_hide = false;
+        }
+        enable_hide(e) {
+            this.allow_hide = true;
+        }
+        hide() {
+            if (this.allow_hide) {
+                super.hide();
+            }
         }
         toggle_picker(evt) {
             evt.preventDefault();
