@@ -30,6 +30,7 @@ export class DatepickerWidget extends Datepicker {
         super(elem[0], opts_);
 
         this.elem = elem;
+        this.elem.data('datepicker', this);
 
         let trigger = this.trigger = $(`<button>...</button>`)
             .addClass('datepicker-trigger btn btn-default');
@@ -58,16 +59,16 @@ export class DatepickerWidget extends Datepicker {
     unload() {
         this.trigger.off('mousedown touchstart', this.toggle_picker);
         this.elem.off('focus', this.prevent_hide);
-        $(document).off('touchmove touchend', this.enable_hide);
+        // $(document).off('touchmove touchend', this.enable_hide);
     }
 
-    prevent_hide(e) {
-        this.allow_hide = false;
-    }
+    // prevent_hide(e) {
+    //     this.allow_hide = false;
+    // }
 
-    enable_hide(e) {
-        this.allow_hide = true;
-    }
+    // enable_hide(e) {
+    //     this.allow_hide = true;
+    // }
 
     // hide() {
     //     if (this.allow_hide) {
