@@ -261,13 +261,6 @@ var yafowil_datetime = (function (exports, $) {
             this._minute = minute;
             this.set_time();
         }
-        get time() {
-            return this._time;
-        }
-        set time(time) {
-            this.elem.val(time);
-            this._time = time;
-        }
         place() {
             let offset = this.elem.offset().left - this.elem.parent().offset().left;
             this.dd_elem.css('left', `${offset}px`);
