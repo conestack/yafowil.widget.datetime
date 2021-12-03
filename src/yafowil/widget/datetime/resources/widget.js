@@ -25,6 +25,7 @@ var yafowil_datetime = (function (exports, $) {
             Object.assign(opts_, opts);
             super(elem[0], opts_);
             this.elem = elem;
+            this.elem.data('datepicker', this);
             let trigger = this.trigger = $(`<button>...</button>`)
                 .addClass('datepicker-trigger btn btn-default');
             elem.after(trigger);
@@ -37,13 +38,6 @@ var yafowil_datetime = (function (exports, $) {
         unload() {
             this.trigger.off('mousedown touchstart', this.toggle_picker);
             this.elem.off('focus', this.prevent_hide);
-            $(document).off('touchmove touchend', this.enable_hide);
-        }
-        prevent_hide(e) {
-            this.allow_hide = false;
-        }
-        enable_hide(e) {
-            this.allow_hide = true;
         }
         toggle_picker(evt) {
             evt.preventDefault();
@@ -226,6 +220,7 @@ var yafowil_datetime = (function (exports, $) {
             this.hours = new TimepickerHours(this, dd_container);
             this.minutes = new TimepickerMinutes(this, dd_container);
             this.validate();
+            this.place = this.place.bind(this);
             this.place();
             this.show_dropdown = this.show_dropdown.bind(this);
             this.elem.on('focus', this.show_dropdown);
@@ -237,6 +232,7 @@ var yafowil_datetime = (function (exports, $) {
             this.elem.on('keypress', this.input_handle);
             this.validate = this.validate.bind(this);
             this.elem.on('keyup', this.validate);
+            $(window).on('resize', this.place);
         }
         unload() {
             this.elem.off('focus', this.show_dropdown);
@@ -266,16 +262,18 @@ var yafowil_datetime = (function (exports, $) {
             this.dd_elem.css('left', `${offset}px`);
             let offset_left = this.elem.offset().left,
                 offset_top = this.elem.offset().top,
-                dd_width = this.dd_elem.outerWidth(),
-                dd_height = this.dd_elem.outerHeight(),
-                elem_width = this.elem.outerWidth();
-            let lower_edge = offset_top + this.elem.outerHeight() + dd_height;
+                dd_width = this.dd_elem.outerWidth();
+                this.dd_elem.outerHeight();
+                let elem_width = this.elem.outerWidth();
+            let lower_edge = offset_top + this.elem.outerHeight() + 250;
             let right_edge = offset_left + dd_width;
+            this.dd_elem.css('transform', `translateX(0px)`);
             if (lower_edge > $(document).height()) {
                 this.dd_elem.css('top', '-170px');
             }
             if (offset_left + elem_width - dd_width < 0) {
-                this.dd_elem.css('left', 'unset');
+                let lefty = right_edge - $(window).width();
+                this.dd_elem.css('transform', `translateX(-${lefty}px)`);
             } else if (right_edge > $(window).width()) {
                 this.dd_elem
                     .css('transform',

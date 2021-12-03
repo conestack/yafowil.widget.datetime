@@ -188,6 +188,7 @@ export class TimepickerWidget {
         this.minutes = new TimepickerMinutes(this, dd_container);
 
         this.validate();
+        this.place = this.place.bind(this);
         this.place();
 
         this.show_dropdown = this.show_dropdown.bind(this);
@@ -203,6 +204,8 @@ export class TimepickerWidget {
         this.elem.on('keypress', this.input_handle);
         this.validate = this.validate.bind(this);
         this.elem.on('keyup', this.validate);
+
+        $(window).on('resize', this.place);
     }
 
     unload() {
@@ -241,17 +244,18 @@ export class TimepickerWidget {
         let offset_left = this.elem.offset().left,
             offset_top = this.elem.offset().top,
             dd_width = this.dd_elem.outerWidth(),
-            dd_height = this.dd_elem.outerHeight(),
             elem_width = this.elem.outerWidth();
 
-        let lower_edge = offset_top + this.elem.outerHeight() + dd_height;
+        let lower_edge = offset_top + this.elem.outerHeight() + 250;
         let right_edge = offset_left + dd_width;
+        this.dd_elem.css('transform', `translateX(0px)`);
 
         if (lower_edge > $(document).height()) {
             this.dd_elem.css('top', '-170px');
         }
         if (offset_left + elem_width - dd_width < 0) {
-            this.dd_elem.css('left', 'unset');
+            let lefty = right_edge - $(window).width();
+            this.dd_elem.css('transform', `translateX(-${lefty}px)`);
         } else if (right_edge > $(window).width()) {
             this.dd_elem
                 .css('transform',
