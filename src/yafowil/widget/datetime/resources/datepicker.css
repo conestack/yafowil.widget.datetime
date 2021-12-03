@@ -11,7 +11,7 @@ button.datepicker-trigger {
     transform: translateX(calc(-100% - 5px));
 }
 
-.datepicker {
+div.datepicker {
     display: none;
 }
 
