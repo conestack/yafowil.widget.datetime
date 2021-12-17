@@ -25,7 +25,7 @@ QUnit.module('TimepickerWidget', hooks => {
         picker = null;
     });
 
-    QUnit.test.only('Initialize() - no data', assert => {
+    QUnit.test('Initialize() - no data', assert => {
         TimepickerWidget.initialize();
 
         picker = elem.data('timepicker');
@@ -33,7 +33,7 @@ QUnit.module('TimepickerWidget', hooks => {
         assert.strictEqual(picker.clock, 24);
     });
 
-    QUnit.test.only('Initialize() - language and clock 12', assert => {
+    QUnit.test('Initialize() - language and clock 12', assert => {
         // manually set data and locale
         data_clock = 12;
         data_locale = "de";
@@ -54,7 +54,7 @@ QUnit.module('TimepickerWidget', hooks => {
     */
 
     /* lack of space on bottom edge */
-    QUnit.test.only('Place - align to top', assert => {
+    QUnit.test('Place - align to top', assert => {
         container
             .css('position', 'absolute')
             .css('top', 'calc(100vh - 100px)');
@@ -66,7 +66,7 @@ QUnit.module('TimepickerWidget', hooks => {
         assert.strictEqual(picker.dd_elem.css('top'), '-170px');
     });
     /* lack of space on right edge */
-    QUnit.test.only('Place - align to right', assert => {
+    QUnit.test('Place - align to right', assert => {
         container
             .css('position', 'absolute')
             .css('left', 'calc(100% - 200px)');
@@ -81,7 +81,7 @@ QUnit.module('TimepickerWidget', hooks => {
         );
     });
 
-    QUnit.test.only('unload elements', assert => {
+    QUnit.test('unload elements', assert => {
         TimepickerWidget.initialize();
         picker = elem.data('timepicker');
         assert.strictEqual(picker.dd_elem.css('display'), 'none');
@@ -112,7 +112,7 @@ QUnit.module('TimepickerWidget', hooks => {
         assert.strictEqual(picker.dd_elem.css('display'), 'none');
     });
 
-    QUnit.test.only('Set_time() - empty hours and minutes', assert => {
+    QUnit.test('Set_time() - empty hours and minutes', assert => {
         // returns if no hour or minute is set
         TimepickerWidget.initialize();
         picker = elem.data('timepicker');
@@ -125,7 +125,7 @@ QUnit.module('TimepickerWidget', hooks => {
         assert.strictEqual(picker.dd_elem.css('display'), 'block');
     });
 
-    QUnit.test.only('Set_time() - 24hr clock', assert => {
+    QUnit.test('Set_time() - 24hr clock', assert => {
         let data_clock = 24;
         elem.data('time-clock', data_clock);
         TimepickerWidget.initialize();
@@ -144,7 +144,7 @@ QUnit.module('TimepickerWidget', hooks => {
         assert.strictEqual(picker.dd_elem.css('display'), 'none');
     });
 
-    QUnit.test.only('Set_time() - 12hr clock', assert => {
+    QUnit.test('Set_time() - 12hr clock', assert => {
         let data_clock = 12;
         elem.data('time-clock', data_clock);
         TimepickerWidget.initialize();
@@ -176,7 +176,7 @@ QUnit.module('TimepickerWidget', hooks => {
     */
 
     QUnit.module('24hr clock', () => {
-        QUnit.test.only('correct input', assert => {
+        QUnit.test('correct input', assert => {
             TimepickerWidget.initialize();
             picker = elem.data('timepicker');
             picker.elem.trigger('focus');
@@ -199,7 +199,7 @@ QUnit.module('TimepickerWidget', hooks => {
             assert.strictEqual(picker.elem.val(), '13:25');
             assert.strictEqual(picker.dd_elem.css('display'), 'none');
         });
-        QUnit.test.only('AM/PM input', assert => {
+        QUnit.test('AM/PM input', assert => {
             TimepickerWidget.initialize();
             picker = elem.data('timepicker');
             picker.elem.trigger('focus');
@@ -224,7 +224,7 @@ QUnit.module('TimepickerWidget', hooks => {
             assert.strictEqual(picker.elem.val(), '01:25');
             assert.strictEqual(picker.dd_elem.css('display'), 'none');
         });
-        QUnit.test.only('faulty inputs', assert => {
+        QUnit.test('faulty inputs', assert => {
             TimepickerWidget.initialize();
             picker = elem.data('timepicker');
             picker.elem.trigger('focus');
@@ -253,7 +253,7 @@ QUnit.module('TimepickerWidget', hooks => {
             picker.elem.trigger($.Event('keypress', { key: 'Enter' }));
             assert.strictEqual(picker.dd_elem.css('display'), 'none');
         });
-        QUnit.test.only('validate() - correct input', assert => {
+        QUnit.test('validate() - correct input', assert => {
             TimepickerWidget.initialize();
             picker = elem.data('timepicker');
 
@@ -270,7 +270,7 @@ QUnit.module('TimepickerWidget', hooks => {
             let minute_elem = picker.minutes.children[7];
             assert.strictEqual(minute_elem.selected, true);
         });
-        QUnit.test.only('validate() - no match', assert => {
+        QUnit.test('validate() - no match', assert => {
             TimepickerWidget.initialize();
             picker = elem.data('timepicker');
 
@@ -290,7 +290,7 @@ QUnit.module('TimepickerWidget', hooks => {
     });
 
     QUnit.module('12hr clock', () => {
-        QUnit.test.only('correct input', assert => {
+        QUnit.test('correct input', assert => {
             let data_clock = 12;
             elem.data('time-clock', data_clock);
             TimepickerWidget.initialize();
@@ -317,7 +317,7 @@ QUnit.module('TimepickerWidget', hooks => {
             assert.strictEqual(picker.elem.val(), '01:25AM');
             assert.strictEqual(picker.dd_elem.css('display'), 'none');
         });
-        QUnit.test.only('faulty inputs', assert => {
+        QUnit.test('faulty inputs', assert => {
             let data_clock = 12;
             elem.data('time-clock', data_clock);
             TimepickerWidget.initialize();
@@ -350,7 +350,7 @@ QUnit.module('TimepickerWidget', hooks => {
             assert.strictEqual(picker.elem.val(), '11:25AM');
             assert.strictEqual(picker.dd_elem.css('display'), 'none');
         });
-        QUnit.test.only('validate() - correct input, AM', assert => {
+        QUnit.test('validate() - correct input, AM', assert => {
             let data_clock = 12;
             elem.data('time-clock', data_clock);
             TimepickerWidget.initialize();
@@ -369,7 +369,7 @@ QUnit.module('TimepickerWidget', hooks => {
             let minute_elem = picker.minutes.children[3];
             assert.strictEqual(minute_elem.selected, true);
         });
-        QUnit.test.only('validate() - correct input, PM', assert => {
+        QUnit.test('validate() - correct input, PM', assert => {
             let data_clock = 12;
             elem.data('time-clock', data_clock);
             TimepickerWidget.initialize();
@@ -387,7 +387,7 @@ QUnit.module('TimepickerWidget', hooks => {
             let minute_elem = picker.minutes.children[3];
             assert.strictEqual(minute_elem.selected, true);
         });
-        QUnit.test.only('validate() - no match', assert => {
+        QUnit.test('validate() - no match', assert => {
             let data_clock = 12;
             elem.data('time-clock', data_clock);
             TimepickerWidget.initialize();
@@ -408,7 +408,7 @@ QUnit.module('TimepickerWidget', hooks => {
         });
     });
 
-    QUnit.test.only('toggle_dropdown()', assert => {
+    QUnit.test('toggle_dropdown()', assert => {
         TimepickerWidget.initialize();
         picker = elem.data('timepicker');
         assert.strictEqual(picker.dd_elem.css('display'), 'none');
@@ -422,7 +422,7 @@ QUnit.module('TimepickerWidget', hooks => {
         assert.strictEqual(picker.dd_elem.css('display'), 'none');
     });
 
-    QUnit.test.only('hide_dropdown() - click outside of dropdown', assert => {
+    QUnit.test('hide_dropdown() - click outside of dropdown', assert => {
         TimepickerWidget.initialize();
         picker = elem.data('timepicker');
         assert.strictEqual(picker.dd_elem.css('display'), 'none');
