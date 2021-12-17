@@ -15,7 +15,7 @@ QUnit.module('TimepickerWidget', hooks => {
         $('body').append(container);
     });
     hooks.beforeEach(() => {
-        elem = create_elem();
+        elem = $(`<input type="text" />`).addClass('timepicker');
         container.append(elem);
     })
     hooks.afterEach(() => {
@@ -253,6 +253,40 @@ QUnit.module('TimepickerWidget', hooks => {
             picker.elem.trigger($.Event('keypress', { key: 'Enter' }));
             assert.strictEqual(picker.dd_elem.css('display'), 'none');
         });
+        QUnit.test.only('validate() - correct input', assert => {
+            TimepickerWidget.initialize();
+            picker = elem.data('timepicker');
+
+            // set time in elem
+            picker.elem.val('16:35');
+            // validate time format
+            picker.validate();
+
+            assert.strictEqual(picker.elem.val(), '16:35');
+
+            // correct hour and minute cell are selected
+            let hour_elem = picker.hours.children[16];
+            assert.strictEqual(hour_elem.selected, true);
+            let minute_elem = picker.minutes.children[7];
+            assert.strictEqual(minute_elem.selected, true);
+        });
+        QUnit.test.only('validate() - no match', assert => {
+            TimepickerWidget.initialize();
+            picker = elem.data('timepicker');
+
+            // set time in elem
+            picker.elem.val('1:35U');
+            // validate time format
+            picker.validate();
+
+            // no minute or hour cell selected
+            for (let hour of picker.hours.children) {
+                assert.strictEqual(hour.selected, false);
+            }
+            for (let minute of picker.minutes.children) {
+                assert.strictEqual(minute.selected, false);
+            }
+        });
     });
 
     QUnit.module('12hr clock', () => {
@@ -283,7 +317,7 @@ QUnit.module('TimepickerWidget', hooks => {
             assert.strictEqual(picker.elem.val(), '01:25AM');
             assert.strictEqual(picker.dd_elem.css('display'), 'none');
         });
-        QUnit.test('faulty inputs', assert => {
+        QUnit.test.only('faulty inputs', assert => {
             let data_clock = 12;
             elem.data('time-clock', data_clock);
             TimepickerWidget.initialize();
@@ -316,194 +350,99 @@ QUnit.module('TimepickerWidget', hooks => {
             assert.strictEqual(picker.elem.val(), '11:25AM');
             assert.strictEqual(picker.dd_elem.css('display'), 'none');
         });
-    });
-
-    QUnit.module('validate', hooks => {
-        let elem;
-        let picker;
-
-        hooks.before(() => {
-            $('body').append(container);
-        });
-        hooks.beforeEach(() => {
-            elem = create_elem();
-            container.append(elem);
-        });
-        hooks.afterEach(() => {
-            container.empty();
-            picker = null;
-        });
-
-        QUnit.module('24hr clock', () => {
-            QUnit.test('correct input', assert => {
-                TimepickerWidget.initialize();
-                picker = elem.data('timepicker');
-
-                // set time in elem
-                picker.elem.val('16:35');
-                // validate time format
-                picker.validate();
-
-                assert.strictEqual(picker.elem.val(), '16:35');
-
-                // correct hour and minute cell are selected
-                let hour_elem = picker.hours.children[16];
-                assert.strictEqual(hour_elem.selected, true);
-                let minute_elem = picker.minutes.children[7];
-                assert.strictEqual(minute_elem.selected, true);
-            });
-            QUnit.test('no match', assert => {
-                TimepickerWidget.initialize();
-                picker = elem.data('timepicker');
-
-                // set time in elem
-                picker.elem.val('1:35U');
-                // validate time format
-                picker.validate();
-
-                // no minute or hour cell selected
-                for (let hour of picker.hours.children) {
-                    assert.strictEqual(hour.selected, false);
-                }
-                for (let minute of picker.minutes.children) {
-                    assert.strictEqual(minute.selected, false);
-                }
-            });
-        });
-
-        QUnit.module('12hr clock', () => {
-            QUnit.test('correct input, AM', assert => {
-                let data_clock = 12;
-                elem.data('time-clock', data_clock);
-                TimepickerWidget.initialize();
-                picker = elem.data('timepicker');
-
-                // set time in elem
-                picker.elem.val('03:15am');
-                // validate time format
-                picker.validate();
-
-                assert.strictEqual(picker.elem.val(), '03:15AM');
-
-                // correct hour and minute cell are selected
-                let hour_elem = picker.hours.children[3];
-                assert.strictEqual(hour_elem.selected, true);
-                let minute_elem = picker.minutes.children[3];
-                assert.strictEqual(minute_elem.selected, true);
-            });
-            QUnit.test('correct input, PM', assert => {
-                let data_clock = 12;
-                elem.data('time-clock', data_clock);
-                TimepickerWidget.initialize();
-                picker = elem.data('timepicker');
-
-                // set time in elem
-                picker.elem.val('03:15pm');
-                // validate time format
-                picker.validate();
-
-                // correct hour and minute cell are selected
-                assert.strictEqual(picker.elem.val(), '03:15PM');
-                let hour_elem = picker.hours.children[15];
-                assert.strictEqual(hour_elem.selected, true);
-                let minute_elem = picker.minutes.children[3];
-                assert.strictEqual(minute_elem.selected, true);
-            });
-            QUnit.test('no match', assert => {
-                let data_clock = 12;
-                elem.data('time-clock', data_clock);
-                TimepickerWidget.initialize();
-                picker = elem.data('timepicker');
-
-                // set time in elem
-                picker.elem.val('1j8:23AM');
-                // validate time format
-                picker.validate();
-
-                // no minute or hour cell selected
-                for (let hour of picker.hours.children) {
-                    assert.strictEqual(hour.selected, false);
-                }
-                for (let minute of picker.minutes.children) {
-                    assert.strictEqual(minute.selected, false);
-                }
-            });
-        });
-    });
-
-    QUnit.module('toggle_dropdown', hooks => {
-        let elem;
-        let picker;
-
-        hooks.before(() => {
-            $('body').append(container);
-        });
-        hooks.beforeEach(() => {
-            elem = create_elem();
-            container.append(elem);
-        });
-        hooks.afterEach(() => {
-            container.empty();
-            picker = null;
-        });
-
-        QUnit.test('toggle', assert => {
+        QUnit.test.only('validate() - correct input, AM', assert => {
+            let data_clock = 12;
+            elem.data('time-clock', data_clock);
             TimepickerWidget.initialize();
             picker = elem.data('timepicker');
-            assert.strictEqual(picker.dd_elem.css('display'), 'none');
 
-            // trigger click on trigger element
-            picker.trigger_elem.trigger('click');
-            assert.strictEqual(picker.dd_elem.css('display'), 'block');
+            // set time in elem
+            picker.elem.val('03:15am');
+            // validate time format
+            picker.validate();
 
-            // trigger click on trigger element
-            picker.trigger_elem.trigger('click');
-            assert.strictEqual(picker.dd_elem.css('display'), 'none');
+            assert.strictEqual(picker.elem.val(), '03:15AM');
+
+            // correct hour and minute cell are selected
+            let hour_elem = picker.hours.children[3];
+            assert.strictEqual(hour_elem.selected, true);
+            let minute_elem = picker.minutes.children[3];
+            assert.strictEqual(minute_elem.selected, true);
+        });
+        QUnit.test.only('validate() - correct input, PM', assert => {
+            let data_clock = 12;
+            elem.data('time-clock', data_clock);
+            TimepickerWidget.initialize();
+            picker = elem.data('timepicker');
+
+            // set time in elem
+            picker.elem.val('03:15pm');
+            // validate time format
+            picker.validate();
+
+            // correct hour and minute cell are selected
+            assert.strictEqual(picker.elem.val(), '03:15PM');
+            let hour_elem = picker.hours.children[15];
+            assert.strictEqual(hour_elem.selected, true);
+            let minute_elem = picker.minutes.children[3];
+            assert.strictEqual(minute_elem.selected, true);
+        });
+        QUnit.test.only('validate() - no match', assert => {
+            let data_clock = 12;
+            elem.data('time-clock', data_clock);
+            TimepickerWidget.initialize();
+            picker = elem.data('timepicker');
+
+            // set time in elem
+            picker.elem.val('1j8:23AM');
+            // validate time format
+            picker.validate();
+
+            // no minute or hour cell selected
+            for (let hour of picker.hours.children) {
+                assert.strictEqual(hour.selected, false);
+            }
+            for (let minute of picker.minutes.children) {
+                assert.strictEqual(minute.selected, false);
+            }
         });
     });
 
-    QUnit.module('hide_dropdown', hooks => {
-        let elem;
-        let picker;
+    QUnit.test.only('toggle_dropdown()', assert => {
+        TimepickerWidget.initialize();
+        picker = elem.data('timepicker');
+        assert.strictEqual(picker.dd_elem.css('display'), 'none');
 
-        hooks.before(() => {
-            $('body').append(container);
-        });
-        hooks.beforeEach(() => {
-            elem = create_elem();
-            container.append(elem);
-        });
-        hooks.afterEach(() => {
-            container.empty();
-            picker = null;
-        });
+        // trigger click on trigger element
+        picker.trigger_elem.trigger('click');
+        assert.strictEqual(picker.dd_elem.css('display'), 'block');
 
-        QUnit.test('click outside of dropdown', assert => {
-            TimepickerWidget.initialize();
-            picker = elem.data('timepicker');
-            assert.strictEqual(picker.dd_elem.css('display'), 'none');
+        // trigger click on trigger element
+        picker.trigger_elem.trigger('click');
+        assert.strictEqual(picker.dd_elem.css('display'), 'none');
+    });
 
-            // show element
-            picker.trigger_elem.trigger('click');
-            assert.strictEqual(picker.dd_elem.css('display'), 'block');
+    QUnit.test.only('hide_dropdown() - click outside of dropdown', assert => {
+        TimepickerWidget.initialize();
+        picker = elem.data('timepicker');
+        assert.strictEqual(picker.dd_elem.css('display'), 'none');
 
-            // click outside of element
-            let click = new $.Event('click', {pageX:1, pageY:1});
-            $(document).trigger(click);
-            assert.strictEqual(picker.dd_elem.css('display'), 'none');
+        // show element
+        picker.trigger_elem.trigger('click');
+        assert.strictEqual(picker.dd_elem.css('display'), 'block');
 
-            // show element
-            picker.trigger_elem.trigger('click');
-            assert.strictEqual(picker.dd_elem.css('display'), 'block');
+        // click outside of element
+        let click = new $.Event('click', { pageX: 1, pageY: 1 });
+        $(document).trigger(click);
+        assert.strictEqual(picker.dd_elem.css('display'), 'none');
 
-            // click inside of element
-            picker.dd_elem.trigger('click');
-            assert.strictEqual(picker.dd_elem.css('display'), 'block');
-        });
+        // show element
+        picker.trigger_elem.trigger('click');
+        assert.strictEqual(picker.dd_elem.css('display'), 'block');
+
+        // click inside of element
+        picker.dd_elem.trigger('click');
+        assert.strictEqual(picker.dd_elem.css('display'), 'block');
     });
 });
 
-function create_elem() {
-    let elem = $(`<input type="text" />`).addClass('timepicker');
-    return elem;
-}
