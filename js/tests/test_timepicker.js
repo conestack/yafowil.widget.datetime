@@ -1,387 +1,320 @@
 import {TimepickerWidget} from '../src/timepicker.js';
 
-let container = $('<div id="container" />');
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // TimepickerWidget
 ////////////////////////////////////////////////////////////////////////////////
 
-QUnit.module('TimepickerWidget', () => {
-    QUnit.module('initialize function', hooks => {
-        let elem;
-        let data_clock;
-        let data_locale;
-        let picker;
+QUnit.module('TimepickerWidget', hooks => {
+    let container = $('<div id="container" />');
+    let elem;
+    let data_clock;
+    let data_locale;
+    let picker;
 
-        hooks.before(() => {
-            $('body').append(container);
-        });
-        hooks.beforeEach(() => {
-            elem = create_elem();
-            container.append(elem);
-        })
-        hooks.afterEach(() => {
-            container.empty();
-            picker = null;
-        });
+    hooks.before(() => {
+        $('body').append(container);
+    });
+    hooks.beforeEach(() => {
+        elem = create_elem();
+        container.append(elem);
+    })
+    hooks.afterEach(() => {
+        container.empty();
+        // reset container css
+        container.css('top', 'unset').css('left', 'unset').css('position', 'unset');
+        picker = null;
+    });
 
-        QUnit.test('no data', assert => {
+    QUnit.test.only('Initialize() - no data', assert => {
+        TimepickerWidget.initialize();
+
+        picker = elem.data('timepicker');
+        assert.strictEqual(picker.language, "en");
+        assert.strictEqual(picker.clock, 24);
+    });
+
+    QUnit.test.only('Initialize() - language and clock 12', assert => {
+        // manually set data and locale
+        data_clock = 12;
+        data_locale = "de";
+
+        elem.data('time-clock', data_clock);
+        elem.data('time-locale', data_locale);
+        TimepickerWidget.initialize();
+
+        picker = elem.data('timepicker');
+        assert.strictEqual(picker.language, data_locale);
+        assert.strictEqual(picker.clock, data_clock);
+        assert.strictEqual(picker.period, null);
+    });
+
+    /**
+     * set position of timepicker dropdown
+     * depending on available space
+    */
+
+    /* lack of space on bottom edge */
+    QUnit.test.only('Place - align to top', assert => {
+        container
+            .css('position', 'absolute')
+            .css('top', 'calc(100vh - 100px)');
+
+        TimepickerWidget.initialize();
+        picker = elem.data('timepicker');
+
+        picker.elem.trigger('focus');
+        assert.strictEqual(picker.dd_elem.css('top'), '-170px');
+    });
+    /* lack of space on right edge */
+    QUnit.test.only('Place - align to right', assert => {
+        container
+            .css('position', 'absolute')
+            .css('left', 'calc(100% - 200px)');
+
+        TimepickerWidget.initialize();
+        picker = elem.data('timepicker');
+
+        picker.elem.trigger('focus');
+        assert.strictEqual(
+            picker.dd_elem.offset().right,
+            picker.elem.offset().right
+        );
+    });
+
+    QUnit.test.only('unload elements', assert => {
+        TimepickerWidget.initialize();
+        picker = elem.data('timepicker');
+        assert.strictEqual(picker.dd_elem.css('display'), 'none');
+
+        // trigger unload
+        picker.unload();
+
+        // trigger unbind of focus
+        picker.elem.trigger('focus');
+        assert.strictEqual(picker.dd_elem.css('display'), 'none');
+
+        // trigger unbind of trigger element click
+        picker.trigger_elem.trigger('click');
+        assert.strictEqual(picker.dd_elem.css('display'), 'none');
+
+        // trigger unbind of document click
+        $(document).trigger('click');
+        assert.strictEqual(picker.dd_elem.css('display'), 'none');
+
+        // trigger unbind of keypress
+        let keypress = $.Event('keypress', { key: '1' });
+        picker.elem.trigger(keypress);
+        assert.strictEqual(picker.dd_elem.css('display'), 'none');
+
+        // trigger unbind of keyup
+        let keyup = $.Event('keyup', { key: '1' });
+        picker.elem.trigger(keyup);
+        assert.strictEqual(picker.dd_elem.css('display'), 'none');
+    });
+
+    QUnit.test.only('Set_time() - empty hours and minutes', assert => {
+        // returns if no hour or minute is set
+        TimepickerWidget.initialize();
+        picker = elem.data('timepicker');
+        picker.show_dropdown();
+        assert.strictEqual(picker.dd_elem.css('display'), 'block');
+        assert.strictEqual(picker.hour, '');
+        assert.strictEqual(picker.minute, '');
+
+        picker.set_time();
+        assert.strictEqual(picker.dd_elem.css('display'), 'block');
+    });
+
+    QUnit.test.only('Set_time() - 24hr clock', assert => {
+        let data_clock = 24;
+        elem.data('time-clock', data_clock);
+        TimepickerWidget.initialize();
+        picker = elem.data('timepicker');
+        picker.show_dropdown();
+        assert.strictEqual(picker.dd_elem.css('display'), 'block');
+
+        picker.minute = '25';
+        picker.hour = '14';
+        // hours and minutes get reset after processing
+        assert.strictEqual(picker.hour, '');
+        assert.strictEqual(picker.minute, '');
+
+        // check if correct value has been set
+        assert.strictEqual(picker.elem.val(), '14:25');
+        assert.strictEqual(picker.dd_elem.css('display'), 'none');
+    });
+
+    QUnit.test.only('Set_time() - 12hr clock', assert => {
+        let data_clock = 12;
+        elem.data('time-clock', data_clock);
+        TimepickerWidget.initialize();
+        picker = elem.data('timepicker');
+        picker.show_dropdown();
+        assert.strictEqual(picker.dd_elem.css('display'), 'block');
+
+        picker.period = 'AM';
+        picker.minute = '10';
+        picker.hour = '08';
+        // hours and minutes get reset after processing
+        assert.strictEqual(picker.hour, '');
+        assert.strictEqual(picker.minute, '');
+
+        // check if correct value has been set
+        assert.strictEqual(picker.elem.val(), '08:10AM');
+        assert.strictEqual(picker.dd_elem.css('display'), 'none');
+    });
+
+    /** NOTE:
+     * manually firing an event does not generate the default action
+     * associated with that event. For example, manually firing a key event
+     * does not cause that letter to appear in a focused text input. In the
+     * case of UI events, this is important for security reasons, as it
+     * prevents scripts from simulating user actions that interact with
+     * the browser itself.
+     *
+     * Source code has been adjusted to allow for easier testing.
+    */
+
+    QUnit.module('24hr clock', () => {
+        QUnit.test.only('correct input', assert => {
             TimepickerWidget.initialize();
-
             picker = elem.data('timepicker');
-            assert.strictEqual(picker.language, "en");
-            assert.strictEqual(picker.clock, 24);
+            picker.elem.trigger('focus');
+            assert.strictEqual(picker.dd_elem.css('display'), 'block');
+
+            // define keypress events
+            let keys = [
+                $.Event('keypress', { key: '1' }),
+                $.Event('keypress', { key: '3' }),
+                $.Event('keypress', { key: '2' }),
+                $.Event('keypress', { key: '5' })
+            ]
+            // trigger keypress events
+            for (let key of keys) {
+                picker.elem.trigger(key);
+                picker.elem.trigger('keyup');
+            }
+
+            // assert correct input value
+            assert.strictEqual(picker.elem.val(), '13:25');
+            assert.strictEqual(picker.dd_elem.css('display'), 'none');
         });
-
-        QUnit.test('language and clock 12', assert => {
-            // manually set data and locale
-            data_clock = 12;
-            data_locale = "de";
-
-            elem.data('time-clock', data_clock);
-            elem.data('time-locale', data_locale);
+        QUnit.test.only('AM/PM input', assert => {
             TimepickerWidget.initialize();
-
             picker = elem.data('timepicker');
-            assert.strictEqual(picker.language, data_locale);
-            assert.strictEqual(picker.clock, data_clock);
-            assert.strictEqual(picker.period, null);
+            picker.elem.trigger('focus');
+            assert.strictEqual(picker.dd_elem.css('display'), 'block');
+
+            // define keypress events
+            let keys = [
+                $.Event('keypress', { key: '0' }),
+                $.Event('keypress', { key: '1' }),
+                $.Event('keypress', { key: '2' }),
+                $.Event('keypress', { key: '5' }),
+                $.Event('keypress', { key: 'A' }),
+                $.Event('keypress', { key: 'M' })
+            ]
+            // trigger keypress events
+            for (let key of keys) {
+                picker.elem.trigger(key);
+                picker.elem.trigger('keyup');
+            }
+
+            // incorrect characters have not been accepted
+            assert.strictEqual(picker.elem.val(), '01:25');
+            assert.strictEqual(picker.dd_elem.css('display'), 'none');
+        });
+        QUnit.test.only('faulty inputs', assert => {
+            TimepickerWidget.initialize();
+            picker = elem.data('timepicker');
+            picker.elem.trigger('focus');
+            assert.strictEqual(picker.dd_elem.css('display'), 'block');
+
+            // define keypress events
+            let keys = [
+                $.Event('keypress', { key: 'A' }),
+                $.Event('keypress', { key: 'Q' }),
+                $.Event('keypress', { key: 'Space' }),
+                $.Event('keypress', { key: '1' }),
+                $.Event('keypress', { key: '1' }),
+                $.Event('keypress', { key: '2' }),
+                $.Event('keypress', { key: '5' })
+            ]
+            // trigger keypress events
+            for (let key of keys) {
+                picker.elem.trigger(key);
+                picker.elem.trigger('keyup');
+            }
+            // incorrect characters have not been accepted
+            assert.strictEqual(picker.elem.val(), '11:25');
+            assert.strictEqual(picker.dd_elem.css('display'), 'none');
+
+            // Hide on Enter Key
+            picker.elem.trigger($.Event('keypress', { key: 'Enter' }));
+            assert.strictEqual(picker.dd_elem.css('display'), 'none');
         });
     });
 
-    QUnit.module('place', hooks => {
-        /**
-         * set position of timepicker dropdown
-         * depending on available space
-        */
-        let elem;
-        let picker;
-
-        hooks.before(() => {
-            $('body').append(container);
-            elem = create_elem();
-            container.append(elem);
-        });
-        hooks.after(() => {
-            container.empty();
-            // reset container css
-            container.css('top', 'unset').css('left', 'unset').css('position', 'unset');
-            picker = null;
-        });
-
-        /* lack of space on bottom edge */
-        QUnit.test('align to top', assert => {
-            container
-                .css('position', 'absolute')
-                .css('top', 'calc(100vh - 100px)');
-
-            TimepickerWidget.initialize();
-            picker = elem.data('timepicker');
-
-            picker.elem.trigger('focus');
-            assert.strictEqual(picker.dd_elem.css('top'), '-170px');
-        });
-        /* lack of space on right edge */
-        QUnit.test('align to right', assert => {
-            container
-                .css('position', 'absolute')
-                .css('left', 'calc(100% - 200px)');
-
-            TimepickerWidget.initialize();
-            picker = elem.data('timepicker');
-
-            picker.elem.trigger('focus');
-            assert.strictEqual(
-                picker.dd_elem.offset().right,
-                picker.elem.offset().right
-            );
-        });
-    });
-
-    QUnit.module('unload', hooks => {
-        let elem;
-        let picker;
-
-        hooks.before(() => {
-            $('body').append(container);
-            elem = create_elem();
-            container.append(elem);
-        });
-        hooks.after(() => {
-            container.empty();
-            picker = null;
-        });
-
-        QUnit.test('unload elements', assert => {
-            TimepickerWidget.initialize();
-            picker = elem.data('timepicker');
-            assert.strictEqual(picker.dd_elem.css('display'), 'none');
-
-            // trigger unload
-            picker.unload();
-
-            // trigger unbind of focus
-            picker.elem.trigger('focus');
-            assert.strictEqual(picker.dd_elem.css('display'), 'none');
-
-            // trigger unbind of trigger element click
-            picker.trigger_elem.trigger('click');
-            assert.strictEqual(picker.dd_elem.css('display'), 'none');
-
-            // trigger unbind of document click
-            $(document).trigger('click');
-            assert.strictEqual(picker.dd_elem.css('display'), 'none');
-
-            // trigger unbind of keypress
-            let keypress = $.Event('keypress', { key: '1' } );
-            picker.elem.trigger(keypress);
-            assert.strictEqual(picker.dd_elem.css('display'), 'none');
-
-            // trigger unbind of keyup
-            let keyup = $.Event('keyup', { key: '1' } );
-            picker.elem.trigger(keyup);
-            assert.strictEqual(picker.dd_elem.css('display'), 'none');
-        });
-    });
-
-    QUnit.module('set_time', hooks => {
-        let elem;
-        let picker;
-
-        hooks.before(() => {
-            $('body').append(container);
-        });
-        hooks.beforeEach(() => {
-            elem = create_elem();
-            container.append(elem);
-        });
-        hooks.afterEach(() => {
-            container.empty();
-            picker = null;
-        });
-
-        QUnit.test('empty hours and minutes', assert => {
-            // returns if no hour or minute is set
-            TimepickerWidget.initialize();
-            picker = elem.data('timepicker');
-            picker.show_dropdown();
-            assert.strictEqual(picker.dd_elem.css('display'), 'block');
-            assert.strictEqual(picker.hour, '');
-            assert.strictEqual(picker.minute, '');
-
-            picker.set_time();
-            assert.strictEqual(picker.dd_elem.css('display'), 'block');
-        });
-
-        QUnit.test('24hr clock', assert => {
-            let data_clock = 24;
-            elem.data('time-clock', data_clock);
-            TimepickerWidget.initialize();
-            picker = elem.data('timepicker');
-            picker.show_dropdown();
-            assert.strictEqual(picker.dd_elem.css('display'), 'block');
-
-            picker.minute = '25';
-            picker.hour = '14';
-            // hours and minutes get reset after processing
-            assert.strictEqual(picker.hour, '');
-            assert.strictEqual(picker.minute, '');
-
-            // check if correct value has been set
-            assert.strictEqual(picker.elem.val(), '14:25');
-            assert.strictEqual(picker.dd_elem.css('display'), 'none');
-        });
-
-        QUnit.test('12hr clock', assert => {
+    QUnit.module('12hr clock', () => {
+        QUnit.test.only('correct input', assert => {
             let data_clock = 12;
             elem.data('time-clock', data_clock);
             TimepickerWidget.initialize();
             picker = elem.data('timepicker');
-            picker.show_dropdown();
+            picker.elem.trigger('focus');
             assert.strictEqual(picker.dd_elem.css('display'), 'block');
 
-            picker.period = 'AM';
-            picker.minute = '10';
-            picker.hour = '08';
-            // hours and minutes get reset after processing
-            assert.strictEqual(picker.hour, '');
-            assert.strictEqual(picker.minute, '');
+            // define keypress events
+            let keys = [
+                $.Event('keypress', { key: '0' }),
+                $.Event('keypress', { key: '1' }),
+                $.Event('keypress', { key: '2' }),
+                $.Event('keypress', { key: '5' }),
+                $.Event('keypress', { key: 'A' }),
+                $.Event('keypress', { key: 'M' })
+            ]
+            // trigger keypress events
+            for (let key of keys) {
+                picker.elem.trigger(key);
+                picker.elem.trigger('keyup');
+            }
 
-            // check if correct value has been set
-            assert.strictEqual(picker.elem.val(), '08:10AM');
+            // assert correct input value
+            assert.strictEqual(picker.elem.val(), '01:25AM');
             assert.strictEqual(picker.dd_elem.css('display'), 'none');
         });
-    });
+        QUnit.test('faulty inputs', assert => {
+            let data_clock = 12;
+            elem.data('time-clock', data_clock);
+            TimepickerWidget.initialize();
+            picker = elem.data('timepicker');
+            picker.elem.trigger('focus');
+            assert.strictEqual(picker.dd_elem.css('display'), 'block');
 
-    QUnit.module('manual input', hooks => {
-        let elem;
-        let picker;
+            // define keypress events
+            let keys = [
+                $.Event('keypress', { key: 'A' }),
+                $.Event('keypress', { key: 'Q' }),
+                $.Event('keypress', { key: 'Space' }),
+                $.Event('keypress', { key: '1' }),
+                $.Event('keypress', { key: '1' }),
+                $.Event('keypress', { key: '2' }),
+                $.Event('keypress', { key: '5' }),
+                $.Event('keypress', { key: '2' }),
+                $.Event('keypress', { key: '5' }),
+                $.Event('keypress', { key: 'A' }),
+                $.Event('keypress', { key: '2' }),
+                $.Event('keypress', { key: 'M' })
+            ]
+            // trigger keypress events
+            for (let key of keys) {
+                picker.elem.trigger(key);
+                picker.elem.trigger('keyup');
+            }
 
-        /** NOTE:
-         * manually firing an event does not generate the default action
-         * associated with that event. For example, manually firing a key event
-         * does not cause that letter to appear in a focused text input. In the
-         * case of UI events, this is important for security reasons, as it
-         * prevents scripts from simulating user actions that interact with
-         * the browser itself.
-         *
-         * Source code has been adjusted to allow for easier testing.
-        */
-
-        hooks.before(() => {
-            $('body').append(container);
-        });
-        hooks.beforeEach(() => {
-            elem = create_elem();
-            container.append(elem);
-        });
-        hooks.afterEach(() => {
-            container.empty();
-            picker = null;
-        });
-
-        QUnit.module('24hr clock', () => {
-            QUnit.test('correct input', assert => {
-                TimepickerWidget.initialize();
-                picker = elem.data('timepicker');
-                picker.elem.trigger('focus');
-                assert.strictEqual(picker.dd_elem.css('display'), 'block');
-
-                // define keypress events
-                let keys = [
-                    $.Event('keypress', { key: '1' } ),
-                    $.Event('keypress', { key: '3' } ),
-                    $.Event('keypress', { key: '2' } ),
-                    $.Event('keypress', { key: '5' } )
-                ]
-                // trigger keypress events
-                for (let key of keys) {
-                    picker.elem.trigger(key);
-                    picker.elem.trigger('keyup');
-                }
-
-                // assert correct input value
-                assert.strictEqual(picker.elem.val(), '13:25');
-                assert.strictEqual(picker.dd_elem.css('display'), 'none');
-            });
-            QUnit.test('AM/PM input', assert => {
-                TimepickerWidget.initialize();
-                picker = elem.data('timepicker');
-                picker.elem.trigger('focus');
-                assert.strictEqual(picker.dd_elem.css('display'), 'block');
-
-                // define keypress events
-                let keys = [
-                    $.Event('keypress', { key: '0' } ),
-                    $.Event('keypress', { key: '1' } ),
-                    $.Event('keypress', { key: '2' } ),
-                    $.Event('keypress', { key: '5' } ),
-                    $.Event('keypress', { key: 'A' } ),
-                    $.Event('keypress', { key: 'M' } )
-                ]
-                // trigger keypress events
-                for (let key of keys) {
-                    picker.elem.trigger(key);
-                    picker.elem.trigger('keyup');
-                }
-
-                // incorrect characters have not been accepted
-                assert.strictEqual(picker.elem.val(), '01:25');
-                assert.strictEqual(picker.dd_elem.css('display'), 'none');
-            });
-            QUnit.test('faulty inputs', assert => {
-                TimepickerWidget.initialize();
-                picker = elem.data('timepicker');
-                picker.elem.trigger('focus');
-                assert.strictEqual(picker.dd_elem.css('display'), 'block');
-
-                // define keypress events
-                let keys = [
-                    $.Event('keypress', {key: 'A'}),
-                    $.Event('keypress', {key: 'Q'}),
-                    $.Event('keypress', {key: 'Space'}),
-                    $.Event('keypress', {key: '1'}),
-                    $.Event('keypress', {key: '1'}),
-                    $.Event('keypress', {key: '2'}),
-                    $.Event('keypress', {key: '5'})
-                ]
-                // trigger keypress events
-                for (let key of keys) {
-                    picker.elem.trigger(key);
-                    picker.elem.trigger('keyup');
-                }
-                // incorrect characters have not been accepted
-                assert.strictEqual(picker.elem.val(), '11:25');
-                assert.strictEqual(picker.dd_elem.css('display'), 'none');
-
-                // Hide on Enter Key
-                picker.elem.trigger($.Event('keypress', {key: 'Enter'}));
-                assert.strictEqual(picker.dd_elem.css('display'), 'none');
-            });
-        });
-
-        QUnit.module('12hr clock', () => {
-            QUnit.test('correct input', assert => {
-                let data_clock = 12;
-                elem.data('time-clock', data_clock);
-                TimepickerWidget.initialize();
-                picker = elem.data('timepicker');
-                picker.elem.trigger('focus');
-                assert.strictEqual(picker.dd_elem.css('display'), 'block');
-
-                // define keypress events
-                let keys = [
-                    $.Event('keypress', { key: '0' } ),
-                    $.Event('keypress', { key: '1' } ),
-                    $.Event('keypress', { key: '2' } ),
-                    $.Event('keypress', { key: '5' } ),
-                    $.Event('keypress', { key: 'A' } ),
-                    $.Event('keypress', { key: 'M' } )
-                ]
-                // trigger keypress events
-                for (let key of keys) {
-                    picker.elem.trigger(key);
-                    picker.elem.trigger('keyup');
-                }
-
-                // assert correct input value
-                assert.strictEqual(picker.elem.val(), '01:25AM');
-                assert.strictEqual(picker.dd_elem.css('display'), 'none');
-            });
-            QUnit.test('faulty inputs', assert => {
-                let data_clock = 12;
-                elem.data('time-clock', data_clock);
-                TimepickerWidget.initialize();
-                picker = elem.data('timepicker');
-                picker.elem.trigger('focus');
-                assert.strictEqual(picker.dd_elem.css('display'), 'block');
-
-                // define keypress events
-                let keys = [
-                    $.Event('keypress', {key: 'A'}),
-                    $.Event('keypress', {key: 'Q'}),
-                    $.Event('keypress', {key: 'Space'}),
-                    $.Event('keypress', {key: '1'}),
-                    $.Event('keypress', {key: '1'}),
-                    $.Event('keypress', {key: '2'}),
-                    $.Event('keypress', {key: '5'}),
-                    $.Event('keypress', {key: '2'}),
-                    $.Event('keypress', {key: '5'}),
-                    $.Event('keypress', {key: 'A'}),
-                    $.Event('keypress', {key: '2'}),
-                    $.Event('keypress', {key: 'M'})
-                ]
-                // trigger keypress events
-                for (let key of keys) {
-                    picker.elem.trigger(key);
-                    picker.elem.trigger('keyup');
-                }
-
-                // incorrect characters have not been accepted
-                assert.strictEqual(picker.elem.val(), '11:25AM');
-                assert.strictEqual(picker.dd_elem.css('display'), 'none');
-            });
+            // incorrect characters have not been accepted
+            assert.strictEqual(picker.elem.val(), '11:25AM');
+            assert.strictEqual(picker.dd_elem.css('display'), 'none');
         });
     });
 

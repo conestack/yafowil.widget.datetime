@@ -262,9 +262,8 @@ var yafowil_datetime = (function (exports, $) {
             this.dd_elem.css('left', `${offset}px`);
             let offset_left = this.elem.offset().left,
                 offset_top = this.elem.offset().top,
-                dd_width = this.dd_elem.outerWidth();
-                this.dd_elem.outerHeight();
-                let elem_width = this.elem.outerWidth();
+                dd_width = this.dd_elem.outerWidth(),
+                elem_width = this.elem.outerWidth();
             let lower_edge = offset_top + this.elem.outerHeight() + 250;
             let right_edge = offset_left + dd_width;
             this.dd_elem.css('transform', `translateX(0px)`);
