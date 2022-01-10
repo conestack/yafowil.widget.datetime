@@ -17,7 +17,7 @@ QUnit.module('TimepickerWidget', hooks => {
     hooks.beforeEach(() => {
         elem = $(`<input type="text" />`).addClass('timepicker');
         container.append(elem);
-    })
+    });
     hooks.afterEach(() => {
         container.empty();
         // reset container css
@@ -163,17 +163,6 @@ QUnit.module('TimepickerWidget', hooks => {
         assert.strictEqual(picker.elem.val(), '08:10AM');
         assert.strictEqual(picker.dd_elem.css('display'), 'none');
     });
-
-    /** NOTE:
-     * manually firing an event does not generate the default action
-     * associated with that event. For example, manually firing a key event
-     * does not cause that letter to appear in a focused text input. In the
-     * case of UI events, this is important for security reasons, as it
-     * prevents scripts from simulating user actions that interact with
-     * the browser itself.
-     *
-     * Source code has been adjusted to allow for easier testing.
-    */
 
     QUnit.module('24hr clock', () => {
         QUnit.test('correct input', assert => {
