@@ -91,25 +91,11 @@ QUnit.module('TimepickerWidget', hooks => {
 
         // trigger unbind of focus
         picker.elem.trigger('focus');
-        assert.strictEqual(picker.dd_elem.css('display'), 'none');
-
-        // trigger unbind of trigger element click
-        picker.trigger_elem.trigger('click');
-        assert.strictEqual(picker.dd_elem.css('display'), 'none');
+        assert.strictEqual(picker.dd_elem.css('display'), 'block');
 
         // trigger unbind of document click
         $(document).trigger('click');
-        assert.strictEqual(picker.dd_elem.css('display'), 'none');
-
-        // trigger unbind of keypress
-        let keypress = $.Event('keypress', { key: '1' });
-        picker.elem.trigger(keypress);
-        assert.strictEqual(picker.dd_elem.css('display'), 'none');
-
-        // trigger unbind of keyup
-        let keyup = $.Event('keyup', { key: '1' });
-        picker.elem.trigger(keyup);
-        assert.strictEqual(picker.dd_elem.css('display'), 'none');
+        assert.strictEqual(picker.dd_elem.css('display'), 'block');
     });
 
     QUnit.test('Set_time() - empty hours and minutes', assert => {

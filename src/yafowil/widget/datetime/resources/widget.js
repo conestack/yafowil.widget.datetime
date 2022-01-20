@@ -84,7 +84,7 @@ var yafowil_datetime = (function (exports, $) {
         }
         unload_all() {
             for (let child of this.children) {
-                child.elem.off('click', child.click_handle);
+                child.elem.off('click', child.on_click);
             }
         }
         unselect_all() {
@@ -103,10 +103,10 @@ var yafowil_datetime = (function (exports, $) {
             this.hours = hours;
             this.picker = hours.picker;
             this.period = period;
-            this.click_handle = this.click_handle.bind(this);
-            this.elem.on('click', this.click_handle);
+            this.on_click = this.on_click.bind(this);
+            this.elem.on('click', this.on_click);
         }
-        click_handle(e) {
+        on_click(e) {
             let hour = this.elem.text();
             this.hours.unselect_all();
             this.selected = true;
@@ -123,10 +123,10 @@ var yafowil_datetime = (function (exports, $) {
             );
             this.minutes = minutes;
             this.picker = minutes.picker;
-            this.click_handle = this.click_handle.bind(this);
-            this.elem.on('click', this.click_handle);
+            this.on_click = this.on_click.bind(this);
+            this.elem.on('click', this.on_click);
         }
-        click_handle(e) {
+        on_click(e) {
             let minute = this.elem.text();
             this.minutes.unselect_all();
             this.selected = true;
@@ -228,18 +228,14 @@ var yafowil_datetime = (function (exports, $) {
             this.trigger_elem.on('click', this.toggle_dropdown);
             this.hide_dropdown = this.hide_dropdown.bind(this);
             $(document).on('click', this.hide_dropdown);
-            this.input_handle = this.input_handle.bind(this);
-            this.elem.on('keypress', this.input_handle);
+            this.on_keypress = this.on_keypress.bind(this);
+            this.elem.on('keypress', this.on_keypress);
             this.validate = this.validate.bind(this);
             this.elem.on('keyup', this.validate);
             $(window).on('resize', this.place);
         }
         unload() {
-            this.elem.off('focus', this.show_dropdown);
-            this.trigger_elem.off('click', this.toggle_dropdown);
             $(document).off('click', this.hide_dropdown);
-            this.elem.off('keypress', this.input_handle);
-            this.elem.off('keyup', this.validate);
             this.hours.unload_all();
             this.minutes.unload_all();
         }
@@ -306,7 +302,7 @@ var yafowil_datetime = (function (exports, $) {
             e.preventDefault();
             this.dd_elem.toggle();
         }
-        input_handle(e) {
+        on_keypress(e) {
             e.preventDefault();
             let isNumber = new RegExp("[0-9]");
             let val = this.elem.val();
@@ -354,9 +350,9 @@ var yafowil_datetime = (function (exports, $) {
                 if (period === "PM") hour_index += 12;
             }
             let hour_elem = this.hours.children[hour_index];
-            hour_elem.click_handle();
+            hour_elem.on_click();
             let minute_elem = this.minutes.children[minute_index];
-            minute_elem.click_handle();
+            minute_elem.on_click();
         }
         translate(msgid) {
             let locales = this.constructor.locales,
