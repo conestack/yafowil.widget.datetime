@@ -26,9 +26,10 @@ var yafowil_datetime = (function (exports, $) {
             super(elem[0], opts_);
             this.elem = elem;
             this.elem.data('datepicker', this);
-            let trigger = this.trigger = $(`<button>...</button>`)
-                .addClass('datepicker-trigger btn btn-default');
-            elem.after(trigger);
+            this.trigger = $(`<button />`)
+                .addClass('datepicker-trigger btn btn-default')
+                .text('...')
+                .insertAfter(elem);
             this.toggle_picker = this.toggle_picker.bind(this);
             this.trigger
                 .off('mousedown touchstart', this.toggle_picker)
