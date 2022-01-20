@@ -79,10 +79,9 @@ export class TimepickerMinute extends TimepickerButton {
     }
 
     on_click(e) {
-        let minute = this.elem.text();
         this.minutes.unselect_all();
         this.selected = true;
-        this.picker.minute = minute;
+        this.picker.minute = this.elem.text();
     }
 }
 
@@ -116,18 +115,18 @@ export class TimepickerHours extends TimepickerButtonContainer {
     }
 
     create_clock_12() {
-        let hours_am = $(`<div class="am" />`);
+        let hours_am = $(`<div />`).addClass('am');
         for (let i = 0; i < 12; i++) {
             this.children.push(new TimepickerHour(this, hours_am, i, 'AM'));
         }
-        let hours_pm = $(`<div class="pm" />`);
+        let hours_pm = $(`<div />`).addClass('pm');
         for (let i = 0; i < 12; i++) {
             this.children.push(new TimepickerHour(this, hours_pm, i, 'PM'));
         }
         this.elem.css('display', 'block')
-            .append('<span class="am">A.M.</span>')
+            .append('<span />').addClass('am').text('A.M.')
             .append(hours_am)
-            .append('<span class="pm">P.M.</span>')
+            .append('<span />').addClass('pm').text('P.M.')
             .append(hours_pm);
     }
 }
@@ -173,12 +172,14 @@ export class TimepickerWidget {
         this.hour = '';
         this.minute = '';
 
-        this.trigger_elem = $(`<button>...</button>`)
-            .addClass('timepicker-trigger btn btn-default');
-        elem.after(this.trigger_elem);
+        this.trigger_elem = $(`<button />`)
+            .addClass('timepicker-trigger btn btn-default')
+            .text('...')
+            .insertAfter(elem);
 
-        let dd_elem = this.dd_elem = $(`<div />`).addClass('timepicker-dropdown');
-        elem.after(dd_elem);
+        let dd_elem = this.dd_elem = $(`<div />`)
+            .addClass('timepicker-dropdown')
+            .insertAfter(elem);
 
         let dd_container = $(`<div />`)
             .addClass('timepicker-container')
@@ -292,7 +293,6 @@ export class TimepickerWidget {
 
     on_keypress(e) {
         e.preventDefault();
-        let isNumber = new RegExp("[0-9]");
         let val = this.elem.val();
         let cursor_pos = e.target.selectionStart;
         if (e.key === 'Enter') {
@@ -301,7 +301,7 @@ export class TimepickerWidget {
         }
 
         if (cursor_pos <= 4) {
-            if (e.key.match(isNumber)) {
+            if (e.key.match(new RegExp("[0-9]"))) {
                 this.elem.val(val + e.key);
                 if (cursor_pos === 2) {
                     this.elem.val(`${val}:${e.key}`);
