@@ -9,26 +9,26 @@ module.exports = function(config) {
             'qunit'
         ],
         files: [{
-            pattern: '../node_modules/vanillajs-datepicker/dist/js/datepicker.js',
+            pattern: '../../node_modules/vanillajs-datepicker/dist/js/datepicker.js',
             included: true
         }, {
-            pattern: '../node_modules/jquery/src/**/*.js',
+            pattern: '../../node_modules/jquery/src/**/*.js',
             type: 'module',
             included: false
         }, {
-            pattern: '../js/src/*.js',
+            pattern: '../src/*.js',
             type: 'module',
             included: false
         }, {
-            pattern: '../js/tests/test_*.js',
+            pattern: '../tests/test_*.js',
             type: 'module'
         },
         {
-            pattern: '../src/yafowil/widget/datetime/resources/timepicker.css',
+            pattern: '../../src/yafowil/widget/datetime/resources/timepicker.css',
             included: true
         },
         {
-            pattern: '../src/yafowil/widget/datetime/resources/datepicker.css',
+            pattern: '../../src/yafowil/widget/datetime/resources/datepicker.css',
             included: true
         }],
         browsers: [
@@ -40,11 +40,11 @@ module.exports = function(config) {
             'coverage'
         ],
         preprocessors: {
-            '../js/src/*.js': [
+            '../src/*.js': [
                 'coverage',
                 'module-resolver'
             ],
-            '../js/tests/*.js': [
+            '../tests/*.js': [
                 'coverage',
                 'module-resolver'
             ]
@@ -54,7 +54,7 @@ module.exports = function(config) {
             customResolver: null,
             ecmaVersion: 6,
             aliases: {
-                jquery: '../node_modules/jquery/src/jquery.js'
+                jquery: '../../node_modules/jquery/src/jquery.js'
             }
         }
     });
