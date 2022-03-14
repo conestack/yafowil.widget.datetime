@@ -17,15 +17,14 @@ export default args => {
             cleanup()
         ],
         output: [{
-            file: `${out_dir}/widget.js`,
             name: 'yafowil_datetime',
+            file: `${out_dir}/widget.js`,
             format: 'iife',
             outro: outro,
             globals: {
                 jquery: 'jQuery'
             },
-            interop: 'default',
-            sourcemap: false
+            interop: 'default'
         }],
         external: [
             'jquery'
@@ -33,8 +32,8 @@ export default args => {
     };
     if (args.configDebug !== true) {
         conf.output.push({
-            file: `${out_dir}/widget.min.js`,
             name: 'yafowil_datetime',
+            file: `${out_dir}/widget.min.js`,
             format: 'iife',
             plugins: [
                 terser()
@@ -43,8 +42,7 @@ export default args => {
             globals: {
                 jquery: 'jQuery'
             },
-            interop: 'default',
-            sourcemap: false
+            interop: 'default'
         });
     }
     return conf;
