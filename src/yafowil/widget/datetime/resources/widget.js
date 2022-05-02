@@ -159,19 +159,17 @@ var yafowil_datetime = (function (exports, $) {
             }
         }
         create_clock_12() {
-            let hours_am = $(`<div />`).addClass('am');
+            $('<span />').addClass('am').text('A.M.').appendTo(this.elem);
+            let hours_am = $(`<div />`).addClass('am').appendTo(this.elem);
+            $('<span />').addClass('pm').text('P.M.').appendTo(this.elem);
+            let hours_pm = $(`<div />`).addClass('pm').appendTo(this.elem);
             for (let i = 0; i < 12; i++) {
                 this.children.push(new TimepickerHour(this, hours_am, i, 'AM'));
             }
-            let hours_pm = $(`<div />`).addClass('pm');
             for (let i = 0; i < 12; i++) {
                 this.children.push(new TimepickerHour(this, hours_pm, i, 'PM'));
             }
-            this.elem.css('display', 'block')
-                .append('<span />').addClass('am').text('A.M.')
-                .append(hours_am)
-                .append('<span />').addClass('pm').text('P.M.')
-                .append(hours_pm);
+            this.elem.css('display', 'block');
         }
     }
     class TimepickerMinutes extends TimepickerButtonContainer {
