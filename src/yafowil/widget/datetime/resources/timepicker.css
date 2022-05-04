@@ -56,7 +56,7 @@ button.timepicker-trigger {
 }
 
 .timepicker-container .cell.selected {
-    background-color: var(--yafowil-accent-color, #00adff);
+    background-color: var(--yafowil-accent-color, #0d6efd);
     color: var(--yafowil-accent-font-color, #fff);
     font-weight: 600;
 }
