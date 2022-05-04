@@ -2,8 +2,8 @@ from yafowil.base import factory
 
 
 DOC_DATE = """
-Date
-----
+Date Picker
+-----------
 
 Date input.
 
@@ -32,10 +32,12 @@ def date_example():
 
 
 DOC_TIME = """
-Time
-----
+Time Picker
+-----------
 
 Time input.
+
+Set the 'clock' property to either 12 or 24 hours format (defaults to 24).
 
 .. code-block:: python
 
@@ -64,8 +66,8 @@ def time_example():
 
 
 DOC_DATETIME = """
-Datetime
---------
+Datetime Picker
+---------------
 
 Date and time input.
 
