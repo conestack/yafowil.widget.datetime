@@ -20,7 +20,8 @@ npm --save-dev install \
     rollup \
     rollup-plugin-cleanup \
     rollup-plugin-terser \
-    vanillajs-datepicker
+    vanillajs-datepicker \
+    sass
 
 npm --no-save install https://github.com/jquery/jquery#main
 
