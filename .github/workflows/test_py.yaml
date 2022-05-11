@@ -1,7 +1,9 @@
-name: Test datetime
+name: PY Test datetime
 
 on:
   push:
+    paths:
+    - '**.py'
 
 jobs:
   test:
