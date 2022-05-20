@@ -29,8 +29,8 @@ export class DatepickerWidget extends Datepicker {
         Object.assign(opts_, opts);
         super(elem[0], opts_);
 
+        elem.data('yafowil-datepicker', this);
         this.elem = elem;
-        this.elem.data('datepicker', this);
 
         this.trigger = $(`<button />`)
             .addClass('datepicker-trigger btn btn-default')

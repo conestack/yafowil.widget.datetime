@@ -23,7 +23,7 @@ QUnit.module('DatepickerWidget', hooks => {
     QUnit.test('Constructor - no data', assert => {
         DatepickerWidget.initialize();
 
-        picker = elem.data('datepicker');
+        picker = elem.data('yafowil-datepicker');
         // default options taken
         assert.strictEqual(picker._options.orientation, 'bottom');
         assert.strictEqual(picker._options.buttonClass, 'btn');
@@ -31,7 +31,7 @@ QUnit.module('DatepickerWidget', hooks => {
         assert.strictEqual(picker._options.autohide, true);
 
         assert.deepEqual(picker.elem, elem);
-        assert.deepEqual(elem.data('datepicker'), picker);
+        assert.deepEqual(elem.data('yafowil-datepicker'), picker);
         assert.ok(picker.trigger.is('button.datepicker-trigger.btn.btn-default'));
 
         assert.ok(picker.toggle_picker);
@@ -42,14 +42,14 @@ QUnit.module('DatepickerWidget', hooks => {
             .css('top', 'calc(100vh - 100px)');
         DatepickerWidget.initialize();
 
-        picker = elem.data('datepicker');
+        picker = elem.data('yafowil-datepicker');
         // default options taken
         assert.strictEqual(picker._options.orientation, 'top');
     });
 
     QUnit.test('unload', assert => {
         DatepickerWidget.initialize();
-        picker = elem.data('datepicker');
+        picker = elem.data('yafowil-datepicker');
         assert.strictEqual($(picker.picker.element).css('display'), 'none');
 
         // unload picker
@@ -70,7 +70,7 @@ QUnit.module('DatepickerWidget', hooks => {
 
     QUnit.test('mousedown', assert => {
         DatepickerWidget.initialize();
-        picker = elem.data('datepicker');
+        picker = elem.data('yafowil-datepicker');
         assert.strictEqual($(picker.picker.element).css('display'), 'none');
 
         // trigger first mousedown
@@ -86,7 +86,7 @@ QUnit.module('DatepickerWidget', hooks => {
 
     QUnit.test('touchstart', assert => {
         DatepickerWidget.initialize();
-        picker = elem.data('datepicker');
+        picker = elem.data('yafowil-datepicker');
         assert.strictEqual($(picker.picker.element).css('display'), 'none');
 
         // trigger first mousedown

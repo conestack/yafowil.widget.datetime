@@ -161,8 +161,8 @@ export class TimepickerWidget {
     }
 
     constructor(elem, opts) {
+        elem.data('yafowil-timepicker', this);
         this.elem = elem;
-        this.elem.data('timepicker', this);
         this.language = opts.language || 'en';
         this.clock = opts.clock || 24;
 
