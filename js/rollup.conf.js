@@ -4,9 +4,7 @@ import {terser} from 'rollup-plugin-terser';
 const out_dir = 'src/yafowil/widget/datetime/resources';
 
 const outro = `
-if (window.yafowil === undefined) {
-    window.yafowil = {};
-}
+window.yafowil = window.yafowil || {};
 window.yafowil.datetime = exports;
 `;
 
