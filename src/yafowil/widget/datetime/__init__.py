@@ -87,7 +87,7 @@ css = [{
 def register():
     from yafowil.widget.datetime import widget  # noqa
 
-    # Defaulr
+    # Default
     factory.register_theme(
         'default', 'yafowil.widget.datetime', resources_dir,
         js=js, css=css, resources=resources
