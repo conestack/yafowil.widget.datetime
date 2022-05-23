@@ -24,8 +24,8 @@ var yafowil_datetime = (function (exports, $) {
             Object.assign(opts_, locale_options[locale] || locale_options.en);
             Object.assign(opts_, opts);
             super(elem[0], opts_);
+            elem.data('yafowil-datepicker', this);
             this.elem = elem;
-            this.elem.data('datepicker', this);
             this.trigger = $(`<button />`)
                 .addClass('datepicker-trigger btn btn-default')
                 .text('...')
@@ -200,8 +200,8 @@ var yafowil_datetime = (function (exports, $) {
             });
         }
         constructor(elem, opts) {
+            elem.data('yafowil-timepicker', this);
             this.elem = elem;
-            this.elem.data('timepicker', this);
             this.language = opts.language || 'en';
             this.clock = opts.clock || 24;
             this.period = null;
@@ -395,9 +395,7 @@ var yafowil_datetime = (function (exports, $) {
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    if (window.yafowil === undefined) {
-        window.yafowil = {};
-    }
+    window.yafowil = window.yafowil || {};
     window.yafowil.datetime = exports;
 
 
