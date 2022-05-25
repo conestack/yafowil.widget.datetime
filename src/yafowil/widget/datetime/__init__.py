@@ -13,12 +13,9 @@ resources_dir = os.path.join(os.path.dirname(__file__), 'resources')
 
 # webresource ################################################################
 
-scripts = wr.ResourceGroup(name='scripts')
+scripts = wr.ResourceGroup(name='yafowil-datetime-scripts')
 scripts.add(wr.ScriptResource(
     name='datepicker-js',
-    # actually it not depends on jquery, but yafowil-datetime-js does
-    # think about multiple depends values in webresource
-    depends='jquery-js',
     directory=resources_dir,
     resource='datepicker.js',
     compressed='datepicker.min.js'
@@ -31,13 +28,13 @@ scripts.add(wr.ScriptResource(
 ))
 scripts.add(wr.ScriptResource(
     name='yafowil-datetime-js',
-    depends='datepicker-js',
+    depends=['jquery-js', 'datepicker-js'],
     directory=resources_dir,
     resource='widget.js',
     compressed='widget.min.js'
 ))
 
-styles = wr.ResourceGroup(name='styles')
+styles = wr.ResourceGroup(name='yafowil-datetime-styles')
 styles.add(wr.StyleResource(
     name='yafowil-datepicker-css',
     directory=resources_dir,
@@ -48,10 +45,6 @@ styles.add(wr.StyleResource(
     directory=resources_dir,
     resource='timepicker.css'
 ))
-
-resources = wr.ResourceGroup(name='datetime-resources')
-resources.add(scripts)
-resources.add(styles)
 
 # B/C resources ##############################################################
 
@@ -90,5 +83,7 @@ def register():
     # Default
     factory.register_theme(
         'default', 'yafowil.widget.datetime', resources_dir,
-        js=js, css=css, resources=resources
+        js=js, css=css
     )
+    factory.register_scripts('default', 'yafowil.widget.datetime', scripts)
+    factory.register_styles('default', 'yafowil.widget.datetime', styles)
