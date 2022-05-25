@@ -13,7 +13,10 @@ resources_dir = os.path.join(os.path.dirname(__file__), 'resources')
 
 # webresource ################################################################
 
-scripts = wr.ResourceGroup(name='yafowil-datetime-scripts')
+scripts = wr.ResourceGroup(
+    name='yafowil-datetime-scripts',
+    path='yafowil.widget.datetime'
+)
 scripts.add(wr.ScriptResource(
     name='datepicker-js',
     directory=resources_dir,
@@ -34,7 +37,10 @@ scripts.add(wr.ScriptResource(
     compressed='widget.min.js'
 ))
 
-styles = wr.ResourceGroup(name='yafowil-datetime-styles')
+styles = wr.ResourceGroup(
+    name='yafowil-datetime-styles',
+    path='yafowil.widget.datetime'
+)
 styles.add(wr.StyleResource(
     name='yafowil-datepicker-css',
     directory=resources_dir,
