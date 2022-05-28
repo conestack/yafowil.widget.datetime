@@ -13,42 +13,35 @@ resources_dir = os.path.join(os.path.dirname(__file__), 'resources')
 
 # webresource ################################################################
 
-scripts = wr.ResourceGroup(
-    name='yafowil-datetime-scripts',
-    path='yafowil.widget.datetime'
-)
-scripts.add(wr.ScriptResource(
-    name='datepicker-js',
+resources = wr.ResourceGroup(
+    name='yafowil-datetime-resources',
     directory=resources_dir,
+    path='yafowil-datetime'
+)
+resources.add(wr.ScriptResource(
+    name='datepicker-js',
     resource='datepicker.js',
     compressed='datepicker.min.js'
 ))
-scripts.add(wr.ScriptResource(
+resources.add(wr.ScriptResource(
     name='datepicker-de-js',
     depends='datepicker-js',
     directory=os.path.join(resources_dir, 'locales'),
+    path='yafowil-datetime/locales',
     resource='de.js'
 ))
-scripts.add(wr.ScriptResource(
+resources.add(wr.ScriptResource(
     name='yafowil-datetime-js',
     depends=['jquery-js', 'datepicker-js'],
-    directory=resources_dir,
     resource='widget.js',
     compressed='widget.min.js'
 ))
-
-styles = wr.ResourceGroup(
-    name='yafowil-datetime-styles',
-    path='yafowil.widget.datetime'
-)
-styles.add(wr.StyleResource(
+resources.add(wr.StyleResource(
     name='yafowil-datepicker-css',
-    directory=resources_dir,
     resource='datepicker.css'
 ))
-styles.add(wr.StyleResource(
+resources.add(wr.StyleResource(
     name='yafowil-timepicker-css',
-    directory=resources_dir,
     resource='timepicker.css'
 ))
 
@@ -86,10 +79,14 @@ css = [{
 def register():
     from yafowil.widget.datetime import widget  # noqa
 
+    widget_name = 'yafowil.widget.datetime'
+
     # Default
     factory.register_theme(
-        'default', 'yafowil.widget.datetime', resources_dir,
-        js=js, css=css
+        'default',
+        widget_name,
+        resources_dir,
+        js=js,
+        css=css
     )
-    factory.register_scripts('default', 'yafowil.widget.datetime', scripts)
-    factory.register_styles('default', 'yafowil.widget.datetime', styles)
+    factory.register_resources('default', widget_name, resources)
