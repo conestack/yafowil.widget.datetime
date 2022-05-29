@@ -119,7 +119,7 @@ class TestDatetimeWidget(YafowilTestCase):
                 'timepicker': True,
                 'tzinfo': None,
             })
-        self.check_output("""
+        self.checkOutput("""
         <div>
           <input class="dateinput datepicker datetime required"
                  data-date-locale="de" id="input-dt" name="dt" size="10"
@@ -139,7 +139,7 @@ class TestDatetimeWidget(YafowilTestCase):
         )
 
         # Widget renders empty value
-        self.check_output("""
+        self.checkOutput("""
         <div>
           <input class="dateinput datepicker datetime required"
                  data-date-locale="de" id="input-dt" name="dt" size="10"
@@ -157,7 +157,7 @@ class TestDatetimeWidget(YafowilTestCase):
             [data.name, data.value, data.extracted, data.errors],
             ['dt', UNSET, 'xyz', [ExtractionError('Not a valid date input.')]]
         )
-        self.check_output("""
+        self.checkOutput("""
         <div>
           <input class="dateinput datepicker datetime required"
                  data-date-locale="de" id="input-dt" name="dt" size="10"
@@ -175,7 +175,7 @@ class TestDatetimeWidget(YafowilTestCase):
             [data.name, data.value, data.extracted, data.errors],
             ['dt', UNSET, datetime.datetime(2010, 1, 1, 10, 15), []]
         )
-        self.check_output("""
+        self.checkOutput("""
         <div>
           <input class="dateinput datepicker datetime required"
                  data-date-locale="de" id="input-dt" name="dt" size="10"
@@ -217,7 +217,7 @@ class TestDatetimeWidget(YafowilTestCase):
             props={
                 'time': True,
             })
-        self.check_output("""
+        self.checkOutput("""
         <div>
           <input class="dateinput datetime" id="input-dt" name="dt" size="10"
                  type="text" value="5.1.2011"/>
@@ -474,12 +474,9 @@ class TestDatetimeWidget(YafowilTestCase):
             props={
                 'format': 'inexistent'
             })
-        err = self.expect_error(
-            ValueError,
-            widget.extract,
-            {'t': '1:12'}
-        )
-        self.assertEqual(str(err), "Unknown format 'inexistent'")
+        with self.assertRaises(ValueError) as arc:
+            widget.extract({'t': '1:12'})
+        self.assertEqual(str(arc.exception), "Unknown format 'inexistent'")
 
     def test_time_default_format(self):
         # Number ``format``. Default unit is ``hours``
@@ -577,12 +574,9 @@ class TestDatetimeWidget(YafowilTestCase):
                 'format': 'number',
                 'unit': 'inexistent'
             })
-        err = self.expect_error(
-            ValueError,
-            widget.extract,
-            {'t': '1:12'}
-        )
-        self.assertEqual(str(err), "Unknown unit 'inexistent'")
+        with self.assertRaises(ValueError) as arc:
+            widget.extract({'t': '1:12'})
+        self.assertEqual(str(arc.exception), "Unknown unit 'inexistent'")
 
     def test_time_format_minutes_unit(self):
         # Minutes ``unit``
