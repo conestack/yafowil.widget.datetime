@@ -5,20 +5,25 @@ from yafowil.compat import IS_PY2
 from yafowil.tests import fxml
 from yafowil.tests import YafowilTestCase
 import datetime
+import os
 import unittest
-import yafowil.loader  # noqa
 
 
 if not IS_PY2:
     from importlib import reload
 
 
+def np(path):
+    return path.replace('/', os.path.sep)
+
+
 class TestDatetimeWidget(YafowilTestCase):
 
     def setUp(self):
         super(TestDatetimeWidget, self).setUp()
-        from yafowil.widget.datetime import widget
-        reload(widget)
+        from yafowil.widget import datetime
+        reload(datetime.widget)
+        datetime.register()
 
     def test_datetime_basics(self):
         # Render very basic widget
@@ -705,6 +710,45 @@ class TestDatetimeWidget(YafowilTestCase):
         request = {'t': ''}
         data = widget.extract(request)
         self.assertTrue(data.extracted is emptyvalue)
+
+    def test_resources(self):
+        factory.theme = 'default'
+        resources = factory.get_resources('yafowil.widget.datetime')
+        self.assertTrue(resources.directory.endswith(np('/datetime/resources')))
+        self.assertEqual(resources.path, 'yafowil-datetime')
+
+        scripts = resources.scripts
+        self.assertEqual(len(scripts), 3)
+
+        self.assertTrue(scripts[0].directory.endswith(np('/datetime/resources')))
+        self.assertEqual(scripts[0].path, 'yafowil-datetime')
+        self.assertEqual(scripts[0].file_name, 'datepicker.min.js')
+        self.assertTrue(os.path.exists(scripts[0].file_path))
+
+        self.assertTrue(
+            scripts[1].directory.endswith(np('/datetime/resources/locales'))
+        )
+        self.assertEqual(scripts[1].path, 'yafowil-datetime/locales')
+        self.assertEqual(scripts[1].file_name, 'de.js')
+        self.assertTrue(os.path.exists(scripts[1].file_path))
+
+        self.assertTrue(scripts[2].directory.endswith(np('/datetime/resources')))
+        self.assertEqual(scripts[2].path, 'yafowil-datetime')
+        self.assertEqual(scripts[2].file_name, 'widget.min.js')
+        self.assertTrue(os.path.exists(scripts[2].file_path))
+
+        styles = resources.styles
+        self.assertEqual(len(styles), 2)
+
+        self.assertTrue(styles[0].directory.endswith(np('/datetime/resources')))
+        self.assertEqual(styles[0].path, 'yafowil-datetime')
+        self.assertEqual(styles[0].file_name, 'datepicker.css')
+        self.assertTrue(os.path.exists(styles[0].file_path))
+
+        self.assertTrue(styles[1].directory.endswith(np('/datetime/resources')))
+        self.assertEqual(styles[1].path, 'yafowil-datetime')
+        self.assertEqual(styles[1].file_name, 'timepicker.css')
+        self.assertTrue(os.path.exists(styles[1].file_path))
 
 
 if __name__ == '__main__':
