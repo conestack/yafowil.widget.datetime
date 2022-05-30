@@ -716,6 +716,7 @@ class TestDatetimeWidget(YafowilTestCase):
         factory.theme = 'default'
         resources = factory.get_resources('yafowil.widget.datetime')
         self.assertTrue(resources.directory.endswith(np('/datetime/resources')))
+        self.assertEqual(resources.name, 'yafowil.widget.datetime')
         self.assertEqual(resources.path, 'yafowil-datetime')
 
         scripts = resources.scripts
