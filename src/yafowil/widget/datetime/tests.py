@@ -22,7 +22,8 @@ class TestDatetimeWidget(YafowilTestCase):
     def setUp(self):
         super(TestDatetimeWidget, self).setUp()
         from yafowil.widget import datetime
-        reload(datetime.widget)
+        from yafowil.widget.datetime import widget
+        reload(widget)
         datetime.register()
 
     def test_datetime_basics(self):
