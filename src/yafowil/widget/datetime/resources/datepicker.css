@@ -1,5 +1,6 @@
 input.dateinput {
     margin-right: 45px;
+    display: inline-block;
 }
 
 button.datepicker-trigger {

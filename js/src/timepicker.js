@@ -131,10 +131,35 @@ export class TimepickerHours extends TimepickerButtonContainer {
 
 export class TimepickerMinutes extends TimepickerButtonContainer {
 
-    constructor(picker, container) {
+    constructor(picker, container, step) {
         super(picker, $(`<div />`).addClass('minutes-content'));
-        for (let i = 0; i < 12; i++) {
-            this.children.push(new TimepickerMinute(this, this.elem, i * 5));
+        this.step = step;
+        let count = 60 / step;
+        if (count <= 32) {
+            // calculate grid columns based on number of cells
+            let cols = '1fr '.repeat(Math.ceil(count / 4));
+            this.elem.css(
+                'grid-template-columns',
+                cols
+            );
+        } else {
+            this.elem.css(
+                'grid-template-columns',
+                '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr'
+            );
+            if (picker.clock === 24) {
+                $('div.hours-content', picker.dd_elem).css({
+                    'grid-template-columns': '1fr 1fr 1fr 1fr',
+                    'width': '110px'
+                });
+            } else {
+                $('div.am, div.pm', picker.dd_elem).css({
+                    'grid-template-columns': '1fr 1fr 1fr 1fr'
+                });
+            }
+        }
+        for (let i = 0; i < count; i++) {
+            this.children.push(new TimepickerMinute(this, this.elem, i * step));
         }
         let header = $('<div />')
             .addClass('header')
@@ -155,7 +180,8 @@ export class TimepickerWidget {
             elem.attr('spellcheck', false);
             new TimepickerWidget(elem, {
                 language: elem.data('time-locale'),
-                clock: elem.data('time-clock')
+                clock: elem.data('time-clock'),
+                step: elem.data('time-minutes_step')
             });
         });
     }
@@ -169,6 +195,7 @@ export class TimepickerWidget {
         this.period = null;
         this.hour = '';
         this.minute = '';
+        this.step = opts.step;
 
         this.trigger_elem = $(`<button />`)
             .addClass('timepicker-trigger btn btn-default')
@@ -184,7 +211,7 @@ export class TimepickerWidget {
             .appendTo(dd_elem);
 
         this.hours = new TimepickerHours(this, dd_container);
-        this.minutes = new TimepickerMinutes(this, dd_container);
+        this.minutes = new TimepickerMinutes(this, dd_container, opts.step);
 
         this.validate();
         this.place = this.place.bind(this);
@@ -326,7 +353,7 @@ export class TimepickerWidget {
             hour = time.substr(0, 2),
             hour_index = parseInt(hour),
             minute = time.substr(3, 2),
-            minute_index = parseInt(minute) / 5;
+            minute_index = parseInt(minute) / this.step;
 
         if (this.clock === 24) {
             if (!time.match(match_24) || time.length < 5) {
@@ -345,7 +372,11 @@ export class TimepickerWidget {
         hour_elem.on_click();
 
         let minute_elem = this.minutes.children[minute_index];
-        minute_elem.on_click();
+        if (minute_elem) {
+            minute_elem.on_click();
+        } else {
+            this.minutes.unselect_all();
+        }
     }
 
     translate(msgid) {

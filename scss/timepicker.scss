@@ -1,6 +1,7 @@
 input.timeinput {
-  width: 5em;
+  width: 6em;
   margin-right: 45px;
+  display: inline-block;
 }
 
 button.timepicker-trigger {
@@ -20,7 +21,6 @@ button.timepicker-trigger {
   padding: 5px;
   border-radius: 6px;
   box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 18%);
-  width: 314px;
   z-index: 1000;
 }
 
@@ -59,7 +59,6 @@ button.timepicker-trigger {
 
   .timepicker-hours {
     background: white;
-    width: 200px;
     margin-right: 6px;
   
     .hours-content {
@@ -74,7 +73,7 @@ button.timepicker-trigger {
       grid-template-rows: 1fr 1fr;
     }
     div.am {
-      border-bottom: 1px solid lightgray;
+      border-bottom: 1px solid #e7e7e7;
     }
     span.am, span.pm {
       font-size: 10px;
@@ -95,6 +94,15 @@ button.timepicker-trigger {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       grid-template-rows: 1fr 1fr 1fr 1fr;
+
+      &::before {
+        content: "";
+        position: absolute;
+        height: 100%;
+        bottom: 0;
+        border-left: 1px solid #e7e7e7;
+        transform: translateX(-4px);
+      }
     }
   }
 }

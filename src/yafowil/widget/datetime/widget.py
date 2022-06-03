@@ -119,6 +119,7 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
         class_.append(attr_value('timepicker_class', widget, data))
         attrs['data-time-locale'] = attr_value('locale', widget, data)
         attrs['data-time-clock'] = attr_value('clock', widget, data)
+        attrs['data-time-minutes_step'] = attr_value('minutes_step', widget, data)
     if css_class:
         attrs['class_'] = cssclasses(widget, data, additional=class_)
     else:
@@ -149,7 +150,7 @@ def time_value(format_, unit, time):
 
 
 @managedprops('format', 'unit', 'disabled', 'timepicker',
-              'timepicker_class', 'clock', 'locale', *css_managed_props)
+              'timepicker_class', 'clock', 'minutes_step', 'locale', *css_managed_props)
 def time_edit_renderer(widget, data):
     format_, unit = time_data_defs(widget, data)
     time = time_value(format_, unit, fetch_value(widget, data))
@@ -235,6 +236,11 @@ for 12-hour-clock. Defaults to `24`
 factory.defaults['time.locale'] = 'en'
 factory.doc['props']['time.locale'] = """\
 Widget locale. Used for translations in timepicker widget.
+"""
+
+factory.defaults['time.minutes_step'] = '5'
+factory.doc['props']['time.minutes_step'] = """\
+Defines step between time options. Used in timepicker widget.
 """
 
 
@@ -416,6 +422,11 @@ factory.defaults['datetime.clock'] = '24'
 factory.doc['props']['datetime.clock'] = """\
 Defines which clock to use in timepicker. Either `24` for 24-hour-clock or `12`
 for 12-hour-clock. Defaults to `24`
+"""
+
+factory.defaults['datetime.minutes_step'] = '5'
+factory.doc['props']['datetime.minutes_step'] = """\
+Defines step between time options. Defaults to 5.
 """
 
 factory.defaults['datetime.tzinfo'] = None

@@ -79,7 +79,7 @@ Date and time input.
         'locale': 'de',
         'datepicker': True,
         'time': True,
-        'timepicker': True,
+        'timepicker': True
     })
 """
 
@@ -93,6 +93,7 @@ def datetime_example():
         'datepicker': True,
         'time': True,
         'timepicker': True,
+        'minutes_step': 10
     })
     return {
         'widget': form,
