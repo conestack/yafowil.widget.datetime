@@ -59,7 +59,7 @@ QUnit.module('TimepickerWidget', hooks => {
         picker = elem.data('yafowil-timepicker');
 
         picker.elem.trigger('focus');
-        assert.strictEqual(picker.dd_elem.css('top'), '-170px');
+        assert.strictEqual(picker.dd_elem.css('top'), '-171px');
     });
     /* lack of space on right edge */
     QUnit.test('Place - align to right', assert => {
@@ -74,6 +74,72 @@ QUnit.module('TimepickerWidget', hooks => {
         assert.strictEqual(
             picker.dd_elem.offset().right,
             picker.elem.offset().right
+        );
+    });
+
+    QUnit.test('minutes_step', assert => {
+        elem.data('time-minutes_step', 15);
+        TimepickerWidget.initialize();
+        picker = elem.data('yafowil-timepicker');
+
+        assert.strictEqual(picker.step, 15);
+        assert.strictEqual(
+            picker.minutes.elem.css('grid-template-columns'),
+            '1fr'
+        );
+    });
+
+    QUnit.test('minutes_step - faulty value', assert => {
+        elem.data('time-minutes_step', 0);
+        TimepickerWidget.initialize();
+        picker = elem.data('yafowil-timepicker');
+
+        assert.strictEqual(picker.step, 5);
+        assert.strictEqual(
+            picker.minutes.elem.css('grid-template-columns'),
+            '1fr 1fr 1fr'
+        );
+    });
+
+    QUnit.test('minutes_step 1 - clock_24', assert => {
+        elem.data('time-minutes_step', 1);
+        TimepickerWidget.initialize();
+        picker = elem.data('yafowil-timepicker');
+
+        assert.strictEqual(picker.step, 1);
+        assert.strictEqual(
+            picker.minutes.elem.css('grid-template-columns'),
+            '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr'
+        );
+        assert.strictEqual(
+            $('div.hours-content', picker.dd_elem).css('grid-template-columns'),
+            '1fr 1fr 1fr 1fr'
+        );
+        assert.strictEqual(
+            $('div.hours-content', picker.dd_elem).css('width'),
+            '110px'
+        );
+    });
+
+    QUnit.test('minutes_step 1 - clock_12', assert => {
+        elem.data('time-minutes_step', 1);
+        elem.data('time-clock', 12);
+        TimepickerWidget.initialize();
+        picker = elem.data('yafowil-timepicker');
+
+        assert.strictEqual(picker.step, 1);
+        assert.strictEqual(picker.clock, 12);
+        assert.strictEqual(
+            picker.minutes.elem.css('grid-template-columns'),
+            '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr'
+        );
+        assert.strictEqual(
+            $('div.am', picker.dd_elem).css('grid-template-columns'),
+            '1fr 1fr 1fr 1fr'
+        );
+        assert.strictEqual(
+            $('div.pm', picker.dd_elem).css('grid-template-columns'),
+            '1fr 1fr 1fr 1fr'
         );
     });
 

@@ -186,7 +186,7 @@ var yafowil_datetime = (function (exports, $) {
             } else {
                 this.elem.css(
                     'grid-template-columns',
-                    '1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr'
+                    '1fr '.repeat(10)
                 );
                 if (picker.clock === 24) {
                     $('div.hours-content', picker.dd_elem).css({
@@ -232,7 +232,11 @@ var yafowil_datetime = (function (exports, $) {
             this.period = null;
             this.hour = '';
             this.minute = '';
-            this.step = opts.step;
+            if (opts.step <= 0 || opts.step > 60 || typeof opts.step !== 'number') {
+                this.step = 5;
+            } else {
+                this.step = opts.step;
+            }
             this.trigger_elem = $(`<button />`)
                 .addClass('timepicker-trigger btn btn-default')
                 .text('...')
@@ -244,7 +248,7 @@ var yafowil_datetime = (function (exports, $) {
                 .addClass('timepicker-container')
                 .appendTo(dd_elem);
             this.hours = new TimepickerHours(this, dd_container);
-            this.minutes = new TimepickerMinutes(this, dd_container, opts.step);
+            this.minutes = new TimepickerMinutes(this, dd_container, this.step);
             this.validate();
             this.place = this.place.bind(this);
             this.place();
@@ -290,7 +294,8 @@ var yafowil_datetime = (function (exports, $) {
             let right_edge = offset_left + dd_width;
             this.dd_elem.css('transform', `translateX(0px)`);
             if (lower_edge > $(document).height()) {
-                this.dd_elem.css('top', '-170px');
+                let height = this.dd_elem.outerHeight() + 9;
+                this.dd_elem.css('top', `-${height}px`);
             }
             if (offset_left + elem_width - dd_width < 0) {
                 let lefty = right_edge - $(window).width();

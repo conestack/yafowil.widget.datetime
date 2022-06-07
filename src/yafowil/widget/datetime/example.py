@@ -65,6 +65,42 @@ def time_example():
     }
 
 
+DOC_MINUTES = """
+Minutes
+-------
+
+Sets the interval for minute cells.
+
+Set the 'minutes_step' property to a number between 1 and 60 (defaults to 5).
+
+.. code-block:: python
+
+    time = factory('#field:time', props={
+        'label': 'Select time',
+        'required': 'Time Field is required',
+        'timepicker': True,
+        'clock': '24',
+        'minutes_step': '15'
+    })
+"""
+
+
+def minutes_example():
+    form = factory('fieldset', name='yafowil.widget.datetime.minutes_step')
+    form['time'] = factory('#field:time', props={
+        'label': 'Select time',
+        'required': 'Time Field is required',
+        'timepicker': True,
+        'clock': '24',
+        'minutes_step': '15'
+    })
+    return {
+        'widget': form,
+        'doc': DOC_MINUTES,
+        'title': 'Minutes'
+    }
+
+
 DOC_DATETIME = """
 Datetime Picker
 ---------------
@@ -92,13 +128,12 @@ def datetime_example():
         'locale': 'de',
         'datepicker': True,
         'time': True,
-        'timepicker': True,
-        'minutes_step': 10
+        'timepicker': True
     })
     return {
         'widget': form,
         'doc': DOC_DATETIME,
-        'title': 'Datetime',
+        'title': 'Datetime'
     }
 
 
@@ -106,5 +141,6 @@ def get_example():
     return [
         date_example(),
         time_example(),
+        minutes_example(),
         datetime_example()
     ]
