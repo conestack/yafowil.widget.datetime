@@ -119,7 +119,11 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
         class_.append(attr_value('timepicker_class', widget, data))
         attrs['data-time-locale'] = attr_value('locale', widget, data)
         attrs['data-time-clock'] = attr_value('clock', widget, data)
-        attrs['data-time-minutes_step'] = attr_value('minutes_step', widget, data)
+        attrs['data-time-minutes_step'] = attr_value(
+            'minutes_step',
+            widget,
+            data
+        )
     if css_class:
         attrs['class_'] = cssclasses(widget, data, additional=class_)
     else:
@@ -149,8 +153,10 @@ def time_value(format_, unit, time):
     return time
 
 
-@managedprops('format', 'unit', 'disabled', 'timepicker',
-              'timepicker_class', 'clock', 'minutes_step', 'locale', *css_managed_props)
+@managedprops(
+    'format', 'unit', 'disabled', 'timepicker', 'timepicker_class', 'clock',
+    'minutes_step', 'locale', *css_managed_props
+)
 def time_edit_renderer(widget, data):
     format_, unit = time_data_defs(widget, data)
     time = time_value(format_, unit, fetch_value(widget, data))
