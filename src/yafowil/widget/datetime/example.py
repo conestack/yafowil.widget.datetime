@@ -2,8 +2,8 @@ from yafowil.base import factory
 
 
 DOC_DATE = """
-Date
-----
+Date Picker
+-----------
 
 Date input.
 
@@ -12,7 +12,6 @@ Date input.
     date = factory('#field:datetime', props={
         'label': 'Enter date or use date picker',
         'required': 'Date Field is required',
-        'locale': 'de',
         'datepicker': True,
     })
 """
@@ -23,7 +22,6 @@ def date_example():
     form['date'] = factory('#field:datetime', props={
         'label': 'Enter date or use date picker',
         'required': 'Date Field is required',
-        'locale': 'de',
         'datepicker': True,
     })
     return {
@@ -34,10 +32,12 @@ def date_example():
 
 
 DOC_TIME = """
-Time
-----
+Time Picker
+-----------
 
 Time input.
+
+Set the 'clock' property to either 12 or 24 hours format (defaults to 24).
 
 .. code-block:: python
 
@@ -45,6 +45,7 @@ Time input.
         'label': 'Select time',
         'required': 'Time Field is required',
         'timepicker': True,
+        'clock': '12'
     })
 """
 
@@ -55,6 +56,7 @@ def time_example():
         'label': 'Select time',
         'required': 'Time Field is required',
         'timepicker': True,
+        'clock': '12'
     })
     return {
         'widget': form,
@@ -63,9 +65,45 @@ def time_example():
     }
 
 
+DOC_MINUTES = """
+Minutes
+-------
+
+Sets the interval for minute cells.
+
+Set the 'minutes_step' property to a number between 1 and 60 (defaults to 5).
+
+.. code-block:: python
+
+    time = factory('#field:time', props={
+        'label': 'Select time',
+        'required': 'Time Field is required',
+        'timepicker': True,
+        'clock': '24',
+        'minutes_step': '15'
+    })
+"""
+
+
+def minutes_example():
+    form = factory('fieldset', name='yafowil.widget.datetime.minutes_step')
+    form['time'] = factory('#field:time', props={
+        'label': 'Select time',
+        'required': 'Time Field is required',
+        'timepicker': True,
+        'clock': '24',
+        'minutes_step': '15'
+    })
+    return {
+        'widget': form,
+        'doc': DOC_MINUTES,
+        'title': 'Minutes'
+    }
+
+
 DOC_DATETIME = """
-Datetime
---------
+Datetime Picker
+---------------
 
 Date and time input.
 
@@ -77,7 +115,7 @@ Date and time input.
         'locale': 'de',
         'datepicker': True,
         'time': True,
-        'timepicker': True,
+        'timepicker': True
     })
 """
 
@@ -90,12 +128,12 @@ def datetime_example():
         'locale': 'de',
         'datepicker': True,
         'time': True,
-        'timepicker': True,
+        'timepicker': True
     })
     return {
         'widget': form,
         'doc': DOC_DATETIME,
-        'title': 'Datetime',
+        'title': 'Datetime'
     }
 
 
@@ -103,5 +141,6 @@ def get_example():
     return [
         date_example(),
         time_example(),
-        datetime_example(),
+        minutes_example(),
+        datetime_example()
     ]

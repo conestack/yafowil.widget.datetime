@@ -1,10 +1,13 @@
 Changes
 =======
 
-1.13 (unreleased)
+2.0 (unreleased)
 -----------------
+- Get rid of JQuery UI.
+  [lenadax]
 
-- No changes yet.
+- Rewrite JavaScript using ES6. Utilize vanillajs-datepicker
+  [lenadax]
 
 
 1.12 (2020-07-09)

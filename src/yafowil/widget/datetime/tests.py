@@ -5,20 +5,26 @@ from yafowil.compat import IS_PY2
 from yafowil.tests import fxml
 from yafowil.tests import YafowilTestCase
 import datetime
+import os
 import unittest
-import yafowil.loader  # noqa
 
 
 if not IS_PY2:
     from importlib import reload
 
 
+def np(path):
+    return path.replace('/', os.path.sep)
+
+
 class TestDatetimeWidget(YafowilTestCase):
 
     def setUp(self):
         super(TestDatetimeWidget, self).setUp()
+        from yafowil.widget import datetime
         from yafowil.widget.datetime import widget
         reload(widget)
+        datetime.register()
 
     def test_datetime_basics(self):
         # Render very basic widget
@@ -47,8 +53,9 @@ class TestDatetimeWidget(YafowilTestCase):
                 'datepicker': True,
             })
         self.assertEqual(widget(), (
-            '<input class="dateinput datepicker datetime" id="input-dt" '
-            'name="dt" size="10" type="text" value="" />'
+            '<input class="dateinput datepicker datetime" '
+            'data-date-locale=\'en\' id="input-dt" name="dt" size="10" '
+            'type="text" value="" />'
         ))
 
     def test_datetime_without_time_input(self):
@@ -91,7 +98,7 @@ class TestDatetimeWidget(YafowilTestCase):
         ))
 
         # Valid widget extraction. Returns datetime instance
-        request = {'dt': '2010.1.1'}
+        request = {'dt': '1.1.2010'}
         data = widget.extract(request)
         self.assertEqual(
             [data.name, data.value, data.extracted, data.errors],
@@ -99,7 +106,7 @@ class TestDatetimeWidget(YafowilTestCase):
         )
         self.assertEqual(widget(data), (
             '<input class="dateinput datetime required" id="input-dt" '
-            'name="dt" size="10" type="text" value="2010.1.1" />'
+            'name="dt" size="10" type="text" value="1.1.2010" />'
         ))
 
     def test_datetime_advanced(self):
@@ -118,12 +125,15 @@ class TestDatetimeWidget(YafowilTestCase):
                 'timepicker': True,
                 'tzinfo': None,
             })
-        self.check_output("""
+        self.checkOutput("""
         <div>
           <input class="dateinput datepicker datetime required"
-                 id="input-dt" name="dt" size="10" type="text" value=""/>
-          <input class="timeinput timepicker" id="input-dt-time" name="dt.time"
-                 size="5" type="text" value=""/>
+                 data-date-locale="de" id="input-dt" name="dt" size="10"
+                 type="text" value=""/>
+          <input class="timeinput timepicker" data-time-clock="24"
+                 data-time-locale="de" data-time-minutes_step="5"
+                 id="input-dt-time" name="dt.time" size="5" type="text"
+                 value=""/>
         </div>
         """, fxml('<div>{}</div>'.format(widget())))
 
@@ -136,12 +146,15 @@ class TestDatetimeWidget(YafowilTestCase):
         )
 
         # Widget renders empty value
-        self.check_output("""
+        self.checkOutput("""
         <div>
-          <input class="dateinput datepicker datetime required" id="input-dt"
-                 name="dt" size="10" type="text" value=""/>
-          <input class="timeinput timepicker" id="input-dt-time" name="dt.time"
-                 size="5" type="text" value=""/>
+          <input class="dateinput datepicker datetime required"
+                 data-date-locale="de" id="input-dt" name="dt" size="10"
+                 type="text" value=""/>
+          <input class="timeinput timepicker" data-time-clock="24"
+                 data-time-locale="de" data-time-minutes_step="5"
+                 id="input-dt-time" name="dt.time" size="5" type="text"
+                 value=""/>
         </div>
         """, fxml('<div>{}</div>'.format(widget(data))))
 
@@ -152,12 +165,15 @@ class TestDatetimeWidget(YafowilTestCase):
             [data.name, data.value, data.extracted, data.errors],
             ['dt', UNSET, 'xyz', [ExtractionError('Not a valid date input.')]]
         )
-        self.check_output("""
+        self.checkOutput("""
         <div>
-          <input class="dateinput datepicker datetime required" id="input-dt"
-                 name="dt" size="10" type="text" value="xyz"/>
-          <input class="timeinput timepicker" id="input-dt-time" name="dt.time"
-                 size="5" type="text" value="x"/>
+          <input class="dateinput datepicker datetime required"
+                 data-date-locale="de" id="input-dt" name="dt" size="10"
+                 type="text" value="xyz"/>
+          <input class="timeinput timepicker" data-time-clock="24"
+                 data-time-locale="de" data-time-minutes_step="5"
+                 id="input-dt-time" name="dt.time" size="5" type="text"
+                 value="x"/>
         </div>
         """, fxml('<div>{}</div>'.format(widget(data))))
 
@@ -168,12 +184,15 @@ class TestDatetimeWidget(YafowilTestCase):
             [data.name, data.value, data.extracted, data.errors],
             ['dt', UNSET, datetime.datetime(2010, 1, 1, 10, 15), []]
         )
-        self.check_output("""
+        self.checkOutput("""
         <div>
-          <input class="dateinput datepicker datetime required" id="input-dt"
-                 name="dt" size="10" type="text" value="1.1.2010"/>
-          <input class="timeinput timepicker" id="input-dt-time" name="dt.time"
-                 size="5" type="text" value="10:15"/>
+          <input class="dateinput datepicker datetime required"
+                 data-date-locale="de" id="input-dt" name="dt" size="10"
+                 type="text" value="1.1.2010"/>
+          <input class="timeinput timepicker" data-time-clock="24"
+                 data-time-locale="de" data-time-minutes_step="5"
+                 id="input-dt-time" name="dt.time" size="5" type="text"
+                 value="10:15"/>
         </div>
         """, fxml('<div>{}</div>'.format(widget(data))))
 
@@ -208,10 +227,10 @@ class TestDatetimeWidget(YafowilTestCase):
             props={
                 'time': True,
             })
-        self.check_output("""
+        self.checkOutput("""
         <div>
           <input class="dateinput datetime" id="input-dt" name="dt" size="10"
-                 type="text" value="2011.5.1"/>
+                 type="text" value="5.1.2011"/>
           <input class="timeinput" id="input-dt-time" name="dt.time" size="5"
                  type="text" value="00:00"/>
         </div>
@@ -420,8 +439,9 @@ class TestDatetimeWidget(YafowilTestCase):
 
         # Additional CSS class is rendered for timepicker if ``timepicker`` set
         self.assertEqual(widget(), (
-            '<input class="time timeinput timepicker" id="input-t" name="t" '
-            'size="5" type="text" value="02:02" />'
+            '<input class="time timeinput timepicker" data-time-clock=\'24\' '
+            'data-time-locale=\'en\' data-time-minutes_step=\'5\' '
+            'id="input-t" name="t" size="5" type="text" value="02:02" />'
         ))
 
     def test_time_rendering_if_preset_and_extracted(self):
@@ -464,12 +484,9 @@ class TestDatetimeWidget(YafowilTestCase):
             props={
                 'format': 'inexistent'
             })
-        err = self.expect_error(
-            ValueError,
-            widget.extract,
-            {'t': '1:12'}
-        )
-        self.assertEqual(str(err), "Unknown format 'inexistent'")
+        with self.assertRaises(ValueError) as arc:
+            widget.extract({'t': '1:12'})
+        self.assertEqual(str(arc.exception), "Unknown format 'inexistent'")
 
     def test_time_default_format(self):
         # Number ``format``. Default unit is ``hours``
@@ -567,12 +584,9 @@ class TestDatetimeWidget(YafowilTestCase):
                 'format': 'number',
                 'unit': 'inexistent'
             })
-        err = self.expect_error(
-            ValueError,
-            widget.extract,
-            {'t': '1:12'}
-        )
-        self.assertEqual(str(err), "Unknown unit 'inexistent'")
+        with self.assertRaises(ValueError) as arc:
+            widget.extract({'t': '1:12'})
+        self.assertEqual(str(arc.exception), "Unknown unit 'inexistent'")
 
     def test_time_format_minutes_unit(self):
         # Minutes ``unit``
@@ -701,6 +715,46 @@ class TestDatetimeWidget(YafowilTestCase):
         request = {'t': ''}
         data = widget.extract(request)
         self.assertTrue(data.extracted is emptyvalue)
+
+    def test_resources(self):
+        factory.theme = 'default'
+        resources = factory.get_resources('yafowil.widget.datetime')
+        self.assertTrue(resources.directory.endswith(np('/datetime/resources')))
+        self.assertEqual(resources.name, 'yafowil.widget.datetime')
+        self.assertEqual(resources.path, 'yafowil-datetime')
+
+        scripts = resources.scripts
+        self.assertEqual(len(scripts), 3)
+
+        self.assertTrue(scripts[0].directory.endswith(np('/datetime/resources')))
+        self.assertEqual(scripts[0].path, 'yafowil-datetime')
+        self.assertEqual(scripts[0].file_name, 'datepicker.min.js')
+        self.assertTrue(os.path.exists(scripts[0].file_path))
+
+        self.assertTrue(
+            scripts[1].directory.endswith(np('/datetime/resources/locales'))
+        )
+        self.assertEqual(scripts[1].path, 'yafowil-datetime/locales')
+        self.assertEqual(scripts[1].file_name, 'de.js')
+        self.assertTrue(os.path.exists(scripts[1].file_path))
+
+        self.assertTrue(scripts[2].directory.endswith(np('/datetime/resources')))
+        self.assertEqual(scripts[2].path, 'yafowil-datetime')
+        self.assertEqual(scripts[2].file_name, 'widget.min.js')
+        self.assertTrue(os.path.exists(scripts[2].file_path))
+
+        styles = resources.styles
+        self.assertEqual(len(styles), 2)
+
+        self.assertTrue(styles[0].directory.endswith(np('/datetime/resources')))
+        self.assertEqual(styles[0].path, 'yafowil-datetime')
+        self.assertEqual(styles[0].file_name, 'datepicker.css')
+        self.assertTrue(os.path.exists(styles[0].file_path))
+
+        self.assertTrue(styles[1].directory.endswith(np('/datetime/resources')))
+        self.assertEqual(styles[1].path, 'yafowil-datetime')
+        self.assertEqual(styles[1].file_name, 'timepicker.css')
+        self.assertTrue(os.path.exists(styles[1].file_path))
 
 
 if __name__ == '__main__':
