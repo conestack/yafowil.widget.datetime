@@ -88,7 +88,7 @@ export class TimepickerMinute extends TimepickerButton {
 export class TimepickerHours extends TimepickerButtonContainer {
 
     constructor(picker, container) {
-        super(picker, $(`<div />`).addClass('hours-content'));
+        super(picker, $('<div />').addClass('hours-content'));
         if (picker.clock === 24) {
             this.create_clock_24();
         } else if (picker.clock === 12) {
@@ -116,9 +116,9 @@ export class TimepickerHours extends TimepickerButtonContainer {
 
     create_clock_12() {
         $('<span />').addClass('am').text('A.M.').appendTo(this.elem);
-        let hours_am = $(`<div />`).addClass('am').appendTo(this.elem);
+        let hours_am = $('<div />').addClass('am').appendTo(this.elem);
         $('<span />').addClass('pm').text('P.M.').appendTo(this.elem);
-        let hours_pm = $(`<div />`).addClass('pm').appendTo(this.elem);
+        let hours_pm = $('<div />').addClass('pm').appendTo(this.elem);
         for (let i = 0; i < 12; i++) {
             this.children.push(new TimepickerHour(this, hours_am, i, 'AM'));
         }
@@ -132,7 +132,7 @@ export class TimepickerHours extends TimepickerButtonContainer {
 export class TimepickerMinutes extends TimepickerButtonContainer {
 
     constructor(picker, container, step) {
-        super(picker, $(`<div />`).addClass('minutes-content'));
+        super(picker, $('<div />').addClass('minutes-content'));
         this.step = step;
         let count = 60 / step;
         if (count <= 32) {
@@ -202,16 +202,16 @@ export class TimepickerWidget {
             this.step = opts.step;
         }
 
-        this.trigger_elem = $(`<button />`)
+        this.trigger_elem = $('<button />')
             .addClass('timepicker-trigger btn btn-default')
             .text('...')
             .insertAfter(elem);
 
-        let dd_elem = this.dd_elem = $(`<div />`)
+        let dd_elem = this.dd_elem = $('<div />')
             .addClass('timepicker-dropdown')
             .insertAfter(elem);
 
-        let dd_container = $(`<div />`)
+        let dd_container = $('<div />')
             .addClass('timepicker-container')
             .appendTo(dd_elem);
 
@@ -275,15 +275,15 @@ export class TimepickerWidget {
 
         let lower_edge = offset_top + this.elem.outerHeight() + 250;
         let right_edge = offset_left + dd_width;
-        this.dd_elem.css('transform', `translateX(0px)`);
+        this.dd_elem.css('transform', 'translateX(0px)');
 
         if (lower_edge > $(document).height()) {
             let height = this.dd_elem.outerHeight() + 9;
             this.dd_elem.css('top', `-${height}px`);
         }
         if (offset_left + elem_width - dd_width < 0) {
-            let lefty = right_edge - $(window).width();
-            this.dd_elem.css('transform', `translateX(-${lefty}px)`);
+            let leftx = right_edge - $(window).width();
+            this.dd_elem.css('transform', `translateX(-${leftx}px)`);
         } else if (right_edge > $(window).width()) {
             this.dd_elem
                 .css('transform',
@@ -332,19 +332,19 @@ export class TimepickerWidget {
         }
 
         if (cursor_pos <= 4) {
-            if (e.key.match(new RegExp("[0-9]"))) {
+            if (e.key.match(new RegExp('[0-9]'))) {
                 this.elem.val(val + e.key);
                 if (cursor_pos === 2) {
                     this.elem.val(`${val}:${e.key}`);
                 }
             }
         } else if (cursor_pos === 5 && this.clock === 12) {
-            let correct = ["a", "A", "p", "P"];
+            let correct = ['a', 'A', 'p', 'P'];
             if (correct.includes(e.key)) {
                 this.elem.val(val + e.key);
             }
         } else if (cursor_pos === 6 && this.clock === 12) {
-            if (e.key === "m" || e.key === "M") {
+            if (e.key === 'm' || e.key === 'M') {
                 this.elem.val(val + e.key);
             }
         };
@@ -370,8 +370,8 @@ export class TimepickerWidget {
                 return;
             }
             let period = time.substr(5).toUpperCase();
-            this.period = (period === "PM") ? "PM" : "AM";
-            if (period === "PM") hour_index += 12;
+            this.period = (period === 'PM') ? 'PM' : 'AM';
+            if (period === 'PM') hour_index += 12;
         }
 
         let hour_elem = this.hours.children[hour_index];
