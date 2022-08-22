@@ -15,8 +15,8 @@
 
 # configuration
 DOMAIN="yafowil.widget.datetime"
-SEACH_PATH=src/yafowil/widget/datetime
-LOCALES_PATH=src/yafowil/widget/datetime/locales
+SEACH_PATH="src/yafowil/widget/datetime"
+LOCALES_PATH="src/yafowil/widget/datetime/locales"
 # end configuration
 
 # create locales folder if not exists
