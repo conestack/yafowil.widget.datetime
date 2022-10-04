@@ -26,7 +26,7 @@ if (window.yafowil === undefined) {
         // add binder to yafowil.widget.array hooks
         if (yafowil.array !== undefined) {
             $.extend(yafowil.array.hooks.add, {
-                datepicker_binder: yafowil.datepicker.binder
+                datepicker_binder: yafowil.datepicker.array_binder
             });
         }
     });
@@ -44,6 +44,14 @@ if (window.yafowil === undefined) {
                     showPeriodLabels: false,
                     showOn: 'both'
                 });
+            },
+
+            array_binder: function(context) {
+                $('input.datepicker', context).removeClass('hasDatepicker');
+                $('input.timepicker', context).removeClass('hasTimepicker');
+                $('.ui-datepicker-trigger', context).remove();
+                $('.ui-timepicker-trigger', context).remove();
+                yafowil.datepicker.binder(context);
             }
         }
     });

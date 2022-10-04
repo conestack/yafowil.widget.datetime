@@ -10,6 +10,10 @@ Changes
 1.12 (2020-07-09)
 -----------------
 
+- Add support for usage in ``yafowil.widget.array`` - remove date/timepicker
+  related css classes ``hasDatepicker, hasTimepicker`` before initialize.
+  [lenadax]
+
 - Add ``datetime.empty_display_value`` property.
   [rnix]
 
