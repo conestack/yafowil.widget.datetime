@@ -8,6 +8,9 @@ Changes
   related css classes ``hasDatepicker, hasTimepicker`` before initialize.
   [lenadax]
 
+- Fix case time value is no tuple in ``time_value``.
+  [lenadax]
+
 
 1.12 (2020-07-09)
 -----------------
