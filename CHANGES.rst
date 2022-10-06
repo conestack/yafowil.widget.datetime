@@ -1,7 +1,7 @@
 Changes
 =======
 
-1.13 (unreleased)
+1.13 (2022-10-06)
 -----------------
 
 - Add support for usage in ``yafowil.widget.array`` - remove date/timepicker
