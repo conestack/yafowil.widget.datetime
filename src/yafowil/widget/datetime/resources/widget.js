@@ -28,12 +28,29 @@ if (window.yafowil === undefined) {
             $.extend(yafowil.array.hooks.add, {
                 datepicker_binder: yafowil.datepicker.array_binder
             });
+            var datepicker = yafowil.datepicker;
+            datepicker.register_array_hooks();
         }
     });
 
     $.extend(yafowil, {
 
         datepicker: {
+
+            register_array_hooks() {
+                if (yafowil.array === undefined) {
+                    return;
+                }
+                $.extend(yafowil.array.hooks.add, {
+                    datepicker_add: this.array_add
+                });
+            },
+
+            array_add: function(context) {
+                parent = context.parents('tbody');
+                $('input.datepicker', parent).datepicker('destroy');
+                yafowil.datepicker.array_binder(parent);
+            },
 
             binder: function(context) {
                 $('input.datepicker', context).datepicker({
