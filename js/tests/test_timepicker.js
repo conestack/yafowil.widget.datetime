@@ -1,5 +1,7 @@
 import {TimepickerWidget} from '../src/timepicker.js';
 
+window.yafowil_array = undefined;
+
 QUnit.module('TimepickerWidget', hooks => {
     let container = $('<div id="container" />');
     let elem;

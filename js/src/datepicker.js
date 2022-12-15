@@ -6,6 +6,10 @@ export class DatepickerWidget extends Datepicker {
     static initialize(context) {
         $('input.datepicker', context).each(function() {
             let elem = $(this);
+            let id = elem.attr('id');
+            if (id && id.includes('TEMPLATE')) {
+                return;
+            }
             new DatepickerWidget(elem, elem.data('date-locale'));
         });
     }
@@ -72,3 +76,18 @@ DatepickerWidget.locale_options = {
         format: 'dd.mm.yyyy'
     }
 };
+
+//////////////////////////////////////////////////////////////////////////////
+// yafowil.widget.array integration
+//////////////////////////////////////////////////////////////////////////////
+
+function datepicker_on_array_add(inst, context) {
+    DatepickerWidget.initialize(context);
+}
+
+$(function() {
+    if (yafowil_array === undefined) {
+        return;
+    }
+    yafowil_array.on_array_event('on_add', datepicker_on_array_add);
+});

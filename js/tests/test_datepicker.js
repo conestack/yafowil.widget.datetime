@@ -1,5 +1,7 @@
 import {DatepickerWidget} from '../src/datepicker.js';
 
+window.yafowil_array = undefined;
+
 QUnit.module('DatepickerWidget', hooks => {
     let container = $('<div id="container" />');
     let elem;

@@ -178,6 +178,10 @@ export class TimepickerWidget {
     static initialize(context) {
         $('input.timepicker', context).each(function() {
             let elem = $(this);
+            let id = elem.attr('id');
+            if (id && id.includes('TEMPLATE')) {
+                return;
+            }
             elem.attr('spellcheck', false);
             new TimepickerWidget(elem, {
                 language: elem.data('time-locale'),
@@ -402,3 +406,18 @@ TimepickerWidget.locales = {
         minute: 'Minute'
     }
 };
+
+//////////////////////////////////////////////////////////////////////////////
+// yafowil.widget.array integration
+//////////////////////////////////////////////////////////////////////////////
+
+function timepicker_on_array_add(inst, context) {
+    TimepickerWidget.initialize(context);
+}
+
+$(function() {
+    if (yafowil_array === undefined) {
+        return;
+    }
+    yafowil_array.on_array_event('on_add', timepicker_on_array_add);
+});
