@@ -22,6 +22,13 @@ QUnit.module('DatepickerWidget', hooks => {
         picker = null;
     });
 
+    QUnit.test('initialize in array', assert => {
+        elem.attr('id', 'yafowil-TEMPLATE-array');
+        DatepickerWidget.initialize();
+        assert.notOk(elem.data('yafowil-datepicker'));
+        elem.attr('id', null);
+    });
+
     QUnit.test('Constructor - no data', assert => {
         DatepickerWidget.initialize();
 
@@ -38,6 +45,7 @@ QUnit.module('DatepickerWidget', hooks => {
 
         assert.ok(picker.toggle_picker);
     });
+
     QUnit.test('Constructor - no space on bottom', assert => {
         container
             .css('position', 'absolute')
