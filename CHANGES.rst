@@ -4,6 +4,9 @@ Changes
 2.0 (unreleased)
 -----------------
 
+- Prevent initialize if widget is part of array template.
+  [lenadax]
+
 - Extend JS by:
   ``datepicker_on_array_add``,
   ``timeepicker_on_array_add``,
