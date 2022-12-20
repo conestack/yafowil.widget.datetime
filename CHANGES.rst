@@ -3,6 +3,15 @@ Changes
 
 2.0 (unreleased)
 -----------------
+
+- Extend JS by:
+  ``datepicker_on_array_add``,
+  ``timeepicker_on_array_add``,
+  ``register_datepicker_array_subscribers``,
+  ``register_timepicker_array_subscribers``
+  to enable usage in ``yafowil.widget.array``.
+  [lenadax]
+
 - Get rid of JQuery UI.
   [lenadax]
 
