@@ -415,9 +415,9 @@ function timepicker_on_array_add(inst, context) {
     TimepickerWidget.initialize(context);
 }
 
-$(function() {
+export function register_timepicker_array_subscribers() {
     if (yafowil_array === undefined) {
         return;
     }
     yafowil_array.on_array_event('on_add', timepicker_on_array_add);
-});
+}

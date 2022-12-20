@@ -68,12 +68,12 @@ var yafowil_datetime = (function (exports, $) {
     function datepicker_on_array_add(inst, context) {
         DatepickerWidget.initialize(context);
     }
-    $(function() {
+    function register_datepicker_array_subscribers() {
         if (yafowil_array === undefined) {
             return;
         }
         yafowil_array.on_array_event('on_add', datepicker_on_array_add);
-    });
+    }
 
     class TimepickerButton {
         constructor(elem) {
@@ -424,12 +424,12 @@ var yafowil_datetime = (function (exports, $) {
     function timepicker_on_array_add(inst, context) {
         TimepickerWidget.initialize(context);
     }
-    $(function() {
+    function register_timepicker_array_subscribers() {
         if (yafowil_array === undefined) {
             return;
         }
         yafowil_array.on_array_event('on_add', timepicker_on_array_add);
-    });
+    }
 
     $(function() {
         if (window.ts !== undefined) {
@@ -442,6 +442,8 @@ var yafowil_datetime = (function (exports, $) {
             DatepickerWidget.initialize();
             TimepickerWidget.initialize();
         }
+        register_datepicker_array_subscribers();
+        register_timepicker_array_subscribers();
     });
 
     exports.DatepickerWidget = DatepickerWidget;
@@ -452,6 +454,8 @@ var yafowil_datetime = (function (exports, $) {
     exports.TimepickerMinute = TimepickerMinute;
     exports.TimepickerMinutes = TimepickerMinutes;
     exports.TimepickerWidget = TimepickerWidget;
+    exports.register_datepicker_array_subscribers = register_datepicker_array_subscribers;
+    exports.register_timepicker_array_subscribers = register_timepicker_array_subscribers;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

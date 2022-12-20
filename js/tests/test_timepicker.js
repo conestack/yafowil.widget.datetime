@@ -1,4 +1,5 @@
 import {TimepickerWidget} from '../src/timepicker.js';
+import {register_timepicker_array_subscribers} from '../src/timepicker.js';
 
 window.yafowil_array = undefined;
 
@@ -8,6 +9,9 @@ QUnit.module('TimepickerWidget', hooks => {
     let data_clock;
     let data_locale;
     let picker;
+    let _array_subscribers = {
+        on_add: []
+    };
 
     hooks.before(() => {
         $('body').append(container);
@@ -21,6 +25,47 @@ QUnit.module('TimepickerWidget', hooks => {
         // reset container css
         container.css('top', 'unset').css('left', 'unset').css('position', 'unset');
         picker = null;
+    });
+
+    QUnit.test('register_timepicker_array_subscribers', assert => {
+        container.empty();
+
+        // return if window.yafowil === undefined
+        register_timepicker_array_subscribers();
+        assert.deepEqual(_array_subscribers['on_add'], []);
+
+        // patch yafowil_array
+        window.yafowil_array = {
+            on_array_event: function(evt_name, evt_function) {
+                _array_subscribers[evt_name] = evt_function;
+            }
+        };
+        register_timepicker_array_subscribers();
+
+        // create table DOM
+        let table = $('<table />')
+            .append($('<tr />'))
+            .append($('<td />'))
+            .appendTo('body');
+        
+        let el = $(`<input type="text" />`).addClass('timepicker');
+        el.attr('id', 'yafowil-TEMPLATE-array');
+        el.appendTo($('td', table));
+
+        // invoke array on_add - returns
+        _array_subscribers['on_add'].apply(null, $('tr', table));
+        picker = el.data('yafowil-timepicker');
+        assert.notOk(picker);
+
+        // invoke array on_add
+        el.attr('id', '');
+        _array_subscribers['on_add'].apply(null, $('tr', table));
+        picker = el.data('yafowil-timepicker');
+        assert.ok(picker);
+
+        table.remove();
+        window.yafowil_array = undefined;
+        _array_subscribers = undefined;
     });
 
     QUnit.test('Initialize() - no data', assert => {

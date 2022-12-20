@@ -85,9 +85,9 @@ function datepicker_on_array_add(inst, context) {
     DatepickerWidget.initialize(context);
 }
 
-$(function() {
+export function register_datepicker_array_subscribers() {
     if (yafowil_array === undefined) {
         return;
     }
     yafowil_array.on_array_event('on_add', datepicker_on_array_add);
-});
+}

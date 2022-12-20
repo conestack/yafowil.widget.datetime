@@ -1,4 +1,5 @@
 import {DatepickerWidget} from '../src/datepicker.js';
+import {register_datepicker_array_subscribers} from '../src/datepicker.js';
 
 window.yafowil_array = undefined;
 
@@ -6,6 +7,9 @@ QUnit.module('DatepickerWidget', hooks => {
     let container = $('<div id="container" />');
     let elem;
     let picker;
+    let _array_subscribers = {
+        on_add: []
+    };
 
     hooks.before(() => {
         $('body').append(container);
@@ -22,11 +26,45 @@ QUnit.module('DatepickerWidget', hooks => {
         picker = null;
     });
 
-    QUnit.test('initialize in array', assert => {
-        elem.attr('id', 'yafowil-TEMPLATE-array');
-        DatepickerWidget.initialize();
-        assert.notOk(elem.data('yafowil-datepicker'));
-        elem.attr('id', null);
+    QUnit.test('register_datepicker_array_subscribers', assert => {
+        container.empty();
+
+        // return if window.yafowil === undefined
+        register_datepicker_array_subscribers();
+        assert.deepEqual(_array_subscribers['on_add'], []);
+
+        // patch yafowil_array
+        window.yafowil_array = {
+            on_array_event: function(evt_name, evt_function) {
+                _array_subscribers[evt_name] = evt_function;
+            }
+        };
+        register_datepicker_array_subscribers();
+
+        // create table DOM
+        let table = $('<table />')
+            .append($('<tr />'))
+            .append($('<td />'))
+            .appendTo('body');
+        
+        let el = $(`<input type="text" />`).addClass('datepicker');
+        el.attr('id', 'yafowil-TEMPLATE-array');
+        el.appendTo($('td', table));
+
+        // invoke array on_add - returns
+        _array_subscribers['on_add'].apply(null, $('tr', table));
+        picker = el.data('yafowil-datepicker');
+        assert.notOk(picker);
+
+        // invoke array on_add
+        el.attr('id', '');
+        _array_subscribers['on_add'].apply(null, $('tr', table));
+        picker = el.data('yafowil-datepicker');
+        assert.ok(picker);
+
+        table.remove();
+        window.yafowil_array = undefined;
+        _array_subscribers = undefined;
     });
 
     QUnit.test('Constructor - no data', assert => {
@@ -110,4 +148,3 @@ QUnit.module('DatepickerWidget', hooks => {
         assert.notOk(picker.elem.is(':focus'));
     });
 });
-
