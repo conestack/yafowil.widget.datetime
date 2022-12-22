@@ -178,8 +178,7 @@ export class TimepickerWidget {
     static initialize(context) {
         $('input.timepicker', context).each(function() {
             let elem = $(this);
-            let id = elem.attr('id');
-            if (id && id.includes('TEMPLATE')) {
+            if (elem.parents('.arraytemplate').length) {
                 return;
             }
             elem.attr('spellcheck', false);
@@ -416,8 +415,8 @@ function timepicker_on_array_add(inst, context) {
 }
 
 export function register_timepicker_array_subscribers() {
-    if (yafowil_array === undefined) {
+    if (window.yafowil_array === undefined) {
         return;
     }
-    yafowil_array.on_array_event('on_add', timepicker_on_array_add);
+    window.yafowil_array.on_array_event('on_add', timepicker_on_array_add);
 }

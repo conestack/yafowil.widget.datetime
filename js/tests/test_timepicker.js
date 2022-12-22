@@ -48,13 +48,14 @@ QUnit.module('TimepickerWidget', hooks => {
             .appendTo('body');
         
         let el = $(`<input type="text" />`).addClass('timepicker');
-        el.attr('id', 'yafowil-TEMPLATE-array');
+        $('td', table).addClass('arraytemplate');
         el.appendTo($('td', table));
 
         // invoke array on_add - returns
         _array_subscribers['on_add'].apply(null, $('tr', table));
         picker = el.data('yafowil-timepicker');
         assert.notOk(picker);
+        $('td', table).removeClass('arraytemplate');
 
         // invoke array on_add
         el.attr('id', '');
