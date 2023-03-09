@@ -528,5 +528,20 @@ QUnit.module('TimepickerWidget', hooks => {
         picker.dd_elem.trigger('click');
         assert.strictEqual(picker.dd_elem.css('display'), 'block');
     });
+
+    QUnit.test('change event', assert => {
+        TimepickerWidget.initialize();
+        picker = elem.data('yafowil-timepicker');
+        picker.elem.on('change', () => {
+            assert.step('timepicker_input_change');
+        })
+
+        picker.trigger_elem.trigger('click');
+        picker.minute = '25';
+        picker.hour = '14';
+        picker.set_time();
+        assert.verifySteps(['timepicker_input_change']);
+        picker.elem.off('change');
+    });
 });
 
