@@ -178,7 +178,8 @@ export class TimepickerWidget {
     static initialize(context) {
         $('input.timepicker', context).each(function() {
             let elem = $(this);
-            if (elem.parents('.arraytemplate').length) {
+            if (window.yafowil_array !== undefined &&
+                window.yafowil_array.inside_template(elem)) {
                 return;
             }
             elem.attr('spellcheck', false);

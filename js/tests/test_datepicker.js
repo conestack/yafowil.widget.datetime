@@ -36,6 +36,9 @@ QUnit.module('DatepickerWidget', hooks => {
         window.yafowil_array = {
             on_array_event: function(evt_name, evt_function) {
                 _array_subscribers[evt_name] = evt_function;
+            },
+            inside_template(elem) {
+                return elem.parents('.arraytemplate').length > 0;
             }
         };
         register_datepicker_array_subscribers();

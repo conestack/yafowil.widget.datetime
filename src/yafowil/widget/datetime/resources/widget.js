@@ -5,7 +5,8 @@ var yafowil_datetime = (function (exports, $) {
         static initialize(context) {
             $('input.datepicker', context).each(function() {
                 let elem = $(this);
-                if (elem.parents('.arraytemplate').length) {
+                if (window.yafowil_array !== undefined &&
+                    window.yafowil_array.inside_template(elem)) {
                     return;
                 }
                 new DatepickerWidget(elem, elem.data('date-locale'));
@@ -231,7 +232,8 @@ var yafowil_datetime = (function (exports, $) {
         static initialize(context) {
             $('input.timepicker', context).each(function() {
                 let elem = $(this);
-                if (elem.parents('.arraytemplate').length) {
+                if (window.yafowil_array !== undefined &&
+                    window.yafowil_array.inside_template(elem)) {
                     return;
                 }
                 elem.attr('spellcheck', false);
