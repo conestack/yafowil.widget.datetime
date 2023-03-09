@@ -38,6 +38,9 @@ var yafowil_datetime = (function (exports, $) {
                 .off('mousedown touchstart', this.toggle_picker)
                 .on('mousedown touchstart', this.toggle_picker);
             this.trigger.on('click', (e) => {e.preventDefault();});
+            this.elem.on('changeDate', () => {
+                this.elem.trigger('change');
+            });
         }
         unload() {
             this.trigger.off('mousedown touchstart', this.toggle_picker);
@@ -330,6 +333,7 @@ var yafowil_datetime = (function (exports, $) {
             } else if (this.clock === 12) {
                 this.elem.val(`${this.hour}:${this.minute}${this.period}`);
             }
+            this.elem.trigger('change');
             this.hour = '';
             this.minute = '';
             this.dd_elem.hide();
