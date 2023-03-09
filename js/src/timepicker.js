@@ -178,6 +178,10 @@ export class TimepickerWidget {
     static initialize(context) {
         $('input.timepicker', context).each(function() {
             let elem = $(this);
+            if (window.yafowil_array !== undefined &&
+                window.yafowil_array.inside_template(elem)) {
+                return;
+            }
             elem.attr('spellcheck', false);
             new TimepickerWidget(elem, {
                 language: elem.data('time-locale'),
@@ -300,6 +304,7 @@ export class TimepickerWidget {
         } else if (this.clock === 12) {
             this.elem.val(`${this.hour}:${this.minute}${this.period}`);
         }
+        this.elem.trigger('change');
         this.hour = '';
         this.minute = '';
         this.dd_elem.hide();
@@ -402,3 +407,18 @@ TimepickerWidget.locales = {
         minute: 'Minute'
     }
 };
+
+//////////////////////////////////////////////////////////////////////////////
+// yafowil.widget.array integration
+//////////////////////////////////////////////////////////////////////////////
+
+function timepicker_on_array_add(inst, context) {
+    TimepickerWidget.initialize(context);
+}
+
+export function register_timepicker_array_subscribers() {
+    if (window.yafowil_array === undefined) {
+        return;
+    }
+    window.yafowil_array.on_array_event('on_add', timepicker_on_array_add);
+}

@@ -5,6 +5,10 @@ var yafowil_datetime = (function (exports, $) {
         static initialize(context) {
             $('input.datepicker', context).each(function() {
                 let elem = $(this);
+                if (window.yafowil_array !== undefined &&
+                    window.yafowil_array.inside_template(elem)) {
+                    return;
+                }
                 new DatepickerWidget(elem, elem.data('date-locale'));
             });
         }
@@ -35,6 +39,9 @@ var yafowil_datetime = (function (exports, $) {
                 .off('mousedown touchstart', this.toggle_picker)
                 .on('mousedown touchstart', this.toggle_picker);
             this.trigger.on('click', (e) => {e.preventDefault();});
+            this.elem.on('changeDate', () => {
+                this.elem.trigger('change');
+            });
         }
         unload() {
             this.trigger.off('mousedown touchstart', this.toggle_picker);
@@ -61,6 +68,15 @@ var yafowil_datetime = (function (exports, $) {
             format: 'dd.mm.yyyy'
         }
     };
+    function datepicker_on_array_add(inst, context) {
+        DatepickerWidget.initialize(context);
+    }
+    function register_datepicker_array_subscribers() {
+        if (window.yafowil_array === undefined) {
+            return;
+        }
+        window.yafowil_array.on_array_event('on_add', datepicker_on_array_add);
+    }
 
     class TimepickerButton {
         constructor(elem) {
@@ -216,6 +232,10 @@ var yafowil_datetime = (function (exports, $) {
         static initialize(context) {
             $('input.timepicker', context).each(function() {
                 let elem = $(this);
+                if (window.yafowil_array !== undefined &&
+                    window.yafowil_array.inside_template(elem)) {
+                    return;
+                }
                 elem.attr('spellcheck', false);
                 new TimepickerWidget(elem, {
                     language: elem.data('time-locale'),
@@ -315,6 +335,7 @@ var yafowil_datetime = (function (exports, $) {
             } else if (this.clock === 12) {
                 this.elem.val(`${this.hour}:${this.minute}${this.period}`);
             }
+            this.elem.trigger('change');
             this.hour = '';
             this.minute = '';
             this.dd_elem.hide();
@@ -404,6 +425,15 @@ var yafowil_datetime = (function (exports, $) {
             minute: 'Minute'
         }
     };
+    function timepicker_on_array_add(inst, context) {
+        TimepickerWidget.initialize(context);
+    }
+    function register_timepicker_array_subscribers() {
+        if (window.yafowil_array === undefined) {
+            return;
+        }
+        window.yafowil_array.on_array_event('on_add', timepicker_on_array_add);
+    }
 
     $(function() {
         if (window.ts !== undefined) {
@@ -416,6 +446,8 @@ var yafowil_datetime = (function (exports, $) {
             DatepickerWidget.initialize();
             TimepickerWidget.initialize();
         }
+        register_datepicker_array_subscribers();
+        register_timepicker_array_subscribers();
     });
 
     exports.DatepickerWidget = DatepickerWidget;
@@ -426,6 +458,8 @@ var yafowil_datetime = (function (exports, $) {
     exports.TimepickerMinute = TimepickerMinute;
     exports.TimepickerMinutes = TimepickerMinutes;
     exports.TimepickerWidget = TimepickerWidget;
+    exports.register_datepicker_array_subscribers = register_datepicker_array_subscribers;
+    exports.register_timepicker_array_subscribers = register_timepicker_array_subscribers;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

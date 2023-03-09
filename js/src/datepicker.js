@@ -6,6 +6,10 @@ export class DatepickerWidget extends Datepicker {
     static initialize(context) {
         $('input.datepicker', context).each(function() {
             let elem = $(this);
+            if (window.yafowil_array !== undefined &&
+                window.yafowil_array.inside_template(elem)) {
+                return;
+            }
             new DatepickerWidget(elem, elem.data('date-locale'));
         });
     }
@@ -42,6 +46,9 @@ export class DatepickerWidget extends Datepicker {
             .off('mousedown touchstart', this.toggle_picker)
             .on('mousedown touchstart', this.toggle_picker);
         this.trigger.on('click', (e) => {e.preventDefault()});
+        this.elem.on('changeDate', () => {
+            this.elem.trigger('change');
+        });
     }
 
     unload() {
@@ -72,3 +79,18 @@ DatepickerWidget.locale_options = {
         format: 'dd.mm.yyyy'
     }
 };
+
+//////////////////////////////////////////////////////////////////////////////
+// yafowil.widget.array integration
+//////////////////////////////////////////////////////////////////////////////
+
+function datepicker_on_array_add(inst, context) {
+    DatepickerWidget.initialize(context);
+}
+
+export function register_datepicker_array_subscribers() {
+    if (window.yafowil_array === undefined) {
+        return;
+    }
+    window.yafowil_array.on_array_event('on_add', datepicker_on_array_add);
+}

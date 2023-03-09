@@ -1,9 +1,14 @@
 import {DatepickerWidget} from '../src/datepicker.js';
+import {register_datepicker_array_subscribers} from '../src/datepicker.js';
+
 
 QUnit.module('DatepickerWidget', hooks => {
     let container = $('<div id="container" />');
     let elem;
     let picker;
+    let _array_subscribers = {
+        on_add: []
+    };
 
     hooks.before(() => {
         $('body').append(container);
@@ -18,6 +23,51 @@ QUnit.module('DatepickerWidget', hooks => {
             .css('position', '')
             .css('top', 'unset');
         picker = null;
+    });
+
+    QUnit.test('register_datepicker_array_subscribers', assert => {
+        container.empty();
+
+        // return if window.yafowil === undefined
+        register_datepicker_array_subscribers();
+        assert.deepEqual(_array_subscribers['on_add'], []);
+
+        // patch yafowil_array
+        window.yafowil_array = {
+            on_array_event: function(evt_name, evt_function) {
+                _array_subscribers[evt_name] = evt_function;
+            },
+            inside_template(elem) {
+                return elem.parents('.arraytemplate').length > 0;
+            }
+        };
+        register_datepicker_array_subscribers();
+
+        // create table DOM
+        let table = $('<table />')
+            .append($('<tr />'))
+            .append($('<td />'))
+            .appendTo('body');
+        
+        let el = $(`<input type="text" />`).addClass('datepicker');
+        $('td', table).addClass('arraytemplate');
+        el.appendTo($('td', table));
+
+        // invoke array on_add - returns
+        _array_subscribers['on_add'].apply(null, $('tr', table));
+        picker = el.data('yafowil-datepicker');
+        assert.notOk(picker);
+        $('td', table).removeClass('arraytemplate');
+
+        // invoke array on_add
+        el.attr('id', '');
+        _array_subscribers['on_add'].apply(null, $('tr', table));
+        picker = el.data('yafowil-datepicker');
+        assert.ok(picker);
+
+        table.remove();
+        window.yafowil_array = undefined;
+        _array_subscribers = undefined;
     });
 
     QUnit.test('Constructor - no data', assert => {
@@ -36,6 +86,7 @@ QUnit.module('DatepickerWidget', hooks => {
 
         assert.ok(picker.toggle_picker);
     });
+
     QUnit.test('Constructor - no space on bottom', assert => {
         container
             .css('position', 'absolute')
@@ -99,5 +150,19 @@ QUnit.module('DatepickerWidget', hooks => {
         assert.strictEqual($(picker.picker.element).css('display'), 'none');
         assert.notOk(picker.elem.is(':focus'));
     });
-});
 
+    QUnit.test('on date change', assert => {
+        DatepickerWidget.initialize();
+        picker = elem.data('yafowil-datepicker');
+        picker.elem.on('change', () => {
+            assert.step('datepicker_change_event');
+        });
+
+        picker.trigger.trigger('mousedown');
+        $('span.datepicker-cell.day:first-of-type').trigger('click');
+        assert.verifySteps(['datepicker_change_event']);
+
+        picker.picker.datepicker.setDate('03.09.2023');
+        assert.verifySteps(['datepicker_change_event']);
+    });
+});
