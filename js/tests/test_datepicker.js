@@ -147,4 +147,19 @@ QUnit.module('DatepickerWidget', hooks => {
         assert.strictEqual($(picker.picker.element).css('display'), 'none');
         assert.notOk(picker.elem.is(':focus'));
     });
+
+    QUnit.test('on date change', assert => {
+        DatepickerWidget.initialize();
+        picker = elem.data('yafowil-datepicker');
+        picker.elem.on('change', () => {
+            assert.step('datepicker_change_event');
+        });
+
+        picker.trigger.trigger('mousedown');
+        $('span.datepicker-cell.day:first-of-type').trigger('click');
+        assert.verifySteps(['datepicker_change_event']);
+
+        picker.picker.datepicker.setDate('03.09.2023');
+        assert.verifySteps(['datepicker_change_event']);
+    });
 });
