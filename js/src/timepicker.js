@@ -303,6 +303,7 @@ export class TimepickerWidget {
         } else if (this.clock === 12) {
             this.elem.val(`${this.hour}:${this.minute}${this.period}`);
         }
+        this.elem.trigger('change');
         this.hour = '';
         this.minute = '';
         this.dd_elem.hide();

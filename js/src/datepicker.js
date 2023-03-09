@@ -45,6 +45,9 @@ export class DatepickerWidget extends Datepicker {
             .off('mousedown touchstart', this.toggle_picker)
             .on('mousedown touchstart', this.toggle_picker);
         this.trigger.on('click', (e) => {e.preventDefault()});
+        this.elem.on('changeDate', () => {
+            this.elem.trigger('change');
+        });
     }
 
     unload() {
