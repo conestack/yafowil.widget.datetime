@@ -49,6 +49,9 @@ export class DatepickerWidget extends Datepicker {
         this.elem.on('changeDate', () => {
             this.elem.trigger('change');
         });
+
+        let created_event = $.Event('datepicker_created', {widget: this});
+        this.elem.trigger(created_event);
     }
 
     unload() {
