@@ -242,8 +242,7 @@ export class TimepickerWidget {
 
         $(window).on('resize', this.place);
 
-        let created_event = $.Event('timepicker_created');
-        created_event.widget = this;
+        let created_event = $.Event('timepicker_created', {widget: this});
         this.elem.trigger(created_event);
     }
 
