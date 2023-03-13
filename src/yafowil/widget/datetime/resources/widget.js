@@ -42,6 +42,9 @@ var yafowil_datetime = (function (exports, $) {
             this.elem.on('changeDate', () => {
                 this.elem.trigger('change');
             });
+            let created_event = $.Event('datepicker_created');
+            created_event.widget = this;
+            this.elem.trigger(created_event);
         }
         unload() {
             this.trigger.off('mousedown touchstart', this.toggle_picker);
@@ -283,6 +286,9 @@ var yafowil_datetime = (function (exports, $) {
             this.validate = this.validate.bind(this);
             this.elem.on('keyup', this.validate);
             $(window).on('resize', this.place);
+            let created_event = $.Event('timepicker_created');
+            created_event.widget = this;
+            this.elem.trigger(created_event);
         }
         unload() {
             $(document).off('click', this.hide_dropdown);
