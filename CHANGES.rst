@@ -1,8 +1,11 @@
 Changes
 =======
 
-2.0 (unreleased)
------------------
+2.0a1 (unreleased)
+------------------
+
+- Add ``webresource`` support.
+  [rnix]
 
 - Prevent initialize if widget is part of array template.
   [lenadax]
