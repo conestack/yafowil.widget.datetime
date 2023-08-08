@@ -257,14 +257,16 @@ def datetime_extractor(widget, data):
         time = data.request.get('{}.time'.format(widget.dottedpath))
     required = attr_value('required', widget, data)
     if not required and not data.extracted and not time:
-        return ''
+        return None
     locale = attr_value('locale', widget, data)
     tzinfo = attr_value('tzinfo', widget, data)
     try:
         return convert(data.extracted, time=time, tzinfo=tzinfo, locale=locale)
     except DateTimeConversionError:
-        message = _('input_not_valid_date',
-                    default=u'Not a valid date input.')
+        message = _(
+            'input_not_valid_date',
+            default=u'Not a valid date input.'
+        )
         raise ExtractionError(message)
 
 
@@ -311,9 +313,10 @@ def render_datetime_input(widget, data, date, time):
     return tag('input', **attrs) + timeinput
 
 
-@managedprops('locale', 'delimiter', 'time', 'disabled', 'timepicker',
-              'timepicker_class', 'datepicker', 'datepicker_class',
-              *css_managed_props)
+@managedprops(
+    'locale', 'delimiter', 'time', 'disabled', 'timepicker',
+    'timepicker_class', 'datepicker', 'datepicker_class', *css_managed_props
+)
 def datetime_edit_renderer(widget, data):
     locale = attr_value('locale', widget, data)
     delim = attr_value('delimiter', widget, data)

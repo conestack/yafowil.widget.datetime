@@ -4,7 +4,8 @@ Changes
 2.0a2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- ``datetime_extractor`` returns ``None`` instead of empty string if widget is
+  present in form but no value given.
 
 
 2.0a1 (2023-05-15)

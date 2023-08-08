@@ -40,7 +40,7 @@ class TestDatetimeWidget(YafowilTestCase):
         data = widget.extract({})
         self.assertEqual(
             [data.name, data.value, data.extracted, data.errors],
-            ['dt', UNSET, '', []]
+            ['dt', UNSET, None, []]
         )
 
     def test_datetime_datepicker_class(self):
