@@ -1,7 +1,7 @@
 Changes
 =======
 
-2.0a2 (unreleased)
+2.0a2 (2023-09-28)
 ------------------
 
 - ``datetime_extractor`` returns ``None`` instead of empty string if widget is
