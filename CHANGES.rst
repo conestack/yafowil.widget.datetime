@@ -6,6 +6,7 @@ Changes
 
 - ``datetime_extractor`` returns ``None`` instead of empty string if widget is
   present in form but no value given.
+  [rnix]
 
 
 2.0a1 (2023-05-15)
