@@ -128,7 +128,11 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
         attrs['class_'] = cssclasses(widget, data, additional=class_)
     else:
         attrs['class_'] = ' '.join(class_)
-    return tag('input', **attrs)
+    if factory.theme == 'bootstrap5':
+        tags = tag('input', **attrs)
+        return data.tag('div', tags, **{'class': 'input-group'})
+    else:
+        return tag('input', **attrs)
 
 
 def time_value(format_, unit, time):
@@ -310,7 +314,12 @@ def render_datetime_input(widget, data, date, time):
         additional_classes.append(datepicker_class)
         attrs['data-date-locale'] = attr_value('locale', widget, data)
     attrs['class_'] = cssclasses(widget, data, additional=additional_classes)
-    return tag('input', **attrs) + timeinput
+
+    if factory.theme == 'bootstrap5':
+        tags = tag('input', **attrs)
+        return data.tag('div', tags, **{'class': 'input-group'}) + timeinput
+    else:
+        return tag('input', **attrs) + timeinput
 
 
 @managedprops(

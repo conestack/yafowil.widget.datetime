@@ -1,0 +1,47 @@
+.timepicker-dropdown {
+  position: absolute;
+  margin-top: 4px;
+  display: none;
+  z-index: 1000;
+}
+
+.timepicker-container .cell {
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 3px;
+  user-select: none;
+}
+.timepicker-container .cell:hover {
+  background: #f9f9f9;
+}
+.timepicker-container .cell.selected {
+  background-color: var(--yafowil-accent-color, #0d6efd);
+  color: var(--yafowil-accent-font-color, #fff);
+  font-weight: 600;
+}
+.timepicker-container .timepicker-hours .hours-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+.timepicker-container .timepicker-hours div.am, .timepicker-container .timepicker-hours div.pm {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+.timepicker-container .timepicker-hours div.am {
+  border-bottom: 1px solid #e7e7e7;
+}
+.timepicker-container .timepicker-hours span.am, .timepicker-container .timepicker-hours span.pm {
+  font-size: 10px;
+  float: left;
+  position: relative;
+  top: 25px;
+  padding: 0 6px;
+  font-weight: 600;
+}
+.timepicker-container .timepicker-minutes .minutes-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+}
