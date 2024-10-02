@@ -1,4 +1,4 @@
-var yafowil_datetime = (function (exports, $) {
+var yafowil_datetime = (function (exports, $, Popper) {
     'use strict';
 
     class DatepickerWidget extends Datepicker {
@@ -170,7 +170,7 @@ var yafowil_datetime = (function (exports, $) {
             let header = $('<div />')
                 .addClass('header card-header bg-primary text-white')
                 .text(picker.translate('hour'));
-            $('<div />')
+            this.container_elem = $('<div />')
                 .addClass('card timepicker-hours')
                 .append(header)
                 .append(this.elem)
@@ -201,21 +201,23 @@ var yafowil_datetime = (function (exports, $) {
             super(picker, $('<div />').addClass('card-body minutes-content'));
             this.step = step;
             let count = 60 / step;
+            let columns = 0;
             if (count <= 32) {
+                columns = Math.ceil(count / 4);
                 let cols = '1fr '.repeat(Math.ceil(count / 4));
                 this.elem.css(
                     'grid-template-columns',
                     cols
                 );
             } else {
+                columns = 10;
                 this.elem.css(
                     'grid-template-columns',
                     '1fr '.repeat(10)
                 );
                 if (picker.clock === 24) {
                     $('div.hours-content', picker.dd_elem).css({
-                        'grid-template-columns': '1fr 1fr 1fr 1fr',
-                        'width': '110px'
+                        'grid-template-columns': '1fr 1fr 1fr 1fr'
                     });
                 } else {
                     $('div.am, div.pm', picker.dd_elem).css({
@@ -223,13 +225,14 @@ var yafowil_datetime = (function (exports, $) {
                     });
                 }
             }
+            this.columns_count = columns;
             for (let i = 0; i < count; i++) {
                 this.children.push(new TimepickerMinute(this, this.elem, i * step));
             }
             let header = $('<div />')
                 .addClass('header card-header bg-primary text-white')
                 .text(picker.translate('minute'));
-            $('<div />')
+            this.container_elem = $('<div />')
                 .addClass('card timepicker-minutes')
                 .append(header)
                 .append(this.elem)
@@ -277,8 +280,8 @@ var yafowil_datetime = (function (exports, $) {
                 .appendTo(dd_elem);
             this.hours = new TimepickerHours(this, dd_container);
             this.minutes = new TimepickerMinutes(this, dd_container, this.step);
+            this.calc_flex_basis(this.minutes.columns_count);
             this.validate();
-            this.place = this.place.bind(this);
             this.show_dropdown = this.show_dropdown.bind(this);
             this.elem.on('focus', this.show_dropdown);
             this.toggle_dropdown = this.toggle_dropdown.bind(this);
@@ -289,11 +292,48 @@ var yafowil_datetime = (function (exports, $) {
             this.elem.on('keypress', this.on_keypress);
             this.validate = this.validate.bind(this);
             this.elem.on('keyup', this.validate);
+            this.popper = Popper.createPopper(this.elem[0], this.dd_elem[0], {
+                placement: "bottom-start",
+                modifiers: [
+                  {
+                      name: 'preventOverflow',
+                      options: {
+                          boundary: 'viewport',
+                          padding: 10,
+                      },
+                  },
+                  {
+                    name: "flip",
+                    options: {
+                      allowedAutoPlacements: ["top-start", "bottom-start"],
+                      rootBoundary: "viewport"
+                    }
+                  }
+                ]
+            });
             let created_event = $.Event('timepicker_created', {widget: this});
             this.elem.trigger(created_event);
         }
+        calc_flex_basis(minutesColumns) {
+            let hoursColumns = 6;
+            if (60 / this.step > 32) {
+                if (this.clock === 24) {
+                    hoursColumns = 4;
+                } else {
+                    hoursColumns = 5;
+                }
+            }
+            const total_columns = hoursColumns + minutesColumns;
+            const hoursFlexBasis = (hoursColumns / total_columns) * 100;
+            const minutesFlexBasis = (minutesColumns / total_columns) * 100;
+            this.hours.container_elem.css('flex-basis', hoursFlexBasis.toFixed(2) + '%');
+            this.minutes.container_elem.css('flex-basis', minutesFlexBasis.toFixed(2) + '%');
+            const containerWidth = `calc(${total_columns * 30}px + 4rem)`;
+            this.dd_elem.css('width', containerWidth);
+        }
         unload() {
             $(document).off('click', this.hide_dropdown);
+            this.popper.destroy();
             this.hours.unload_all();
             this.minutes.unload_all();
         }
@@ -310,29 +350,6 @@ var yafowil_datetime = (function (exports, $) {
         set minute(minute) {
             this._minute = minute;
             this.set_time();
-        }
-        place() {
-            let offset = this.elem.offset().left - this.elem.parent().offset().left;
-            this.dd_elem.css('left', `${offset}px`);
-            let offset_left = this.elem.offset().left,
-                offset_top = this.elem.offset().top,
-                dd_width = this.dd_elem.outerWidth(),
-                elem_width = this.elem.outerWidth();
-            let lower_edge = offset_top + this.elem.outerHeight() + 250;
-            let right_edge = offset_left + dd_width;
-            this.dd_elem.css('transform', 'translateX(0px)');
-            if (lower_edge > $(document).height()) {
-                let height = this.dd_elem.outerHeight() + 9;
-                this.dd_elem.css('top', `-${height}px`);
-            }
-            if (offset_left + elem_width - dd_width < 0) {
-                let leftx = right_edge - $(window).width();
-                this.dd_elem.css('transform', `translateX(-${leftx}px)`);
-            } else if (right_edge > $(window).width()) {
-                this.dd_elem
-                    .css('transform',
-                        `translateX(calc(-100% + ${elem_width}px))`);
-            }
         }
         set_time() {
             if (this.hour === '' || this.minute === '') {
@@ -357,10 +374,12 @@ var yafowil_datetime = (function (exports, $) {
         }
         show_dropdown(e) {
             this.dd_elem.show();
+            this.popper.forceUpdate();
         }
         toggle_dropdown(e) {
             e.preventDefault();
             this.dd_elem.toggle();
+            this.popper.forceUpdate();
         }
         on_keypress(e) {
             e.preventDefault();
@@ -478,4 +497,4 @@ var yafowil_datetime = (function (exports, $) {
 
     return exports;
 
-})({}, jQuery);
+})({}, jQuery, Popper);

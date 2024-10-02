@@ -1,6 +1,5 @@
 .timepicker-dropdown {
   position: absolute;
-  margin-top: 4px;
   display: none;
   z-index: 1000;
 }

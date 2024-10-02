@@ -1,47 +1,12 @@
-// input.timeinput {
-//   width: 6em;
-//   margin-right: 45px;
-//   display: inline-block;
-// }
-
-// button.timepicker-trigger {
-//   position: absolute;
-//   width: 34px;
-//   height: 34px;
-//   margin: 0;
-//   padding: 0;
-//   transform: translateX(calc(-100% - 5px));
-// }
-
-// XXX: flex-basis!
-
 .timepicker-dropdown {
   position: absolute;
-  margin-top: 4px;
   display: none;
   z-index: 1000;
 }
 
 .timepicker-container {
-//   display: flex;
-//   height: 100%;
-
-//   .header {
-//     height: 30px;
-//     background: none;
-//     padding: 5px;
-//     font-weight: bold;
-//     border-radius: 5px;
-//     &:hover {
-//       background: #dae0e5;
-//     }
-//   }
-
   .cell {
     cursor: pointer;
-    // display: flex;
-    // align-items: center;
-    // justify-content: center;
     padding: 5px;
     border-radius: 3px;
     user-select: none;
@@ -56,11 +21,7 @@
   }
 
   .timepicker-hours {
-    // background: white;
-    // margin-right: 6px;
-  
     .hours-content {
-    //   width: 100%;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
       grid-template-rows: 1fr 1fr 1fr 1fr;
@@ -84,23 +45,10 @@
   }
   
   .timepicker-minutes {
-    // background: white;
-    // flex: auto;
-  
     .minutes-content {
-    //   width: 100%;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       grid-template-rows: 1fr 1fr 1fr 1fr;
-
-    //   &::before {
-    //     content: "";
-    //     position: absolute;
-    //     height: 100%;
-    //     bottom: 0;
-    //     border-left: 1px solid #e7e7e7;
-    //     transform: translateX(-4px);
-    //   }
     }
   }
 }

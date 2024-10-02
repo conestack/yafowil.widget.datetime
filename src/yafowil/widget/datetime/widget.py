@@ -317,7 +317,11 @@ def render_datetime_input(widget, data, date, time):
 
     if factory.theme == 'bootstrap5':
         tags = tag('input', **attrs)
-        return data.tag('div', tags, **{'class': 'input-group'}) + timeinput
+        dateinput = data.tag('div', tags, **{'class': 'input-group'})
+        if dateinput and timeinput:
+            return data.tag('div', dateinput + timeinput, **{'class': 'datetime-picker'})
+        else:
+            return dateinput
     else:
         return tag('input', **attrs) + timeinput
 

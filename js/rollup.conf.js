@@ -57,13 +57,15 @@ export default args => {
             format: 'iife',
             outro: outro,
             globals: {
-                jquery: 'jQuery'
+                jquery: 'jQuery',
+                popper: 'Popper'
             },
             interop: 'default'
         }],
         external: [
             'jquery',
-            'bootstrap'
+            'bootstrap',
+            'popper'
         ]
     };
     if (args.configDebug !== true) {
@@ -76,7 +78,8 @@ export default args => {
             ],
             outro: outro,
             globals: {
-                jquery: 'jQuery'
+                jquery: 'jQuery',
+                popper: 'Popper'
             },
             interop: 'default'
         });
