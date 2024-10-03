@@ -89,17 +89,29 @@ var yafowil_datetime = (function (exports, $, Popper) {
     }
 
     class TimepickerButton {
-        constructor(elem) {
+        constructor(elem, parent) {
             this.elem = elem;
+            this.parent = parent;
         }
         get selected() {
             return this.elem.hasClass('selected');
         }
         set selected(value) {
             if (value) {
+                this.parent.remove_previously_selected();
                 this.elem.addClass('selected');
             } else {
                 this.elem.removeClass('selected');
+            }
+        }
+        get previously_selected() {
+            return this.elem.hasClass('prev-selected');
+        }
+        set previously_selected(value) {
+            if (value) {
+                this.elem.addClass('prev-selected');
+            } else {
+                this.elem.removeClass('prev-selected');
             }
         }
     }
@@ -119,14 +131,27 @@ var yafowil_datetime = (function (exports, $, Popper) {
                 child.selected = false;
             }
         }
+        mark_previously_selected() {
+            for (let child of this.children) {
+                if (child.selected) {
+                    child.previously_selected = true;
+                    child.selected = false;
+                }
+            }
+        }
+        remove_previously_selected() {
+            for (let child of this.children) {
+                child.previously_selected = false;
+            }
+        }
     }
     class TimepickerHour extends TimepickerButton {
         constructor(hours, container, value, period) {
-            super($('<div />')
+            let elem = $('<div />')
                 .addClass('cell')
                 .text(new String(value).padStart(2, '0'))
-                .appendTo(container)
-            );
+                .appendTo(container);
+            super(elem, hours);
             this.hours = hours;
             this.picker = hours.picker;
             this.period = period;
@@ -143,11 +168,11 @@ var yafowil_datetime = (function (exports, $, Popper) {
     }
     class TimepickerMinute extends TimepickerButton {
         constructor(minutes, container, value) {
-            super($('<div />')
+            let elem = $('<div />')
                 .addClass('cell')
                 .text(new String(value).padStart(2, '0'))
-                .appendTo(container)
-            );
+                .appendTo(container);
+            super(elem, minutes);
             this.minutes = minutes;
             this.picker = minutes.picker;
             this.on_click = this.on_click.bind(this);
@@ -167,9 +192,16 @@ var yafowil_datetime = (function (exports, $, Popper) {
             } else if (picker.clock === 12) {
                 this.create_clock_12();
             }
+            this.to_minute = this.to_minute.bind(this);
             let header = $('<div />')
                 .addClass('header card-header bg-primary text-white')
                 .text(picker.translate('hour'));
+            this.minutes_btn = $('<button />')
+                .append($('<i class="bi bi-caret-right"/>'))
+                .append($('<span>Minute</span>'))
+                .addClass('to_minutes d-block d-sm-none btn p-0 float-end')
+                .on('click', this.to_minute)
+                .appendTo(header);
             this.container_elem = $('<div />')
                 .addClass('card timepicker-hours')
                 .append(header)
@@ -193,7 +225,12 @@ var yafowil_datetime = (function (exports, $, Popper) {
                 this.children.push(new TimepickerHour(this, hours_pm, i, 'PM'));
             }
             this.elem.css('grid-template-rows', '1fr 1fr');
-            this.elem.css('grid-template-columns', '1fr 1fr');
+            this.elem.css('grid-template-columns', 'auto 1fr');
+        }
+        to_minute(e) {
+            e.preventDefault();
+            this.container_elem.hide();
+            this.picker.minutes.container_elem.show();
         }
     }
     class TimepickerMinutes extends TimepickerButtonContainer {
@@ -229,14 +266,26 @@ var yafowil_datetime = (function (exports, $, Popper) {
             for (let i = 0; i < count; i++) {
                 this.children.push(new TimepickerMinute(this, this.elem, i * step));
             }
+            this.to_hour = this.to_hour.bind(this);
             let header = $('<div />')
                 .addClass('header card-header bg-primary text-white')
                 .text(picker.translate('minute'));
+            this.hours_btn = $('<button />')
+                .append($('<i class="bi bi-caret-left"/>'))
+                .append($('<span>Hour</span>'))
+                .addClass('to_hours d-block d-sm-none btn p-0 float-end')
+                .on('click', this.to_hour)
+                .appendTo(header);
             this.container_elem = $('<div />')
                 .addClass('card timepicker-minutes')
                 .append(header)
                 .append(this.elem)
                 .appendTo(container);
+        }
+        to_hour(e) {
+            e.preventDefault();
+            this.container_elem.hide();
+            this.picker.hours.container_elem.show();
         }
     }
     class TimepickerWidget {
@@ -323,12 +372,15 @@ var yafowil_datetime = (function (exports, $, Popper) {
                     hoursColumns = 5;
                 }
             }
+            if (minutesColumns < 2) {
+                minutesColumns = 2;
+            }
             const total_columns = hoursColumns + minutesColumns;
             const hoursFlexBasis = (hoursColumns / total_columns) * 100;
             const minutesFlexBasis = (minutesColumns / total_columns) * 100;
             this.hours.container_elem.css('flex-basis', hoursFlexBasis.toFixed(2) + '%');
             this.minutes.container_elem.css('flex-basis', minutesFlexBasis.toFixed(2) + '%');
-            const containerWidth = `calc(${total_columns * 30}px + 4rem)`;
+            const containerWidth = `calc(${total_columns * 40}px + 4rem)`;
             this.dd_elem.css('width', containerWidth);
         }
         unload() {
@@ -363,12 +415,27 @@ var yafowil_datetime = (function (exports, $, Popper) {
             this.elem.trigger('change');
             this.hour = '';
             this.minute = '';
+            this.hours.mark_previously_selected();
+            this.minutes.mark_previously_selected();
+            if ($(window).width() <= 575) {
+                this.reset_visibility();
+            }
             this.dd_elem.hide();
+        }
+        reset_visibility() {
+            this.hours.container_elem.show();
+            this.minutes.container_elem.hide();
         }
         hide_dropdown(e) {
             if (e.target !== this.elem[0] && e.target !== this.trigger_elem[0]) {
                 if ($(e.target).closest(this.dd_elem).length === 0) {
                     this.dd_elem.hide();
+                    if (this.hour === '' || this.minute === '') {
+                        this._hour = '';
+                        this._minute = '';
+                    }
+                    this.hours.unselect_all();
+                    this.minutes.unselect_all();
                 }
             }
         }

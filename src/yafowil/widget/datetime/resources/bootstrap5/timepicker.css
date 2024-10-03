@@ -5,18 +5,25 @@
 }
 
 .timepicker-container .cell {
+  display: flex;
+  justify-content: center;
   cursor: pointer;
   padding: 5px;
   border-radius: 3px;
   user-select: none;
+  border: 2px solid transparent;
 }
-.timepicker-container .cell:hover {
-  background: #f9f9f9;
+.timepicker-container .cell:not(.selected):hover {
+  background-color: #f9f9f9;
 }
 .timepicker-container .cell.selected {
   background-color: var(--yafowil-accent-color, #0d6efd);
+  border-color: var(--yafowil-accent-color, #0d6efd);
   color: var(--yafowil-accent-font-color, #fff);
   font-weight: 600;
+}
+.timepicker-container .cell.prev-selected {
+  border-color: var(--yafowil-accent-color, #0d6efd);
 }
 .timepicker-container .timepicker-hours .hours-content {
   display: grid;
@@ -43,4 +50,28 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+
+[data-bs-theme=dark] .timepicker-container .cell:not(.selected):hover {
+  background-color: #343a40;
+}
+
+@media (max-width: 575px) {
+  .timepicker-dropdown {
+    max-width: 100%;
+  }
+  .timepicker-hours {
+    margin-bottom: 0 !important;
+  }
+  .timepicker-minutes {
+    display: none;
+  }
+}
+@media (min-width: 576px) {
+  .timepicker-hours {
+    display: block !important;
+  }
+  .timepicker-minutes {
+    display: block !important;
+  }
 }
