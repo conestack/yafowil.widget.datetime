@@ -111,22 +111,26 @@ bootstrap5_resources.add(wr.StyleResource(
 # B/C resources ##############################################################
 
 bootstrap5_js = [{
-    'group': 'yafowil.widget.tiptap.dependencies',
-    'resource': 'tiptap/tiptap.js',
+    'group': 'yafowil.widget.datetime.common',
+    'resource': 'datepicker.js',
     'order': 20,
 }, {
-    'group': 'yafowil.widget.tiptap.common',
+    'group': 'yafowil.widget.datetime.common',
+    'resource': 'locales/de.js',
+    'order': 20,
+}, {
+    'group': 'yafowil.widget.datetime.common',
     'resource': 'bootstrap5/widget.js',
-    'order': 21,
+    'order': 20,
 }]
 bootstrap5_css = [{
-    'group': 'yafowil.widget.tiptap.dependencies',
-    'resource': 'tiptap/tiptap.css',
+    'group': 'yafowil.widget.datetime.common',
+    'resource': 'bootstrap5/datepicker.css',
     'order': 20,
 }, {
-    'group': 'yafowil.widget.tiptap.common',
-    'resource': 'bootstrap5/widget.css',
-    'order': 21,
+    'group': 'yafowil.widget.datetime.common',
+    'resource': 'bootstrap5/timepicker.css',
+    'order': 20,
 }]
 
 
