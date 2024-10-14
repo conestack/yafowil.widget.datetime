@@ -128,11 +128,9 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
         attrs['class_'] = cssclasses(widget, data, additional=class_)
     else:
         attrs['class_'] = ' '.join(class_)
-    if factory.theme == 'bootstrap5':
-        tags = tag('input', **attrs)
-        return data.tag('div', tags, **{'class': 'input-group'})
-    else:
-        return tag('input', **attrs)
+    tags = tag('input', **attrs)
+    wrapper_class = attr_value('timepicker_wrapper_class', widget, data)
+    return data.tag('div', tags, **{'class': wrapper_class})
 
 
 def time_value(format_, unit, time):
@@ -159,7 +157,7 @@ def time_value(format_, unit, time):
 
 @managedprops(
     'format', 'unit', 'disabled', 'timepicker', 'timepicker_class', 'clock',
-    'minutes_step', 'locale', *css_managed_props
+    'minutes_step', 'locale', 'timepicker_wrapper_class', *css_managed_props
 )
 def time_edit_renderer(widget, data):
     format_, unit = time_data_defs(widget, data)
@@ -315,20 +313,21 @@ def render_datetime_input(widget, data, date, time):
         attrs['data-date-locale'] = attr_value('locale', widget, data)
     attrs['class_'] = cssclasses(widget, data, additional=additional_classes)
 
-    if factory.theme == 'bootstrap5':
-        tags = tag('input', **attrs)
-        dateinput = data.tag('div', tags, **{'class': 'input-group'})
-        if dateinput and timeinput:
-            return data.tag('div', dateinput + timeinput, **{'class': 'datetime-picker'})
-        else:
-            return dateinput
+    wrapper_class = attr_value('wrapper_class', widget, data)
+    date_wrapper_class = attr_value('datepicker_wrapper_class', widget, data)
+    tags = tag('input', **attrs)
+    dateinput = data.tag('div', tags, **{'class': date_wrapper_class})
+    if dateinput and timeinput:
+        return data.tag('div', dateinput + timeinput, **{'class': wrapper_class})
     else:
-        return tag('input', **attrs) + timeinput
+        return dateinput
 
 
 @managedprops(
     'locale', 'delimiter', 'time', 'disabled', 'timepicker',
-    'timepicker_class', 'datepicker', 'datepicker_class', *css_managed_props
+    'timepicker_class', 'datepicker', 'datepicker_class',
+    'timepicker_wrapper_class', 'datepicker_wrapper_class', 'wrapper_class',
+    *css_managed_props
 )
 def datetime_edit_renderer(widget, data):
     locale = attr_value('locale', widget, data)
@@ -395,6 +394,11 @@ factory.defaults['datetime.class'] = 'datetime'
 
 factory.defaults['datetime.required_class'] = 'required'
 
+factory.defaults['datetime.wrapper_class'] = 'datetime-picker'
+factory.doc['props']['datetime.wrapper_class'] = """\
+CSS class rendered on datetime wrapper.
+"""
+
 factory.defaults['datetime.dateinput_class'] = 'dateinput'
 factory.doc['props']['datetime.dateinput_class'] = """\
 CSS class rendered on date input field.
@@ -405,6 +409,11 @@ factory.doc['props']['datetime.datepicker_class'] = """\
 jquery.ui datepicker binds to this class.
 """
 
+factory.defaults['datetime.datepicker_wrapper_class'] = ''
+factory.doc['props']['datetime.wrapper_class'] = """\
+CSS class rendered on date wrapper div.
+"""
+
 factory.defaults['datetime.timeinput_class'] = 'timeinput'
 factory.doc['props']['datetime.timeinput_class'] = """\
 CSS class rendered on time input field.
@@ -413,6 +422,11 @@ CSS class rendered on time input field.
 factory.defaults['datetime.timepicker_class'] = 'timepicker'
 factory.doc['props']['datetime.timepicker_class'] = """\
 jquery.ui timepicker binds to this class.
+"""
+
+factory.defaults['datetime.timepicker_wrapper_class'] = ''
+factory.doc['props']['datetime.wrapper_class'] = """\
+CSS class rendered on time wrapper div.
 """
 
 factory.defaults['datetime.disabled'] = False

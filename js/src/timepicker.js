@@ -272,9 +272,6 @@ export class TimepickerWidget {
     }
 
     place() {
-        let offset = this.elem.offset().left - this.elem.parent().offset().left;
-        this.dd_elem.css('left', `${offset}px`);
-
         let offset_left = this.elem.offset().left,
             offset_top = this.elem.offset().top,
             dd_width = this.dd_elem.outerWidth(),

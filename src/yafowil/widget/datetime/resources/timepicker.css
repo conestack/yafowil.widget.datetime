@@ -99,3 +99,7 @@ button.timepicker-trigger {
   border-left: 1px solid #e7e7e7;
   transform: translateX(-4px);
 }
+
+.datetime-picker > div {
+  display: inline-block;
+}
