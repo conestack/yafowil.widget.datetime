@@ -1,6 +1,6 @@
-import {TimepickerWidget} from '../src/timepicker.js';
-import {register_timepicker_array_subscribers} from '../src/timepicker.js';
-
+import {TimepickerWidget} from '../src/default/timepicker.js';
+import {register_timepicker_array_subscribers} from '../src/default/timepicker.js';
+import $ from 'jquery';
 
 QUnit.module('TimepickerWidget', hooks => {
     let container = $('<div id="container" />');
@@ -11,8 +11,17 @@ QUnit.module('TimepickerWidget', hooks => {
     let _array_subscribers = {
         on_add: []
     };
+    let css_link;
 
-    hooks.before(() => {
+    hooks.before(async () => {
+        css_link = document.createElement('link');
+        css_link.rel = 'stylesheet';
+        css_link.href = '../../src/yafowil/widget/datetime/resources/default/timepicker.css';
+        document.head.appendChild(css_link);
+        // Wait for required styles to load
+        await new Promise(resolve => {
+            css_link.onload = resolve;
+        });
         $('body').append(container);
     });
     hooks.beforeEach(() => {
@@ -24,6 +33,12 @@ QUnit.module('TimepickerWidget', hooks => {
         // reset container css
         container.css('top', 'unset').css('left', 'unset').css('position', 'unset');
         picker = null;
+    });
+    hooks.after(() => {
+        // remove required css styles after test run has finished
+        if (css_link) {
+            document.head.removeChild(css_link);
+        }
     });
 
     QUnit.test('register_timepicker_array_subscribers', assert => {

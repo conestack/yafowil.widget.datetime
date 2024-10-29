@@ -48,15 +48,10 @@ setup(
         'yafowil>2.1.99',
         'bda.intellidatetime>1.2.99',
     ],
-    tests_require=[
-        'lxml',
-        'zope.testrunner'
-    ],
     extras_require=dict(test=[
         'lxml',
-        'zope.testrunner'
+        'pytest'
     ]),
-    test_suite="yafowil.widget.datetime.tests",
     entry_points="""
     [yafowil.plugin]
     register = yafowil.widget.datetime:register
