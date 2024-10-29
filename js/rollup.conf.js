@@ -1,5 +1,6 @@
 import cleanup from 'rollup-plugin-cleanup';
-import {terser} from 'rollup-plugin-terser';
+import postcss from 'rollup-plugin-postcss';
+import terser from '@rollup/plugin-terser';
 
 const out_dir = 'src/yafowil/widget/datetime/resources';
 
@@ -43,5 +44,39 @@ export default args => {
             interop: 'default'
         });
     }
-    return conf;
+    let scss_timepicker = {
+        input: ['scss/timepicker.scss'],
+        output: [{
+            file: `${out_dir}/timepicker.css`,
+            format: 'es',
+            plugins: [terser()],
+        }],
+        plugins: [
+            postcss({
+                extract: true,
+                minimize: true,
+                use: [
+                    ['sass', { outputStyle: 'compressed' }],
+                ],
+            }),
+        ],
+    };
+    let scss_datepicker = {
+        input: ['scss/datepicker.scss'],
+        output: [{
+            file: `${out_dir}/datepicker.css`,
+            format: 'es',
+            plugins: [terser()],
+        }],
+        plugins: [
+            postcss({
+                extract: true,
+                minimize: true,
+                use: [
+                    ['sass', { outputStyle: 'compressed' }],
+                ],
+            }),
+        ],
+    };
+    return [conf, scss_datepicker, scss_timepicker];
 };
