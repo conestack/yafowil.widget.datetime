@@ -735,7 +735,7 @@ class TestDatetimeWidget(YafowilTestCase):
         self.assertEqual(len(scripts), 3)
 
         self.assertTrue(scripts[0].directory.endswith(np('/datetime/resources/vanillajs-datepicker')))
-        self.assertEqual(scripts[0].path, 'yafowil-datetime')
+        self.assertEqual(scripts[0].path, 'yafowil-datetime/vanillajs-datepicker')
         self.assertEqual(scripts[0].file_name, 'datepicker.min.js')
         self.assertTrue(os.path.exists(scripts[0].file_path))
 
@@ -747,7 +747,7 @@ class TestDatetimeWidget(YafowilTestCase):
         self.assertTrue(os.path.exists(scripts[1].file_path))
 
         self.assertTrue(scripts[2].directory.endswith(np('/datetime/resources/default')))
-        self.assertEqual(scripts[2].path, 'yafowil-datetime')
+        self.assertEqual(scripts[2].path, 'yafowil-datetime/default')
         self.assertEqual(scripts[2].file_name, 'widget.min.js')
         self.assertTrue(os.path.exists(scripts[2].file_path))
 
@@ -755,12 +755,12 @@ class TestDatetimeWidget(YafowilTestCase):
         self.assertEqual(len(styles), 2)
 
         self.assertTrue(styles[0].directory.endswith(np('/datetime/resources/default')))
-        self.assertEqual(styles[0].path, 'yafowil-datetime')
+        self.assertEqual(styles[0].path, 'yafowil-datetime/default')
         self.assertEqual(styles[0].file_name, 'datepicker.min.css')
         self.assertTrue(os.path.exists(styles[0].file_path))
 
         self.assertTrue(styles[1].directory.endswith(np('/datetime/resources/default')))
-        self.assertEqual(styles[1].path, 'yafowil-datetime')
+        self.assertEqual(styles[1].path, 'yafowil-datetime/default')
         self.assertEqual(styles[1].file_name, 'timepicker.min.css')
         self.assertTrue(os.path.exists(styles[1].file_path))
 

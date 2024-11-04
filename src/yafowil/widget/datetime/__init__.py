@@ -8,6 +8,36 @@ resources_dir = os.path.join(os.path.dirname(__file__), 'resources')
 
 
 ##############################################################################
+# vanillajs-datepicker
+##############################################################################
+
+# webresource ################################################################
+
+vanillajs_datepicker_js = wr.ScriptResource(
+    name='datepicker-js',
+    directory=os.path.join(resources_dir, 'vanillajs-datepicker'),
+    path='yafowil-datetime/vanillajs-datepicker',
+    resource='datepicker.js',
+    compressed='datepicker.min.js'
+)
+
+
+##############################################################################
+# locale
+##############################################################################
+
+# webresource ################################################################
+
+locale_de = wr.ScriptResource(
+    name='datepicker-de-js',
+    depends='datepicker-js',
+    directory=os.path.join(resources_dir, 'locales'),
+    path='yafowil-datetime/locales',
+    resource='de.js'
+)
+
+
+##############################################################################
 # Default
 ##############################################################################
 
@@ -18,22 +48,12 @@ resources = wr.ResourceGroup(
     directory=resources_dir,
     path='yafowil-datetime'
 )
-resources.add(wr.ScriptResource(
-    name='datepicker-js',
-    directory=os.path.join(resources_dir, 'vanillajs-datepicker'),
-    resource='datepicker.js',
-    compressed='datepicker.min.js'
-))
-resources.add(wr.ScriptResource(
-    name='datepicker-de-js',
-    depends='datepicker-js',
-    directory=os.path.join(resources_dir, 'locales'),
-    path='yafowil-datetime/locales',
-    resource='de.js'
-))
+resources.add(vanillajs_datepicker_js)
+resources.add(locale_de)
 resources.add(wr.ScriptResource(
     name='yafowil-datetime-js',
     directory=os.path.join(resources_dir, 'default'),
+    path='yafowil-datetime/default',
     depends=['jquery-js', 'datepicker-js'],
     resource='widget.js',
     compressed='widget.min.js'
@@ -41,11 +61,13 @@ resources.add(wr.ScriptResource(
 resources.add(wr.StyleResource(
     name='yafowil-datepicker-css',
     directory=os.path.join(resources_dir, 'default'),
+    path='yafowil-datetime/default',
     resource='datepicker.min.css'
 ))
 resources.add(wr.StyleResource(
     name='yafowil-timepicker-css',
     directory=os.path.join(resources_dir, 'default'),
+    path='yafowil-datetime/default',
     resource='timepicker.min.css'
 ))
 
@@ -86,22 +108,12 @@ bootstrap5_resources = wr.ResourceGroup(
     directory=resources_dir,
     path='yafowil-datetime'
 )
-bootstrap5_resources.add(wr.ScriptResource(
-    name='datepicker-js',
-    directory=os.path.join(resources_dir, 'vanillajs-datepicker'),
-    resource='datepicker.js',
-    compressed='datepicker.min.js'
-))
-bootstrap5_resources.add(wr.ScriptResource(
-    name='datepicker-de-js',
-    depends='datepicker-js',
-    directory=os.path.join(resources_dir, 'locales'),
-    path='yafowil-datetime/locales',
-    resource='de.js'
-))
+bootstrap5_resources.add(vanillajs_datepicker_js)
+bootstrap5_resources.add(locale_de)
 bootstrap5_resources.add(wr.ScriptResource(
     name='yafowil-datetime-js',
     directory=os.path.join(resources_dir, 'bootstrap5'),
+    path='yafowil-datetime/bootstrap5',
     depends=['jquery-js', 'datepicker-js'],
     resource='widget.js',
     compressed='widget.min.js'
@@ -109,11 +121,13 @@ bootstrap5_resources.add(wr.ScriptResource(
 bootstrap5_resources.add(wr.StyleResource(
     name='yafowil-datepicker-css',
     directory=os.path.join(resources_dir, 'bootstrap5'),
+    path='yafowil-datetime/bootstrap5',
     resource='datepicker.min.css'
 ))
 bootstrap5_resources.add(wr.StyleResource(
     name='yafowil-timepicker-css',
     directory=os.path.join(resources_dir, 'bootstrap5'),
+    path='yafowil-datetime/bootstrap5',
     resource='timepicker.min.css'
 ))
 # B/C resources ##############################################################
