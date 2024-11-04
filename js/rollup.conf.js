@@ -10,6 +10,7 @@ window.yafowil.datetime = exports;
 `;
 
 export default args => {
+    let conf = [];
 
     ////////////////////////////////////////////////////////////////////////////
     // DEFAULT
@@ -52,7 +53,7 @@ export default args => {
     let scss_timepicker_default = {
         input: ['scss/default/timepicker.scss'],
         output: [{
-            file: `${out_dir}/default/timepicker.css`,
+            file: `${out_dir}/default/timepicker.min.css`,
             format: 'es',
             plugins: [terser()],
         }],
@@ -69,7 +70,7 @@ export default args => {
     let scss_datepicker_default = {
         input: ['scss/default/datepicker.scss'],
         output: [{
-            file: `${out_dir}/default/datepicker.css`,
+            file: `${out_dir}/default/datepicker.min.css`,
             format: 'es',
             plugins: [terser()],
         }],
@@ -83,6 +84,7 @@ export default args => {
             }),
         ],
     };
+    conf.push(bundle_default, scss_datepicker_default, scss_timepicker_default);
 
     ////////////////////////////////////////////////////////////////////////////
     // BOOTSTRAP5
@@ -129,7 +131,7 @@ export default args => {
     let scss_timepicker_bs5 = {
         input: ['scss/bootstrap5/timepicker.scss'],
         output: [{
-            file: `${out_dir}/bootstrap5/timepicker.css`,
+            file: `${out_dir}/bootstrap5/timepicker.min.css`,
             format: 'es',
             plugins: [terser()],
         }],
@@ -146,7 +148,7 @@ export default args => {
     let scss_datepicker_bs5 = {
         input: ['scss/bootstrap5/datepicker.scss'],
         output: [{
-            file: `${out_dir}/bootstrap5/datepicker.css`,
+            file: `${out_dir}/bootstrap5/datepicker.min.css`,
             format: 'es',
             plugins: [terser()],
         }],
@@ -160,9 +162,7 @@ export default args => {
             }),
         ],
     };
+    conf.push(bundle_bs5, scss_datepicker_bs5, scss_timepicker_bs5);
 
-    return [
-        bundle_default, scss_datepicker_default, scss_timepicker_default,
-        bundle_bs5, scss_datepicker_bs5, scss_timepicker_bs5
-    ];
+    return conf;
 };

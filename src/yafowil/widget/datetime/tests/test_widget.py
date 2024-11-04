@@ -734,9 +734,9 @@ class TestDatetimeWidget(YafowilTestCase):
         scripts = resources.scripts
         self.assertEqual(len(scripts), 3)
 
-        self.assertTrue(scripts[0].directory.endswith(np('/datetime/resources')))
+        self.assertTrue(scripts[0].directory.endswith(np('/datetime/resources/vanillajs-datepicker')))
         self.assertEqual(scripts[0].path, 'yafowil-datetime')
-        self.assertEqual(scripts[0].file_name, 'vanillajs-datepicker/datepicker.min.js')
+        self.assertEqual(scripts[0].file_name, 'datepicker.min.js')
         self.assertTrue(os.path.exists(scripts[0].file_path))
 
         self.assertTrue(
@@ -746,22 +746,22 @@ class TestDatetimeWidget(YafowilTestCase):
         self.assertEqual(scripts[1].file_name, 'de.js')
         self.assertTrue(os.path.exists(scripts[1].file_path))
 
-        self.assertTrue(scripts[2].directory.endswith(np('/datetime/resources')))
+        self.assertTrue(scripts[2].directory.endswith(np('/datetime/resources/default')))
         self.assertEqual(scripts[2].path, 'yafowil-datetime')
-        self.assertEqual(scripts[2].file_name, 'default/widget.min.js')
+        self.assertEqual(scripts[2].file_name, 'widget.min.js')
         self.assertTrue(os.path.exists(scripts[2].file_path))
 
         styles = resources.styles
         self.assertEqual(len(styles), 2)
 
-        self.assertTrue(styles[0].directory.endswith(np('/datetime/resources')))
+        self.assertTrue(styles[0].directory.endswith(np('/datetime/resources/default')))
         self.assertEqual(styles[0].path, 'yafowil-datetime')
-        self.assertEqual(styles[0].file_name, 'default/datepicker.css')
+        self.assertEqual(styles[0].file_name, 'datepicker.min.css')
         self.assertTrue(os.path.exists(styles[0].file_path))
 
-        self.assertTrue(styles[1].directory.endswith(np('/datetime/resources')))
+        self.assertTrue(styles[1].directory.endswith(np('/datetime/resources/default')))
         self.assertEqual(styles[1].path, 'yafowil-datetime')
-        self.assertEqual(styles[1].file_name, 'default/timepicker.css')
+        self.assertEqual(styles[1].file_name, 'timepicker.min.css')
         self.assertTrue(os.path.exists(styles[1].file_path))
 
 

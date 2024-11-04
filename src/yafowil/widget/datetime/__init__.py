@@ -20,8 +20,9 @@ resources = wr.ResourceGroup(
 )
 resources.add(wr.ScriptResource(
     name='datepicker-js',
-    resource='vanillajs-datepicker/datepicker.js',
-    compressed='vanillajs-datepicker/datepicker.min.js'
+    directory=os.path.join(resources_dir, 'vanillajs-datepicker'),
+    resource='datepicker.js',
+    compressed='datepicker.min.js'
 ))
 resources.add(wr.ScriptResource(
     name='datepicker-de-js',
@@ -32,17 +33,20 @@ resources.add(wr.ScriptResource(
 ))
 resources.add(wr.ScriptResource(
     name='yafowil-datetime-js',
+    directory=os.path.join(resources_dir, 'default'),
     depends=['jquery-js', 'datepicker-js'],
-    resource='default/widget.js',
-    compressed='default/widget.min.js'
+    resource='widget.js',
+    compressed='widget.min.js'
 ))
 resources.add(wr.StyleResource(
     name='yafowil-datepicker-css',
-    resource='default/datepicker.css'
+    directory=os.path.join(resources_dir, 'default'),
+    resource='datepicker.min.css'
 ))
 resources.add(wr.StyleResource(
     name='yafowil-timepicker-css',
-    resource='default/timepicker.css'
+    directory=os.path.join(resources_dir, 'default'),
+    resource='timepicker.min.css'
 ))
 
 # B/C resources ##############################################################
@@ -62,11 +66,11 @@ js = [{
 }]
 css = [{
     'group': 'yafowil.widget.datetime.common',
-    'resource': 'default/datepicker.css',
+    'resource': 'default/datepicker.min.css',
     'order': 20,
 }, {
     'group': 'yafowil.widget.datetime.common',
-    'resource': 'default/timepicker.css',
+    'resource': 'default/timepicker.min.css',
     'order': 20,
 }]
 
@@ -84,8 +88,9 @@ bootstrap5_resources = wr.ResourceGroup(
 )
 bootstrap5_resources.add(wr.ScriptResource(
     name='datepicker-js',
-    resource='vanillajs-datepicker/datepicker.js',
-    compressed='vanillajs-datepicker/datepicker.min.js'
+    directory=os.path.join(resources_dir, 'vanillajs-datepicker'),
+    resource='datepicker.js',
+    compressed='datepicker.min.js'
 ))
 bootstrap5_resources.add(wr.ScriptResource(
     name='datepicker-de-js',
@@ -96,17 +101,20 @@ bootstrap5_resources.add(wr.ScriptResource(
 ))
 bootstrap5_resources.add(wr.ScriptResource(
     name='yafowil-datetime-js',
+    directory=os.path.join(resources_dir, 'bootstrap5'),
     depends=['jquery-js', 'datepicker-js'],
-    resource='bootstrap5/widget.js',
-    compressed='bootstrap5/widget.min.js'
+    resource='widget.js',
+    compressed='widget.min.js'
 ))
 bootstrap5_resources.add(wr.StyleResource(
     name='yafowil-datepicker-css',
-    resource='bootstrap5/datepicker.css'
+    directory=os.path.join(resources_dir, 'bootstrap5'),
+    resource='datepicker.min.css'
 ))
 bootstrap5_resources.add(wr.StyleResource(
     name='yafowil-timepicker-css',
-    resource='bootstrap5/timepicker.css'
+    directory=os.path.join(resources_dir, 'bootstrap5'),
+    resource='timepicker.min.css'
 ))
 # B/C resources ##############################################################
 
@@ -125,11 +133,11 @@ bootstrap5_js = [{
 }]
 bootstrap5_css = [{
     'group': 'yafowil.widget.datetime.common',
-    'resource': 'bootstrap5/datepicker.css',
+    'resource': 'bootstrap5/datepicker.min.css',
     'order': 20,
 }, {
     'group': 'yafowil.widget.datetime.common',
-    'resource': 'bootstrap5/timepicker.css',
+    'resource': 'bootstrap5/timepicker.min.css',
     'order': 20,
 }]
 
