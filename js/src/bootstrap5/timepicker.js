@@ -3,15 +3,27 @@ import Popper from 'popper';
 
 export class TimepickerButton {
 
+    /**
+     * @param {jQuery} elem - The button element.
+     * @param {TimepickerButtonContainer} parent - The parent container for the button.
+     */
     constructor(elem, parent) {
         this.elem = elem;
         this.parent = parent;
     }
 
+    /**
+     * Gets the selected state of the button.
+     * @returns {boolean} - True if the button is selected, otherwise false.
+     */
     get selected() {
         return this.elem.hasClass('selected');
     }
 
+    /**
+     * Sets the selected state of the button.
+     * @param {boolean} value
+     */
     set selected(value) {
         if (value) {
             this.parent.remove_previously_selected();
@@ -21,10 +33,18 @@ export class TimepickerButton {
         }
     }
 
+    /**
+     * Gets the previously selected state of the button.
+     * @returns {boolean}
+     */
     get previously_selected() {
         return this.elem.hasClass('prev-selected');
     }
 
+    /**
+     * Sets the previously selected state of the button.
+     * @param {boolean} value
+     */
     set previously_selected(value) {
         if (value) {
             this.elem.addClass('prev-selected');
@@ -34,26 +54,42 @@ export class TimepickerButton {
     }
 }
 
+/**
+ * Manages a collection of TimepickerButton instances.
+ */
 export class TimepickerButtonContainer {
 
+    /**
+     * @param {TimepickerWidget} picker - The timepicker widget.
+     * @param {jQuery} elem - The container element for buttons.
+     */
     constructor(picker, elem) {
         this.picker = picker;
         this.elem = elem;
         this.children = [];
     }
 
+    /**
+     * Unloads all buttons by removing event handlers.
+     */
     unload_all() {
         for (let child of this.children) {
             child.elem.off('click', child.on_click);
         }
     }
 
+    /**
+     * Unselects all buttons in the container.
+     */
     unselect_all() {
         for (let child of this.children) {
             child.selected = false;
         }
     }
 
+    /**
+     * Marks the currently selected button as previously selected and unselects it.
+     */
     mark_previously_selected() {
         for (let child of this.children) {
             if (child.selected) {
@@ -63,6 +99,9 @@ export class TimepickerButtonContainer {
         }
     }
 
+    /**
+     * Removes the previously selected state from all buttons.
+     */
     remove_previously_selected() {
         for (let child of this.children) {
             child.previously_selected = false;
@@ -72,6 +111,12 @@ export class TimepickerButtonContainer {
 
 export class TimepickerHour extends TimepickerButton {
 
+    /**
+     * @param {TimepickerHours} hours - The parent hours container.
+     * @param {jQuery} container - The container element for this hour button.
+     * @param {number} value - The hour value.
+     * @param {string} period - The period (AM/PM) for 12-hour format.
+     */
     constructor(hours, container, value, period) {
         let elem = $('<div />')
             .addClass('cell')
@@ -85,6 +130,10 @@ export class TimepickerHour extends TimepickerButton {
         this.elem.on('click', this.on_click);
     }
 
+    /**
+     * Handles the click event for the hour button.
+     * @param {Event} e - The click event.
+     */
     on_click(e) {
         let hour = this.elem.text();
         this.hours.unselect_all();
@@ -96,6 +145,11 @@ export class TimepickerHour extends TimepickerButton {
 
 export class TimepickerMinute extends TimepickerButton {
 
+    /**
+     * @param {TimepickerMinutes} minutes - The parent minutes container.
+     * @param {jQuery} container - The container element for this minute button.
+     * @param {number} value - The minute value.
+     */
     constructor(minutes, container, value) {
         let elem = $('<div />')
             .addClass('cell')
@@ -108,6 +162,10 @@ export class TimepickerMinute extends TimepickerButton {
         this.elem.on('click', this.on_click);
     }
 
+    /**
+     * Handles the click event for the minute button.
+     * @param {Event} e - The click event.
+     */
     on_click(e) {
         this.minutes.unselect_all();
         this.selected = true;
@@ -117,6 +175,10 @@ export class TimepickerMinute extends TimepickerButton {
 
 export class TimepickerHours extends TimepickerButtonContainer {
 
+    /**
+     * @param {TimepickerWidget} picker - The timepicker widget.
+     * @param {jQuery} container - The container element for hour buttons.
+     */
     constructor(picker, container) {
         super(picker, $('<div />').addClass('card-body hours-content'));
         if (picker.clock === 24) {
@@ -141,12 +203,18 @@ export class TimepickerHours extends TimepickerButtonContainer {
             .appendTo(container);
     }
 
+    /**
+     * Creates hour buttons for a 24-hour format clock.
+     */
     create_clock_24() {
         for (let i = 0; i < 24; i++) {
             this.children.push(new TimepickerHour(this, this.elem, i));
         }
     }
 
+    /**
+     * Creates hour buttons for a 12-hour format clock.
+     */
     create_clock_12() {
         $('<span />').addClass('am').text('A.M.').appendTo(this.elem);
         let hours_am = $('<div />').addClass('am').appendTo(this.elem);
@@ -162,6 +230,10 @@ export class TimepickerHours extends TimepickerButtonContainer {
         this.elem.css('grid-template-columns', 'auto 1fr');
     }
 
+    /**
+     * Navigates to the minute selection interface.
+     * @param {Event} e - The click event.
+     */
     to_minute(e) {
         e.preventDefault();
         this.container_elem.hide();
@@ -171,6 +243,11 @@ export class TimepickerHours extends TimepickerButtonContainer {
 
 export class TimepickerMinutes extends TimepickerButtonContainer {
 
+    /**
+     * @param {TimepickerWidget} picker - The timepicker widget.
+     * @param {jQuery} container - The container element for minute buttons.
+     * @param {number} step - The step for minute increments.
+     */
     constructor(picker, container, step) {
         super(picker, $('<div />').addClass('card-body minutes-content'));
         this.step = step;
@@ -223,6 +300,10 @@ export class TimepickerMinutes extends TimepickerButtonContainer {
             .appendTo(container);
     }
 
+    /**
+     * Navigates back to the hour selection interface.
+     * @param {Event} e - The click event.
+     */
     to_hour(e) {
         e.preventDefault();
         this.container_elem.hide();
@@ -232,6 +313,9 @@ export class TimepickerMinutes extends TimepickerButtonContainer {
 
 export class TimepickerWidget {
 
+    /**
+     * @param {jQuery} context - DOM context for initialization.
+     */
     static initialize(context) {
         $('input.timepicker', context).each(function() {
             let elem = $(this);
@@ -248,6 +332,10 @@ export class TimepickerWidget {
         });
     }
 
+    /**
+     * @param {jQuery} elem - The widget input element.
+     * @param {Object} opts - Configuration options.
+     */
     constructor(elem, opts) {
         elem.data('yafowil-timepicker', this);
         this.elem = elem;
@@ -321,6 +409,11 @@ export class TimepickerWidget {
         this.elem.trigger(created_event);
     }
 
+    /**
+     * Calculates and sets the flex basis for hours and minutes containers based
+     * on column counts.
+     * @param {number} minutesColumns - The number of columns for minutes.
+     */
     calc_flex_basis(minutesColumns) {
         let hoursColumns = 6;
         if (60 / this.step > 32) {
@@ -344,6 +437,10 @@ export class TimepickerWidget {
         this.dd_elem.css('width', containerWidth);
     }
 
+    /**
+     * Unloads the timepicker by removing event listeners and destroying the
+     * popper instance.
+     */
     unload() {
         $(document).off('click', this.hide_dropdown);
         this.popper.destroy();
@@ -351,24 +448,43 @@ export class TimepickerWidget {
         this.minutes.unload_all();
     }
 
+    /**
+     * Gets the currently set hour.
+     * @returns {string} - The current hour.
+     */
     get hour() {
         return this._hour;
     }
 
+    /**
+     * Sets the hour and updates the time display.
+     * @param {string} hour - The hour to set.
+     */
     set hour(hour) {
         this._hour = hour;
         this.set_time();
     }
 
+    /**
+     * Gets the currently set minute.
+     * @returns {string} - The current minute.
+     */
     get minute() {
         return this._minute;
     }
 
+    /**
+     * Sets the minute and updates the time display.
+     * @param {string} minute - The minute to set.
+     */
     set minute(minute) {
         this._minute = minute;
         this.set_time();
     }
 
+    /**
+     * Updates the input element with the current hour and minute values.
+     */
     set_time() {
         if (this.hour === '' || this.minute === '') {
             return;
@@ -392,11 +508,18 @@ export class TimepickerWidget {
         this.dd_elem.hide();
     }
 
+    /**
+     * Resets the visibility of the hours and minutes containers.
+     */
     reset_visibility() {
         this.hours.container_elem.show();
         this.minutes.container_elem.hide();
     }
 
+    /**
+     * Hides the dropdown when clicking outside of the timepicker.
+     * @param {Event} e - The click event.
+     */
     hide_dropdown(e) {
         if (e.target !== this.elem[0] && e.target !== this.trigger_elem[0]) {
             if ($(e.target).closest(this.dd_elem).length === 0) {
@@ -411,17 +534,29 @@ export class TimepickerWidget {
         }
     }
 
+    /**
+     * Shows the dropdown when the input element gains focus.
+     * @param {Event} e - The focus event.
+     */
     show_dropdown(e) {
         this.dd_elem.show();
         this.popper.forceUpdate();
     }
 
+    /**
+     * Toggles the visibility of the dropdown when the trigger button is clicked.
+     * @param {Event} e - The click event.
+     */
     toggle_dropdown(e) {
         e.preventDefault();
         this.dd_elem.toggle();
         this.popper.forceUpdate();
     }
 
+    /**
+     * Handles keypress events to allow input in the timepicker input field.
+     * @param {Event} e - The keypress event.
+     */
     on_keypress(e) {
         e.preventDefault();
         let val = this.elem.val();
@@ -450,6 +585,10 @@ export class TimepickerWidget {
         };
     }
 
+    /**
+     * Validates the input time format and selects the corresponding
+     * hour and minute.
+     */
     validate() {
         if (!this.elem.val()) return;
 
@@ -485,6 +624,12 @@ export class TimepickerWidget {
         }
     }
 
+    /**
+     * Translates a message ID to the corresponding string in
+     * the selected language.
+     * @param {string} msgid - The message ID to translate.
+     * @returns {string} - The translated message.
+     */
     translate(msgid) {
         let locales = this.constructor.locales,
             locale = locales[this.language] || locales.en;
@@ -507,13 +652,20 @@ TimepickerWidget.locales = {
 // yafowil.widget.array integration
 //////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Re-initializes widget on array add event.
+ */
 function timepicker_on_array_add(inst, context) {
     TimepickerWidget.initialize(context);
 }
 
+/**
+ * Registers subscribers to yafowil array events.
+ */
 export function register_timepicker_array_subscribers() {
     if (window.yafowil_array === undefined) {
         return;
     }
     window.yafowil_array.on_array_event('on_add', timepicker_on_array_add);
 }
+

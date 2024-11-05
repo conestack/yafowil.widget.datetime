@@ -1,8 +1,11 @@
 import $ from 'jquery';
 
-// Datepicker base class is global.
+// Datepicker base class is global (from vanillajs-datepicker).
 export class DatepickerWidget extends Datepicker {
 
+    /**
+     * @param {HTMLElement} context - DOM context for initialization.
+     */
     static initialize(context) {
         $('input.datepicker', context).each(function() {
             let elem = $(this);
@@ -14,6 +17,11 @@ export class DatepickerWidget extends Datepicker {
         });
     }
 
+    /**
+     * @param {jQuery} elem - The widget input element.
+     * @param {string} locale - The locale for the datepicker.
+     * @param {object} opts - Additional options for the datepicker.
+     */
     constructor(elem, locale, opts={}) {
         let opts_ = {
             language: locale,
@@ -23,6 +31,7 @@ export class DatepickerWidget extends Datepicker {
             autohide: true
         };
 
+        // Calculate the lower edge of the element
         let lower_edge = elem.offset().top + elem.outerHeight() + 250;
         if (lower_edge > $(document).height()) {
             opts_.orientation = "top";
@@ -38,6 +47,7 @@ export class DatepickerWidget extends Datepicker {
 
         this.adapt();
 
+        // Create trigger button
         this.trigger = $(`<button />`)
             .addClass('datepicker-trigger btn btn-outline-secondary')
             .text('...')
@@ -56,6 +66,9 @@ export class DatepickerWidget extends Datepicker {
         this.elem.trigger(created_event);
     }
 
+    /**
+     * Adjusts the UI elements of the datepicker for Bootstrap5.
+     */
     adapt() {
         const p_el = $(this.picker.element);
         $('.datepicker-picker', p_el).addClass('card');
@@ -64,11 +77,19 @@ export class DatepickerWidget extends Datepicker {
         $('.datepicker-main', p_el).addClass('card-body');
     }
 
+    /**
+     * Cleans up event handlers.
+     */
     unload() {
         this.trigger.off('mousedown touchstart', this.toggle_picker);
         this.elem.off('focus', this.prevent_hide);
     }
 
+    /**
+     * Toggles the visibility of the datepicker.
+     * 
+     * @param {Event} evt - The event that triggered this function.
+     */
     toggle_picker(evt) {
         evt.preventDefault();
         evt.stopPropagation();
@@ -82,6 +103,7 @@ export class DatepickerWidget extends Datepicker {
     }
 }
 
+// Locale options
 DatepickerWidget.locale_options = {
     en: {
         weekStart: 1,
@@ -97,10 +119,16 @@ DatepickerWidget.locale_options = {
 // yafowil.widget.array integration
 //////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Re-initializes widget on array add event.
+ */
 function datepicker_on_array_add(inst, context) {
     DatepickerWidget.initialize(context);
 }
 
+/**
+ * Registers subscribers to yafowil array events.
+ */
 export function register_datepicker_array_subscribers() {
     if (window.yafowil_array === undefined) {
         return;
