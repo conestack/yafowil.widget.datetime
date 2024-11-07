@@ -4,6 +4,8 @@ import $ from 'jquery';
 export class DatepickerWidget extends Datepicker {
 
     /**
+     * Initializes each widget in the given DOM context.
+     * 
      * @param {HTMLElement} context - DOM context for initialization.
      */
     static initialize(context) {

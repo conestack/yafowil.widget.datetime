@@ -54,9 +54,6 @@ export class TimepickerButton {
     }
 }
 
-/**
- * Manages a collection of TimepickerButton instances.
- */
 export class TimepickerButtonContainer {
 
     /**
@@ -314,6 +311,8 @@ export class TimepickerMinutes extends TimepickerButtonContainer {
 export class TimepickerWidget {
 
     /**
+     * Initializes each widget in the given DOM context.
+     * 
      * @param {jQuery} context - DOM context for initialization.
      */
     static initialize(context) {
