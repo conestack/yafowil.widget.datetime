@@ -50,13 +50,23 @@ export class DatepickerWidget extends Datepicker {
             this.elem.trigger('change');
         });
 
+        if (window.ts !== undefined) {
+            ts.ajax.attach(this, elem);
+        }
+        
         let created_event = $.Event('datepicker_created', {widget: this});
         this.elem.trigger(created_event);
     }
 
     unload() {
-        this.trigger.off('mousedown touchstart', this.toggle_picker);
-        this.elem.off('focus', this.prevent_hide);
+        if (window.ts !== undefined) {
+            ts.deprecate(
+                'yafowil.widget.datepicker.unload',
+                'yafowil.widget.datepicker.destroy',
+                'yafowil 2.1'
+            );
+        }
+        this.destroy();
     }
 
     toggle_picker(evt) {
@@ -69,6 +79,11 @@ export class DatepickerWidget extends Datepicker {
         } else {
             this.show();
         }
+    }
+
+    destroy() {
+        this.trigger.off('mousedown touchstart', this.toggle_picker);
+        this.picker.detach();
     }
 }
 

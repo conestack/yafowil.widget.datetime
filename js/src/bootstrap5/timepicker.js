@@ -406,6 +406,10 @@ export class TimepickerWidget {
 
         let created_event = $.Event('timepicker_created', {widget: this});
         this.elem.trigger(created_event);
+
+        if (window.ts !== undefined) {
+            window.ts.ajax.attach(this, elem);
+        }
     }
 
     /**
@@ -438,13 +442,17 @@ export class TimepickerWidget {
 
     /**
      * Unloads the timepicker by removing event listeners and destroying the
-     * popper instance.
+     * popper instance (deprecated as of yafowil 2.1).
      */
     unload() {
-        $(document).off('click', this.hide_dropdown);
-        this.popper.destroy();
-        this.hours.unload_all();
-        this.minutes.unload_all();
+        if (window.ts !== undefined) {
+            ts.deprecate(
+                'yafowil.widget.timepicker.unload',
+                'yafowil.widget.timepicker.destroy',
+                'yafowil 2.1'
+            );
+        }
+        this.destroy();
     }
 
     /**
@@ -633,6 +641,18 @@ export class TimepickerWidget {
         let locales = this.constructor.locales,
             locale = locales[this.language] || locales.en;
         return locale[msgid];
+    }
+
+    /**
+     * Unloads the timepicker by removing event listeners, destroying the
+     * popper instance and removing the dropdown elem.
+     */
+    destroy() {
+        $(document).off('click', this.hide_dropdown);
+        this.popper.destroy();
+        this.hours.unload_all();
+        this.minutes.unload_all();
+        this.dd_elem.remove();
     }
 }
 

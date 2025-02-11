@@ -208,21 +208,35 @@ QUnit.module('TimepickerWidget', hooks => {
         );
     });
 
-    QUnit.test('unload elements', assert => {
+    QUnit.test('destroy', assert => {
+        // mock hide_dropdown to test unbind
+        const original_hide_dropdown = TimepickerWidget.prototype.hide_dropdown;
+        TimepickerWidget.prototype.hide_dropdown = function () {
+            assert.step('hide_dropdown');
+        }
+
         TimepickerWidget.initialize();
         picker = elem.data('yafowil-timepicker');
         assert.strictEqual(picker.dd_elem.css('display'), 'none');
 
-        // trigger unload
-        picker.unload();
+        // trigger click outside to hide dropdown
+        picker.elem.trigger('focus');
+        $(document).trigger('click');
+        assert.verifySteps(['hide_dropdown']);
+
+        // trigger destroy
+        picker.destroy();
 
         // trigger unbind of focus
         picker.elem.trigger('focus');
-        assert.strictEqual(picker.dd_elem.css('display'), 'block');
 
         // trigger unbind of document click
         $(document).trigger('click');
-        assert.strictEqual(picker.dd_elem.css('display'), 'block');
+
+        // hide_dropdown has not been called again
+        assert.verifySteps([]);
+
+        TimepickerWidget.prototype.hide_dropdown = original_hide_dropdown;
     });
 
     QUnit.test('Set_time() - empty hours and minutes', assert => {
