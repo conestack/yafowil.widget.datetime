@@ -69,8 +69,9 @@ var yafowil_datetime = (function (exports, $) {
             }
         }
         destroy() {
-            this.trigger.off('mousedown touchstart', this.toggle_picker);
-            this.picker.detach();
+            this.trigger.off();
+            this.elem.off();
+            super.destroy();
         }
     }
     DatepickerWidget.locale_options = {
