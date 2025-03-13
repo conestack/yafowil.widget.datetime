@@ -127,10 +127,9 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
     if css_class:
         attrs['class_'] = cssclasses(widget, data, additional=class_)
     else:
-        attrs['class_'] = ' '.join(class_)
+        attrs['class_'] = cssclasses(widget, data, classattr='timeinput_class', additional=class_)
     tags = tag('input', **attrs)
-    wrapper_class = attr_value('timepicker_wrapper_class', widget, data)
-    return data.tag('div', tags, **{'class': wrapper_class})
+    return data.tag('div', tags, **{'class':  cssclasses(widget, data, classattr='timepicker_wrapper_class')})
 
 
 def time_value(format_, unit, time):
@@ -313,12 +312,11 @@ def render_datetime_input(widget, data, date, time):
         attrs['data-date-locale'] = attr_value('locale', widget, data)
     attrs['class_'] = cssclasses(widget, data, additional=additional_classes)
 
-    wrapper_class = attr_value('wrapper_class', widget, data)
-    date_wrapper_class = attr_value('datepicker_wrapper_class', widget, data)
+    date_wrapper_class = cssclasses(widget, data, classattr='datepicker_wrapper_class')
     tags = tag('input', **attrs)
     dateinput = data.tag('div', tags, **{'class': date_wrapper_class})
     if dateinput and timeinput:
-        return data.tag('div', dateinput + timeinput, **{'class': wrapper_class})
+        return data.tag('div', dateinput + timeinput, **{'class': cssclasses(widget, data, classattr='wrapper_class')})
     else:
         return dateinput
 
@@ -410,7 +408,7 @@ jquery.ui datepicker binds to this class.
 """
 
 factory.defaults['datetime.datepicker_wrapper_class'] = ''
-factory.doc['props']['datetime.wrapper_class'] = """\
+factory.doc['props']['datetime.datepicker_wrapper_class'] = """\
 CSS class rendered on date wrapper div.
 """
 
@@ -425,7 +423,7 @@ jquery.ui timepicker binds to this class.
 """
 
 factory.defaults['datetime.timepicker_wrapper_class'] = ''
-factory.doc['props']['datetime.wrapper_class'] = """\
+factory.doc['props']['datetime.timepicker_wrapper_class'] = """\
 CSS class rendered on time wrapper div.
 """
 
