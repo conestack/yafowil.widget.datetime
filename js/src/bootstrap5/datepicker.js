@@ -58,9 +58,8 @@ export class DatepickerWidget extends Datepicker {
         this.toggle_picker = this.toggle_picker.bind(this);
         this.trigger.on('mousedown touchstart', this.toggle_picker);
         this.trigger.on('click', (e) => {e.preventDefault()});
-        this.elem.on('changeDate', () => {
-            this.elem.trigger('change');
-        });
+        this.on_change_date = this.on_change_date.bind(this);
+        this.elem.on('changeDate', this.on_change_date);
 
         if (window.ts !== undefined) {
             window.ts.ajax.attach(this, elem);
@@ -68,6 +67,10 @@ export class DatepickerWidget extends Datepicker {
 
         let created_event = $.Event('datepicker_created', {widget: this});
         this.elem.trigger(created_event);
+    }
+
+    on_change_date() {
+        this.elem.trigger('change');
     }
 
     /**
@@ -116,9 +119,11 @@ export class DatepickerWidget extends Datepicker {
      * Cleans up event handlers and destroys picker instance.
      */
     destroy() {
+        this.trigger.off('mousedown touchstart', this.toggle_picker);
         this.trigger.off();
-        this.elem.off();
+        this.elem.off('changeDate', this.on_change_date);
         super.destroy(); // vanillajs-datepicker destroy method
+        this.elem.off().removeData().remove();
     }
 }
 

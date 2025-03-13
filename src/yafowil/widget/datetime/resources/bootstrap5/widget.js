@@ -38,14 +38,16 @@ var yafowil_datetime = (function (exports, $, Popper) {
             this.toggle_picker = this.toggle_picker.bind(this);
             this.trigger.on('mousedown touchstart', this.toggle_picker);
             this.trigger.on('click', (e) => {e.preventDefault();});
-            this.elem.on('changeDate', () => {
-                this.elem.trigger('change');
-            });
+            this.on_change_date = this.on_change_date.bind(this);
+            this.elem.on('changeDate', this.on_change_date);
             if (window.ts !== undefined) {
                 window.ts.ajax.attach(this, elem);
             }
             let created_event = $.Event('datepicker_created', {widget: this});
             this.elem.trigger(created_event);
+        }
+        on_change_date() {
+            this.elem.trigger('change');
         }
         adapt() {
             const p_el = $(this.picker.element);
@@ -75,9 +77,11 @@ var yafowil_datetime = (function (exports, $, Popper) {
             }
         }
         destroy() {
+            this.trigger.off('mousedown touchstart', this.toggle_picker);
             this.trigger.off();
-            this.elem.off();
+            this.elem.off('changeDate', this.on_change_date);
             super.destroy();
+            this.elem.off().removeData().remove();
         }
     }
     DatepickerWidget.locale_options = {
