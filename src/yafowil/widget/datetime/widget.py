@@ -21,29 +21,6 @@ from yafowil.utils import managedprops
 _ = TSF('yafowil.widget.datetime')
 
 
-# XXX: move to yafowil.utils
-# using yafowil.utils.cssclasses works for acquiring error classes
-# (required on wrappers for bs5 form validation),
-# but also appends unnecessary other classes, for example
-# the widget class_add property.
-def validation_class(widget, data, additional=[]):
-    _classes = list()
-    attrs = widget.attrs
-    if attrs['error_class'] and data.errors:
-        if isinstance(attrs['error_class'], str):
-            _classes.append(attrs['error_class'])
-        else:
-            _classes.append(attrs['error_class_default'])
-    elif attrs['valid_class'] and data.root.extracted:
-        if isinstance(attrs['valid_class'], str):
-            _classes.append(attrs['valid_class'])
-        else:
-            _classes.append(attrs['valid_class_default'])
-    additional = [add for add in additional if add]
-    _classes += additional
-    return _classes and ' '.join(sorted(_classes)) or None
-
-
 def time_data_defs(widget, data):
     format_ = attr_value('format', widget, data)
     if format_ not in ['number', 'string', 'tuple']:
@@ -150,11 +127,18 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
     if css_class:
         attrs['class_'] = cssclasses(widget, data, additional=class_)
     else:
-        attrs['class_'] = validation_class(widget, data, additional=class_)
+        attrs['class_'] = cssclasses(
+            widget,
+            data,
+            classattr=None,
+            additional=class_,
+            ignores=['required_class', 'class_add']
+        )
     tags = tag('input', **attrs)
     wrapper_class = attr_value('timepicker_wrapper_class', widget, data)
-    valid_class = validation_class(widget, data, additional=[wrapper_class])
-    return data.tag('div', tags, **{'class': valid_class})
+    wrapper_class = cssclasses(widget, data, classattr='timepicker_wrapper_class',
+                              ignores=['required_class', 'class_add'])
+    return data.tag('div', tags, **{'class': wrapper_class})
 
 
 def time_value(format_, unit, time):
@@ -336,9 +320,8 @@ def render_datetime_input(widget, data, date, time):
         additional_classes.append(datepicker_class)
         attrs['data-date-locale'] = attr_value('locale', widget, data)
     attrs['class_'] = cssclasses(widget, data, additional=additional_classes)
-
-    wrapper_class = attr_value('wrapper_class', widget, data)
-    wrapper_class = validation_class(widget, data, additional=[wrapper_class])
+    wrapper_class = cssclasses(widget, data, classattr='wrapper_class',
+                                ignores=['required_class', 'class_add'])
     date_wrapper_class = attr_value('datepicker_wrapper_class', widget, data)
     tags = tag('input', **attrs)
     dateinput = data.tag('div', tags, **{'class': date_wrapper_class})
