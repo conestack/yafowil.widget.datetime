@@ -53,7 +53,7 @@ export class DatepickerWidget extends Datepicker {
         if (window.ts !== undefined) {
             ts.ajax.attach(this, elem);
         }
-        
+
         let created_event = $.Event('datepicker_created', {widget: this});
         this.elem.trigger(created_event);
     }
@@ -82,8 +82,9 @@ export class DatepickerWidget extends Datepicker {
     }
 
     destroy() {
-        this.trigger.off('mousedown touchstart', this.toggle_picker);
-        this.picker.detach();
+        this.trigger.off();
+        this.elem.off();
+        super.destroy(); // vanillajs-datepicker destroy method
     }
 }
 

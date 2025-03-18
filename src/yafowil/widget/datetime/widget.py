@@ -127,9 +127,17 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
     if css_class:
         attrs['class_'] = cssclasses(widget, data, additional=class_)
     else:
-        attrs['class_'] = ' '.join(class_)
+        attrs['class_'] = cssclasses(
+            widget,
+            data,
+            classattr=None,
+            additional=class_,
+            ignores=['required_class', 'class_add']
+        )
     tags = tag('input', **attrs)
     wrapper_class = attr_value('timepicker_wrapper_class', widget, data)
+    wrapper_class = cssclasses(widget, data, classattr='timepicker_wrapper_class',
+                              ignores=['required_class', 'class_add'])
     return data.tag('div', tags, **{'class': wrapper_class})
 
 
@@ -312,8 +320,8 @@ def render_datetime_input(widget, data, date, time):
         additional_classes.append(datepicker_class)
         attrs['data-date-locale'] = attr_value('locale', widget, data)
     attrs['class_'] = cssclasses(widget, data, additional=additional_classes)
-
-    wrapper_class = attr_value('wrapper_class', widget, data)
+    wrapper_class = cssclasses(widget, data, classattr='wrapper_class',
+                                ignores=['required_class', 'class_add'])
     date_wrapper_class = attr_value('datepicker_wrapper_class', widget, data)
     tags = tag('input', **attrs)
     dateinput = data.tag('div', tags, **{'class': date_wrapper_class})
@@ -409,8 +417,8 @@ factory.doc['props']['datetime.datepicker_class'] = """\
 jquery.ui datepicker binds to this class.
 """
 
-factory.defaults['datetime.datepicker_wrapper_class'] = ''
-factory.doc['props']['datetime.wrapper_class'] = """\
+factory.defaults['datetime.datepicker_wrapper_class'] = None
+factory.doc['props']['datetime.datepicker_wrapper_class'] = """\
 CSS class rendered on date wrapper div.
 """
 
@@ -424,8 +432,13 @@ factory.doc['props']['datetime.timepicker_class'] = """\
 jquery.ui timepicker binds to this class.
 """
 
-factory.defaults['datetime.timepicker_wrapper_class'] = ''
-factory.doc['props']['datetime.wrapper_class'] = """\
+factory.defaults['datetime.timepicker_wrapper_class'] = None
+factory.doc['props']['datetime.timepicker_wrapper_class'] = """\
+CSS class rendered on time wrapper div.
+"""
+
+factory.defaults['time.timepicker_wrapper_class'] = None
+factory.doc['props']['time.timepicker_wrapper_class'] = """\
 CSS class rendered on time wrapper div.
 """
 
