@@ -41,7 +41,7 @@ var yafowil_datetime = (function (exports, $, Popper) {
             this.on_change_date = this.on_change_date.bind(this);
             this.elem.on('changeDate', this.on_change_date);
             if (window.ts !== undefined) {
-                window.ts.ajax.attach(this, elem);
+                ts.ajax.attach(this, elem);
             }
             let created_event = $.Event('datepicker_created', {widget: this});
             this.elem.trigger(created_event);

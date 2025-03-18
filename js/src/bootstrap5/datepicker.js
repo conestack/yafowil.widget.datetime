@@ -62,7 +62,7 @@ export class DatepickerWidget extends Datepicker {
         this.elem.on('changeDate', this.on_change_date);
 
         if (window.ts !== undefined) {
-            window.ts.ajax.attach(this, elem);
+            ts.ajax.attach(this, elem);
         }
 
         let created_event = $.Event('datepicker_created', {widget: this});

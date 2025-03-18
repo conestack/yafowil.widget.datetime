@@ -181,7 +181,6 @@ COVERAGE_COMMAND?=\
 		-m pytest src/yafowil/widget/datetime/tests \
 	&& $(VENV_FOLDER)/bin/coverage report --fail-under=99
 
-
 ##############################################################################
 # END SETTINGS - DO NOT EDIT BELOW THIS LINE
 ##############################################################################
