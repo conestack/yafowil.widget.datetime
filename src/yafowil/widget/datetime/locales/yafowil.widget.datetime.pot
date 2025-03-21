@@ -1,32 +1,38 @@
-# 
+#
 # SOME DESCRIPTIVE TITLE
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2014-07-30 16:45+0200\n"
+"POT-Creation-Date: 2025-03-21 10:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
+"Generated-By: Lingua 4.15.0\n"
 
 #. Default: Not a valid time input.
-#: ./src/yafowil/widget/datetime/widget.py:47
+#: ./src/yafowil/widget/datetime/widget.py:41
 msgid "input_not_valid_time"
 msgstr ""
 
+#. Default: Failed to parse time input.
+#: ./src/yafowil/widget/datetime/widget.py:52
+msgid "failed_to_parse_time"
+msgstr ""
+
 #. Default: Hours not a number.
-#: ./src/yafowil/widget/datetime/widget.py:65
+#: ./src/yafowil/widget/datetime/widget.py:61
 msgid "hours_not_a_number"
 msgstr ""
 
 #. Default: Minutes not a number.
-#: ./src/yafowil/widget/datetime/widget.py:71
+#: ./src/yafowil/widget/datetime/widget.py:69
 msgid "minutes_not_a_number"
 msgstr ""
 
@@ -36,16 +42,11 @@ msgid "invalid_hours_range"
 msgstr ""
 
 #. Default: Minutes must be in range 0..59.
-#: ./src/yafowil/widget/datetime/widget.py:82
+#: ./src/yafowil/widget/datetime/widget.py:84
 msgid "invalid_minutes_range"
 msgstr ""
 
 #. Default: Not a valid date input.
-#: ./src/yafowil/widget/datetime/widget.py:226
+#: ./src/yafowil/widget/datetime/widget.py:276
 msgid "input_not_valid_date"
-msgstr ""
-
-#. Default: Failed to parse time input.
-#: ./src/yafowil/widget/datetime/widget.py:58
-msgid "failed_to_parse_time"
 msgstr ""
