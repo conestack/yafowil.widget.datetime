@@ -181,10 +181,11 @@ def time_display_renderer(widget, data):
         value = attr_value('empty_display_value', widget, data)
         if not value:
             return u''
+    display_class = attr_value('display_class', widget, data)
     attrs = {
         'id': cssid(widget, 'display'),
         'class_': f'display-{attr_value("class", widget, data)} ' +
-                  attr_value('display_class', widget, data)
+                  display_class if display_class is not None else ''
     }
     return data.tag('div', time_value(format_, unit, value), **attrs)
 
@@ -381,10 +382,11 @@ def datetime_display_renderer(widget, data, value=None):
             value = format_(widget, data)
         else:
             value = value.strftime(format_)
+    display_class = attr_value('display_class', widget, data)
     attrs = {
         'id': cssid(widget, 'display'),
         'class_': f'display-{attr_value("class", widget, data)} ' +
-                  attr_value('display_class', widget, data)
+                  display_class if display_class is not None else ''
     }
     return data.tag('div', value, **attrs)
 
