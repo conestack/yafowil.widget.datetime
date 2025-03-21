@@ -4,6 +4,10 @@ Changes
 2.0a3 (unreleased)
 ------------------
 
+- Use ``empty_display_value`` and ``display_class`` widget properties in display
+  renderers.
+  [lenadax]
+
 - Update jQuery to version ``4.0.0-beta.2``.
   [lenadax]
 

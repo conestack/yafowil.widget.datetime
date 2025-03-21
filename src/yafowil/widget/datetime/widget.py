@@ -178,10 +178,13 @@ def time_display_renderer(widget, data):
     format_, unit = time_data_defs(widget, data)
     value = data.value
     if not value:
-        return u''
+        value = attr_value('empty_display_value', widget, data)
+        if not value:
+            return u''
     attrs = {
         'id': cssid(widget, 'display'),
-        'class_': 'display-{}'.format(attr_value('class', widget, data))
+        'class_': f'display-{attr_value("class", widget, data)} ' +
+                  attr_value('display_class', widget, data)
     }
     return data.tag('div', time_value(format_, unit, value), **attrs)
 
@@ -257,6 +260,11 @@ Widget locale. Used for translations in timepicker widget.
 factory.defaults['time.minutes_step'] = '5'
 factory.doc['props']['time.minutes_step'] = """\
 Defines step between time options. Used in timepicker widget.
+"""
+
+factory.defaults['time.empty_display_value'] = None
+factory.doc['props']['time.empty_display_value'] = """\
+Value to display if no time value set. Used if widget mode is ``display``.
 """
 
 
@@ -375,7 +383,8 @@ def datetime_display_renderer(widget, data, value=None):
             value = value.strftime(format_)
     attrs = {
         'id': cssid(widget, 'display'),
-        'class_': 'display-{}'.format(attr_value('class', widget, data))
+        'class_': f'display-{attr_value("class", widget, data)} ' +
+                  attr_value('display_class', widget, data)
     }
     return data.tag('div', value, **attrs)
 
