@@ -184,8 +184,8 @@ def time_display_renderer(widget, data):
     display_class = attr_value('display_class', widget, data)
     attrs = {
         'id': cssid(widget, 'display'),
-        'class_': f'display-{attr_value("class", widget, data)} ' +
-                  display_class if display_class is not None else ''
+        'class_': f'display-{attr_value("class", widget, data)}' +
+                  (f' {display_class}' if display_class is not None else '')
     }
     return data.tag('div', time_value(format_, unit, value), **attrs)
 
@@ -385,8 +385,8 @@ def datetime_display_renderer(widget, data, value=None):
     display_class = attr_value('display_class', widget, data)
     attrs = {
         'id': cssid(widget, 'display'),
-        'class_': f'display-{attr_value("class", widget, data)} ' +
-                  display_class if display_class is not None else ''
+        'class_': f'display-{attr_value("class", widget, data)}' +
+                  (f' {display_class}' if display_class is not None else '')
     }
     return data.tag('div', value, **attrs)
 
