@@ -1,4 +1,5 @@
 from yafowil.base import factory
+import datetime
 
 
 DOC_DATE = """
@@ -137,10 +138,52 @@ def datetime_example():
     }
 
 
+DOC_DISPLAY = """
+Display Mode
+------------
+
+The widget's display mode renders the widget value inside an uneditable div.
+
+The wrapper div can receive additional classes via the ``display_class``
+widget attribute.
+
+.. code-block:: python
+
+    value = datetime.datetime.now()
+
+    datetime = factory('#field:datetime', value=value, mode='display', props={
+        'label': 'Datetime Picker in Display Mode',
+        'locale': 'de',
+        'datepicker': True,
+        'time': True,
+        'timepicker': True,
+        # 'display_class': 'my-additional-class'
+    })
+"""
+
+
+def display_example():
+    value = datetime.datetime.now()
+    form = factory('fieldset', name='yafowil.widget.datetime.display')
+    form['datetime'] = factory('#field:datetime', value=value, mode='display', props={
+        'label': 'Datetime Picker in Display Mode',
+        'locale': 'de',
+        'datepicker': True,
+        'time': True,
+        'timepicker': True
+    })
+    return {
+        'widget': form,
+        'doc': DOC_DISPLAY,
+        'title': 'Display Mode'
+    }
+
+
 def get_example():
     return [
         date_example(),
         time_example(),
         minutes_example(),
-        datetime_example()
+        datetime_example(),
+        display_example()
     ]

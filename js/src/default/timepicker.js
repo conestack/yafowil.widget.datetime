@@ -244,13 +244,21 @@ export class TimepickerWidget {
 
         let created_event = $.Event('timepicker_created', {widget: this});
         this.elem.trigger(created_event);
+
+        if (window.ts !== undefined) {
+            window.ts.ajax.attach(this, elem);
+        }
     }
 
     unload() {
-        $(document).off('click', this.hide_dropdown);
-
-        this.hours.unload_all();
-        this.minutes.unload_all();
+        if (window.ts !== undefined) {
+            ts.deprecate(
+                'yafowil.widget.timepicker.unload',
+                'yafowil.widget.timepicker.destroy',
+                'yafowil 2.1'
+            );
+        }
+        this.destroy();
     }
 
     get hour() {
@@ -272,9 +280,6 @@ export class TimepickerWidget {
     }
 
     place() {
-        let offset = this.elem.offset().left - this.elem.parent().offset().left;
-        this.dd_elem.css('left', `${offset}px`);
-
         let offset_left = this.elem.offset().left,
             offset_top = this.elem.offset().top,
             dd_width = this.dd_elem.outerWidth(),
@@ -397,6 +402,13 @@ export class TimepickerWidget {
         let locales = this.constructor.locales,
             locale = locales[this.language] || locales.en;
         return locale[msgid];
+    }
+
+    destroy() {
+        $(document).off('click', this.hide_dropdown);
+        this.hours.unload_all();
+        this.minutes.unload_all();
+        this.dd_elem.remove();
     }
 }
 

@@ -42,12 +42,21 @@ var yafowil_datetime = (function (exports, $) {
             this.elem.on('changeDate', () => {
                 this.elem.trigger('change');
             });
+            if (window.ts !== undefined) {
+                ts.ajax.attach(this, elem);
+            }
             let created_event = $.Event('datepicker_created', {widget: this});
             this.elem.trigger(created_event);
         }
         unload() {
-            this.trigger.off('mousedown touchstart', this.toggle_picker);
-            this.elem.off('focus', this.prevent_hide);
+            if (window.ts !== undefined) {
+                ts.deprecate(
+                    'yafowil.widget.datepicker.unload',
+                    'yafowil.widget.datepicker.destroy',
+                    'yafowil 2.1'
+                );
+            }
+            this.destroy();
         }
         toggle_picker(evt) {
             evt.preventDefault();
@@ -58,6 +67,11 @@ var yafowil_datetime = (function (exports, $) {
             } else {
                 this.show();
             }
+        }
+        destroy() {
+            this.trigger.off();
+            this.elem.off();
+            super.destroy();
         }
     }
     DatepickerWidget.locale_options = {
@@ -287,11 +301,19 @@ var yafowil_datetime = (function (exports, $) {
             $(window).on('resize', this.place);
             let created_event = $.Event('timepicker_created', {widget: this});
             this.elem.trigger(created_event);
+            if (window.ts !== undefined) {
+                window.ts.ajax.attach(this, elem);
+            }
         }
         unload() {
-            $(document).off('click', this.hide_dropdown);
-            this.hours.unload_all();
-            this.minutes.unload_all();
+            if (window.ts !== undefined) {
+                ts.deprecate(
+                    'yafowil.widget.timepicker.unload',
+                    'yafowil.widget.timepicker.destroy',
+                    'yafowil 2.1'
+                );
+            }
+            this.destroy();
         }
         get hour() {
             return this._hour;
@@ -308,8 +330,6 @@ var yafowil_datetime = (function (exports, $) {
             this.set_time();
         }
         place() {
-            let offset = this.elem.offset().left - this.elem.parent().offset().left;
-            this.dd_elem.css('left', `${offset}px`);
             let offset_left = this.elem.offset().left,
                 offset_top = this.elem.offset().top,
                 dd_width = this.dd_elem.outerWidth(),
@@ -417,6 +437,12 @@ var yafowil_datetime = (function (exports, $) {
             let locales = this.constructor.locales,
                 locale = locales[this.language] || locales.en;
             return locale[msgid];
+        }
+        destroy() {
+            $(document).off('click', this.hide_dropdown);
+            this.hours.unload_all();
+            this.minutes.unload_all();
+            this.dd_elem.remove();
         }
     }
     TimepickerWidget.locales = {
