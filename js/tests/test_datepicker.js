@@ -1,6 +1,6 @@
-import * as dp from 'vanillajs-datepicker';
-import {DatepickerWidget} from '../src/datepicker.js';
-import {register_datepicker_array_subscribers} from '../src/datepicker.js';
+import * as dp from 'vanillajs-datepicker'; // required for running tests. Do not remove!
+import {DatepickerWidget} from '../src/default/datepicker.js';
+import {register_datepicker_array_subscribers} from '../src/default/datepicker.js';
 import $ from 'jquery';
 
 
@@ -16,7 +16,7 @@ QUnit.module('DatepickerWidget', hooks => {
     hooks.before(async () => {
         css_link = document.createElement('link');
         css_link.rel = 'stylesheet';
-        css_link.href = '../../src/yafowil/widget/datetime/resources/datepicker.css';
+        css_link.href = '../../src/yafowil/widget/datetime/resources/default/datepicker.min.css';
         document.head.appendChild(css_link);
         // Wait for required styles to load
         await new Promise(resolve => {
@@ -116,25 +116,36 @@ QUnit.module('DatepickerWidget', hooks => {
         assert.strictEqual(picker._options.orientation, 'top');
     });
 
-    QUnit.test('unload', assert => {
+    QUnit.test('destroy', assert => {
+        // patch toggle_picker to test unbind
+        const original_toggle_picker = DatepickerWidget.prototype.toggle_picker;
+        DatepickerWidget.prototype.toggle_picker = function() {
+            assert.step('toggle_picker');
+        }
+
+        // initialize widget
         DatepickerWidget.initialize();
         picker = elem.data('yafowil-datepicker');
-        assert.strictEqual($(picker.picker.element).css('display'), 'none');
 
-        // unload picker
-        picker.unload();
-
-        // trigger mousedown
+        // trigger bound events
         picker.trigger.trigger('mousedown');
-        assert.strictEqual($(picker.picker.element).css('display'), 'none');
-
-        // trigger touchstart
         picker.trigger.trigger('touchstart');
-        assert.strictEqual($(picker.picker.element).css('display'), 'none');
-
-        // trigger click
         picker.trigger.trigger('click');
-        assert.strictEqual($(picker.picker.element).css('display'), 'none');
+
+        assert.verifySteps(['toggle_picker', 'toggle_picker']);
+
+        // destroy picker
+        picker.destroy();
+
+        // trigger now unbound events
+        picker.trigger.trigger('mousedown');
+        picker.trigger.trigger('touchstart');
+        picker.trigger.trigger('click');
+
+        // event listeners detached
+        assert.verifySteps([]);
+
+        DatepickerWidget.prototype.toggle_picker = original_toggle_picker;
     });
 
     QUnit.test('mousedown', assert => {

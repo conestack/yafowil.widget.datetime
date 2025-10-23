@@ -4,7 +4,30 @@ Changes
 2.0a3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Use ``empty_display_value`` and ``display_class`` widget properties in display
+  renderers.
+  [lenadax]
+
+- Update jQuery to version ``4.0.0-beta.2``.
+  [lenadax]
+
+- Introduce ``datetime.wrapper_class``, ``datetime.datepicker_wrapper_class`` and
+  ``datetime.timepicker_wrapper_class`` widget properties for bootstrap5 styling.
+
+- Implement dark theme for ``Bootstrap5`` dark theme mode.
+  [lenadax]
+
+- Use rollup for bundling scss. Use ``make rollup`` to compile js and scss.
+  [lenadax]
+
+- Use ``webtestrunner`` instead of ``karma`` for js tests. Use ``make wtr`` to run tests.
+  [lenadax]
+
+- Use ``pnpm`` as package manager.
+  [lenadax]
+
+- Create Bootstrap5 widget version.
+  [lenadax]
 
 
 2.0a2 (2023-09-28)

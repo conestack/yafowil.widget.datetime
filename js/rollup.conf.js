@@ -10,14 +10,20 @@ window.yafowil.datetime = exports;
 `;
 
 export default args => {
-    let conf = {
-        input: 'js/src/bundle.js',
+    let conf = [];
+
+    ////////////////////////////////////////////////////////////////////////////
+    // DEFAULT
+    ////////////////////////////////////////////////////////////////////////////
+
+    let bundle_default = {
+        input: 'js/src/default/bundle.js',
         plugins: [
             cleanup()
         ],
         output: [{
             name: 'yafowil_datetime',
-            file: `${out_dir}/widget.js`,
+            file: `${out_dir}/default/widget.js`,
             format: 'iife',
             outro: outro,
             globals: {
@@ -30,9 +36,9 @@ export default args => {
         ]
     };
     if (args.configDebug !== true) {
-        conf.output.push({
+        bundle_default.output.push({
             name: 'yafowil_datetime',
-            file: `${out_dir}/widget.min.js`,
+            file: `${out_dir}/default/widget.min.js`,
             format: 'iife',
             plugins: [
                 terser()
@@ -44,10 +50,10 @@ export default args => {
             interop: 'default'
         });
     }
-    let scss_timepicker = {
-        input: ['scss/timepicker.scss'],
+    let scss_timepicker_default = {
+        input: ['scss/default/timepicker.scss'],
         output: [{
-            file: `${out_dir}/timepicker.css`,
+            file: `${out_dir}/default/timepicker.min.css`,
             format: 'es',
             plugins: [terser()],
         }],
@@ -61,10 +67,10 @@ export default args => {
             }),
         ],
     };
-    let scss_datepicker = {
-        input: ['scss/datepicker.scss'],
+    let scss_datepicker_default = {
+        input: ['scss/default/datepicker.scss'],
         output: [{
-            file: `${out_dir}/datepicker.css`,
+            file: `${out_dir}/default/datepicker.min.css`,
             format: 'es',
             plugins: [terser()],
         }],
@@ -78,5 +84,85 @@ export default args => {
             }),
         ],
     };
-    return [conf, scss_datepicker, scss_timepicker];
+    conf.push(bundle_default, scss_datepicker_default, scss_timepicker_default);
+
+    ////////////////////////////////////////////////////////////////////////////
+    // BOOTSTRAP5
+    ////////////////////////////////////////////////////////////////////////////
+
+    let bundle_bs5 = {
+        input: 'js/src/bootstrap5/bundle.js',
+        plugins: [
+            cleanup()
+        ],
+        output: [{
+            name: 'yafowil_datetime',
+            file: `${out_dir}/bootstrap5/widget.js`,
+            format: 'iife',
+            outro: outro,
+            globals: {
+                jquery: 'jQuery',
+                popper: 'Popper'
+            },
+            interop: 'default'
+        }],
+        external: [
+            'jquery',
+            'bootstrap',
+            'popper'
+        ]
+    };
+    if (args.configDebug !== true) {
+        bundle_bs5.output.push({
+            name: 'yafowil_datetime',
+            file: `${out_dir}/bootstrap5/widget.min.js`,
+            format: 'iife',
+            plugins: [
+                terser()
+            ],
+            outro: outro,
+            globals: {
+                jquery: 'jQuery',
+                popper: 'Popper'
+            },
+            interop: 'default'
+        });
+    }
+    let scss_timepicker_bs5 = {
+        input: ['scss/bootstrap5/timepicker.scss'],
+        output: [{
+            file: `${out_dir}/bootstrap5/timepicker.min.css`,
+            format: 'es',
+            plugins: [terser()],
+        }],
+        plugins: [
+            postcss({
+                extract: true,
+                minimize: true,
+                use: [
+                    ['sass', { outputStyle: 'compressed' }],
+                ],
+            }),
+        ],
+    };
+    let scss_datepicker_bs5 = {
+        input: ['scss/bootstrap5/datepicker.scss'],
+        output: [{
+            file: `${out_dir}/bootstrap5/datepicker.min.css`,
+            format: 'es',
+            plugins: [terser()],
+        }],
+        plugins: [
+            postcss({
+                extract: true,
+                minimize: true,
+                use: [
+                    ['sass', { outputStyle: 'compressed' }],
+                ],
+            }),
+        ],
+    };
+    conf.push(bundle_bs5, scss_datepicker_bs5, scss_timepicker_bs5);
+
+    return conf;
 };
