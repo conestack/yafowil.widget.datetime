@@ -59,6 +59,22 @@ Changes
   [lenadax]
 
 - Rewrite JavaScript using ES6. Utilize vanillajs-datepicker
+
+
+1.14 (unreleased)
+-----------------
+
+- Nothing changed yet.
+
+
+1.13 (2022-10-06)
+-----------------
+
+- Add support for usage in ``yafowil.widget.array`` - remove date/timepicker
+  related css classes ``hasDatepicker, hasTimepicker`` before initialize.
+  [lenadax]
+
+- Fix case time value is no tuple in ``time_value``.
   [lenadax]
 
 

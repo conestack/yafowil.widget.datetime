@@ -143,7 +143,7 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
 
 def time_value(format_, unit, time):
     if format_ == 'tuple':
-        if not time:
+        if not time or not isinstance(time, tuple):
             return ''
         time = '{:02d}:{:02d}'.format(*(int(time[0]), int(time[1])))
     elif format_ == 'number':

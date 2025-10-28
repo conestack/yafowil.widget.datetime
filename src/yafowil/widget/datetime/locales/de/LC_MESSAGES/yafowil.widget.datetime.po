@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: yafowil.widget.datetime 1.5.2\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-03-21 10:51+0100\n"
+"POT-Creation-Date: 2025-10-28 10:11+0100\n"
 "PO-Revision-Date: 2014-04-30 18:38+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -51,6 +51,6 @@ msgid "invalid_minutes_range"
 msgstr "Minuteneingabe nicht im gültigen Bereich 0..23"
 
 #. Default: Not a valid date input.
-#: src/yafowil/widget/datetime/widget.py:276
+#: src/yafowil/widget/datetime/widget.py:285
 msgid "input_not_valid_date"
 msgstr "Eingabe ist kein gültiges Datum"

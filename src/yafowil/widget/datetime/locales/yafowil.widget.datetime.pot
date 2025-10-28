@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE 1.0\n"
-"POT-Creation-Date: 2025-03-21 10:51+0100\n"
+"POT-Creation-Date: 2025-10-28 10:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,6 +47,6 @@ msgid "invalid_minutes_range"
 msgstr ""
 
 #. Default: Not a valid date input.
-#: ./src/yafowil/widget/datetime/widget.py:276
+#: ./src/yafowil/widget/datetime/widget.py:285
 msgid "input_not_valid_date"
 msgstr ""
