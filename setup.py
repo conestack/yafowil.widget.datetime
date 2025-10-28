@@ -46,7 +46,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'setuptools',
-        'yafowil>2.1.99',
+        'yafowil>2.1.99,<4.0.0',
         'bda.intellidatetime>1.2.99',
     ],
     tests_require=tests_require,

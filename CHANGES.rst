@@ -4,7 +4,8 @@ Changes
 1.14 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Pin upper versions of dependencies.
+  [lenadax]
 
 
 1.13 (2022-10-06)
