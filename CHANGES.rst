@@ -1,7 +1,7 @@
 Changes
 =======
 
-2.0a3 (unreleased)
+2.0.0 (unreleased)
 ------------------
 
 - Use ``empty_display_value`` and ``display_class`` widget properties in display
