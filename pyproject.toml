@@ -22,7 +22,7 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
 ]
 dependencies = [
-    "yafowil>2.1.99",
+    "yafowil>3.99",
     "bda.intellidatetime>1.2.99",
 ]
 
