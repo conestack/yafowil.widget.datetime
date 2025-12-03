@@ -1,4 +1,4 @@
-name: Test yafowil.widget.datetime
+name: Python Tests
 
 on: [push]
 
