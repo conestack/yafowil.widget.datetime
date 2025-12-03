@@ -61,10 +61,11 @@ Changes
 - Rewrite JavaScript using ES6. Utilize vanillajs-datepicker
 
 
-1.14 (unreleased)
+1.14 (2025-11-03)
 -----------------
 
-- Nothing changed yet.
+- Pin upper versions of dependencies.
+  [lenadax]
 
 
 1.13 (2022-10-06)
