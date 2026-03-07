@@ -4,7 +4,8 @@ Changes
 2.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Ignore and remove generated .mo gettext translation files.
+  [thet]
 
 
 2.0.0 (2026-02-03)
