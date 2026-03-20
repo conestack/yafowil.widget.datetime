@@ -6,6 +6,14 @@ div.datepicker {
     display: block;
 }
 
+input.time.form-control,
+input.datepicker.form-control,
+input.timepicker.form-control {
+    &::placeholder {
+        color: var(--bs-border-color);
+    }
+}
+
 input.datepicker.form-control-sm + button.datepicker-trigger,
 input.timepicker.form-control-sm + button.timepicker-trigger {
     --bs-btn-padding-y: 0.25rem;

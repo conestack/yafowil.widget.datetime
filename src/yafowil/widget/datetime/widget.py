@@ -105,13 +105,15 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
     if not value and data.request:
         value = data.request.get(widgetname)
     disabled = 'disabled' if attr_value('disabled', widget, data) else None
+    placeholder = attr_value('placeholder', widget, data) or None
     attrs = {
         'type': 'text',
         'value': value,
         'name_': widgetname,
         'id': cssid(widget, 'input', postfix),
         'size': 5,
-        'disabled': disabled
+        'disabled': disabled,
+        'placeholder': placeholder,
     }
     class_ = [attr_value('timeinput_class', widget, data)]
     timepicker = attr_value('timepicker', widget, data)
@@ -165,7 +167,8 @@ def time_value(format_, unit, time):
 
 @managedprops(
     'format', 'unit', 'disabled', 'timepicker', 'timepicker_class', 'clock',
-    'minutes_step', 'locale', 'timepicker_wrapper_class', *css_managed_props
+    'minutes_step', 'locale', 'timepicker_wrapper_class', 'placeholder',
+    *css_managed_props
 )
 def time_edit_renderer(widget, data):
     format_, unit = time_data_defs(widget, data)
@@ -266,6 +269,12 @@ Defines step between time options. Used in timepicker widget.
 factory.defaults['time.empty_display_value'] = None
 factory.doc['props']['time.empty_display_value'] = """\
 Value to display if no time value set. Used if widget mode is ``display``.
+"""
+
+factory.defaults['time.placeholder'] = 'hh:mm'
+factory.doc['props']['time.placeholder'] = """\
+Placeholder text rendered on the time input field. Defaults to the translated
+format hint 'hh:mm'.
 """
 
 

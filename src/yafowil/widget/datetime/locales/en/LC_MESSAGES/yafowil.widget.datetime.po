@@ -54,3 +54,8 @@ msgstr "Minutes must be in range 0..59."
 #: src/yafowil/widget/datetime/widget.py:285
 msgid "input_not_valid_date"
 msgstr "Not a valid date input."
+
+#. Default: hh:mm
+#: src/yafowil/widget/datetime/widget.py
+msgid "time_format_placeholder"
+msgstr "hh:mm"

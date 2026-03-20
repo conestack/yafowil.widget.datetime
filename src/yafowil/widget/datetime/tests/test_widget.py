@@ -347,8 +347,8 @@ class TestDatetimeWidget(YafowilTestCase):
             'time',
             name='t')
         self.assertEqual(widget(), (
-            '<div><input class="time timeinput" id="input-t" name="t" size="5" '
-            'type="text" value="" /></div>'
+            '<div><input class="time timeinput" id="input-t" name="t" '
+            'placeholder="hh:mm" size="5" type="text" value="" /></div>'
         ))
 
         # Extract empty
@@ -357,6 +357,19 @@ class TestDatetimeWidget(YafowilTestCase):
             [data.name, data.value, data.extracted, data.errors],
             ['t', UNSET, UNSET, []]
         )
+
+    def test_time_placeholder(self):
+        # Default placeholder is the format hint
+        widget = factory('time', name='t')
+        self.assertIn('placeholder="hh:mm"', widget())
+
+        # Custom placeholder overrides the default
+        widget = factory('time', name='t', props={'placeholder': 'HH:MM'})
+        self.assertIn('placeholder="HH:MM"', widget())
+
+        # Empty string suppresses placeholder
+        widget = factory('time', name='t', props={'placeholder': ''})
+        self.assertNotIn('placeholder', widget())
 
     def test_time_extraction(self):
         widget = factory(
@@ -449,7 +462,7 @@ class TestDatetimeWidget(YafowilTestCase):
         self.assertEqual(widget(), (
             '<div><input class="time timeinput timepicker" data-time-clock=\'24\' '
             'data-time-locale=\'en\' data-time-minutes_step=\'5\' '
-            'id="input-t" name="t" size="5" type="text" value="02:02" /></div>'
+            'id="input-t" name="t" placeholder="hh:mm" size="5" type="text" value="02:02" /></div>'
         ))
 
     def test_time_rendering_if_preset_and_extracted(self):
@@ -459,8 +472,8 @@ class TestDatetimeWidget(YafowilTestCase):
             name='t',
             value='02:02')
         self.assertEqual(widget(), (
-            '<div><input class="time timeinput" id="input-t" name="t" size="5" '
-            'type="text" value="02:02" /></div>'
+            '<div><input class="time timeinput" id="input-t" name="t" '
+            'placeholder="hh:mm" size="5" type="text" value="02:02" /></div>'
         ))
         data = widget.extract({'t': '1:12'})
         self.assertEqual(
@@ -468,8 +481,8 @@ class TestDatetimeWidget(YafowilTestCase):
             ['t', '02:02', '01:12', []]
         )
         self.assertEqual(widget(data), (
-            '<div><input class="time timeinput" id="input-t" name="t" size="5" '
-            'type="text" value="01:12" /></div>'
+            '<div><input class="time timeinput" id="input-t" name="t" '
+            'placeholder="hh:mm" size="5" type="text" value="01:12" /></div>'
         ))
 
     def test_time_display(self):
@@ -519,8 +532,8 @@ class TestDatetimeWidget(YafowilTestCase):
                 'format': 'number'
             })
         self.assertEqual(widget(), (
-            '<div><input class="time timeinput" id="input-t" name="t" size="5" '
-            'type="text" value="" /></div>'
+            '<div><input class="time timeinput" id="input-t" name="t" '
+            'placeholder="hh:mm" size="5" type="text" value="" /></div>'
         ))
 
     def test_time_format_with_preset_value(self):
@@ -533,14 +546,14 @@ class TestDatetimeWidget(YafowilTestCase):
                 'format': 'number'
             })
         self.assertEqual(widget(), (
-            '<div><input class="time timeinput" id="input-t" name="t" size="5" '
-            'type="text" value="01:12" /></div>'
+            '<div><input class="time timeinput" id="input-t" name="t" '
+            'placeholder="hh:mm" size="5" type="text" value="01:12" /></div>'
         ))
         data = widget.extract({'t': '0:12'})
         self.assertEqual('%0.1f' % data.extracted, '0.2')
         self.assertEqual(widget(data), (
-            '<div><input class="time timeinput" id="input-t" name="t" size="5" '
-            'type="text" value="00:12" /></div>'
+            '<div><input class="time timeinput" id="input-t" name="t" '
+            'placeholder="hh:mm" size="5" type="text" value="00:12" /></div>'
         ))
 
         widget = factory(
@@ -551,8 +564,8 @@ class TestDatetimeWidget(YafowilTestCase):
                 'format': 'number'
             })
         self.assertEqual(widget(), (
-            '<div><input class="time timeinput" id="input-t" name="t" size="5" '
-            'type="text" value="00:00" /></div>'
+            '<div><input class="time timeinput" id="input-t" name="t" '
+            'placeholder="hh:mm" size="5" type="text" value="00:00" /></div>'
         ))
         data = widget.extract({'t': ''})
         self.assertEqual(
@@ -565,8 +578,8 @@ class TestDatetimeWidget(YafowilTestCase):
             ['t', 0, 0.0, []]
         )
         self.assertEqual(widget(data), (
-            '<div><input class="time timeinput" id="input-t" name="t" size="5" '
-            'type="text" value="00:00" /></div>'
+            '<div><input class="time timeinput" id="input-t" name="t" '
+            'placeholder="hh:mm" size="5" type="text" value="00:00" /></div>'
         ))
 
     def test_time_format_display(self):
@@ -622,8 +635,8 @@ class TestDatetimeWidget(YafowilTestCase):
                 'unit': 'minutes'
             })
         self.assertEqual(widget(), (
-            '<div><input class="time timeinput" id="input-t" name="t" size="5" '
-            'type="text" value="00:12" /></div>'
+            '<div><input class="time timeinput" id="input-t" name="t" '
+            'placeholder="hh:mm" size="5" type="text" value="00:12" /></div>'
         ))
         data = widget.extract({'t': '2:30'})
         self.assertEqual(
@@ -631,8 +644,8 @@ class TestDatetimeWidget(YafowilTestCase):
             ['t', 12, 150, []]
         )
         self.assertEqual(widget(data), (
-            '<div><input class="time timeinput" id="input-t" name="t" size="5" '
-            'type="text" value="02:30" /></div>'
+            '<div><input class="time timeinput" id="input-t" name="t" '
+            'placeholder="hh:mm" size="5" type="text" value="02:30" /></div>'
         ))
 
     def test_time_display_format_unit_with_preset_value(self):
@@ -660,7 +673,7 @@ class TestDatetimeWidget(YafowilTestCase):
             })
         self.assertEqual(widget(), (
             '<div><input class="time timeinput" id="input-t" name="t" '
-            'size="5" type="text" value="" /></div>'
+            'placeholder="hh:mm" size="5" type="text" value="" /></div>'
         ))
         data = widget.extract({'t': '2:30'})
         self.assertEqual(
@@ -676,13 +689,13 @@ class TestDatetimeWidget(YafowilTestCase):
                 'format': 'tuple'
             })
         self.assertEqual(widget(), (
-            '<div><input class="time timeinput" id="input-t" name="t" size="5" '
-            'type="text" value="05:30" /></div>'
+            '<div><input class="time timeinput" id="input-t" name="t" '
+            'placeholder="hh:mm" size="5" type="text" value="05:30" /></div>'
         ))
         data = widget.extract({'t': '2:30'})
         self.assertEqual(widget(data=data), (
-            '<div><input class="time timeinput" id="input-t" name="t" size="5" '
-            'type="text" value="02:30" /></div>'
+            '<div><input class="time timeinput" id="input-t" name="t" '
+            'placeholder="hh:mm" size="5" type="text" value="02:30" /></div>'
         ))
 
         widget = factory(
@@ -693,8 +706,8 @@ class TestDatetimeWidget(YafowilTestCase):
                 'format': 'tuple'
             })
         self.assertEqual(widget(), (
-            '<div><input class="time timeinput" id="input-t" name="t" size="5" '
-            'type="text" value="00:00" /></div>'
+            '<div><input class="time timeinput" id="input-t" name="t" '
+            'placeholder="hh:mm" size="5" type="text" value="00:00" /></div>'
         ))
         data = widget.extract({'t': ''})
         self.assertEqual(
