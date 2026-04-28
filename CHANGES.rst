@@ -4,7 +4,8 @@ Changes
 2.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add placeholder to widget.
+  [lenadax]
 
 
 2.0.0 (2026-02-03)
