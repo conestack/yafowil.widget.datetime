@@ -94,6 +94,18 @@ QUnit.module('TimepickerWidget', hooks => {
         assert.strictEqual(picker.clock, 24);
     });
 
+    QUnit.test('Initialize() - twice binds once', assert => {
+        // Same reason as the datepicker: a reload that replaces an element
+        // binds its parent again, and every input beside it is initialized a
+        // second time.
+        TimepickerWidget.initialize();
+        const first = elem.data('yafowil-timepicker');
+
+        TimepickerWidget.initialize();
+
+        assert.strictEqual(elem.data('yafowil-timepicker'), first);
+    });
+
     QUnit.test('Initialize() - language and clock 12', assert => {
         // manually set data and locale
         data_clock = 12;

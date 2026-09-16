@@ -4,7 +4,14 @@ Changes
 2.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Ignore a second ``initialize`` on an element that already carries a widget.
+  ``initialize`` takes a context, and a context is commonly a parent - an ajax
+  reload that replaces one element re-binds its parent, so every input beside
+  the replaced one arrives a second time. The widget stored itself under
+  ``elem.data('yafowil-datepicker')`` / ``'yafowil-timepicker'`` already; only
+  the check was missing. Without it a field collects another trigger button on
+  every reload and its handlers are bound repeatedly.
+  [rnix]
 
 
 2.0.1 (2026-04-28)

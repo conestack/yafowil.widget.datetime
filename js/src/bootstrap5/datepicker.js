@@ -15,6 +15,16 @@ export class DatepickerWidget extends Datepicker {
                 window.yafowil_array.inside_template(elem)) {
                 return;
             }
+            // Already initialized on this element. ``initialize`` is
+            // called with a context, and a context is commonly a parent: an
+            // ajax reload that replaces one element re-binds its parent, so
+            // every input beside the replaced one arrives here again. A
+            // second widget on the same input attaches a second trigger and
+            // binds its handlers twice, and after a handful of reloads the
+            // field is a row of buttons.
+            if (elem.data('yafowil-datepicker') !== undefined) {
+                return;
+            }
             new DatepickerWidget(elem, elem.data('date-locale'));
         });
     }

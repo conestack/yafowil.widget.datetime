@@ -116,6 +116,35 @@ QUnit.module('DatepickerWidget', hooks => {
         assert.strictEqual(picker._options.orientation, 'top');
     });
 
+    QUnit.test('initialize twice binds once', assert => {
+        // A reload that replaces an element binds its **parent** again, so
+        // every input beside it is initialized a second time. Without a guard
+        // the widget attaches another trigger button on each pass, and after
+        // a few sorts of a table the field is a row of buttons.
+        DatepickerWidget.initialize();
+        const first = elem.data('yafowil-datepicker');
+
+        DatepickerWidget.initialize();
+
+        assert.strictEqual(elem.data('yafowil-datepicker'), first);
+        assert.strictEqual(container.find('button.datepicker-trigger').length, 1);
+    });
+
+    QUnit.test('initialize picks up a new element beside a bound one', assert => {
+        // The guard must not turn into "already ran here, skip the context" -
+        // binding the parent again is exactly how a newly added field gets
+        // its widget.
+        DatepickerWidget.initialize();
+        const second = $('<input type="text" />').addClass('datepicker');
+        container.append(second);
+
+        DatepickerWidget.initialize();
+
+        assert.ok(second.data('yafowil-datepicker'));
+        assert.strictEqual(container.find('button.datepicker-trigger').length, 2);
+        second.data('yafowil-datepicker').destroy();
+    });
+
     QUnit.test('destroy', assert => {
         // patch toggle_picker to test unbind
         const original_toggle_picker = DatepickerWidget.prototype.toggle_picker;

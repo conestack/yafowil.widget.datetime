@@ -9,6 +9,9 @@ var yafowil_datetime = (function (exports, $) {
                     window.yafowil_array.inside_template(elem)) {
                     return;
                 }
+                if (elem.data('yafowil-datepicker') !== undefined) {
+                    return;
+                }
                 new DatepickerWidget(elem, elem.data('date-locale'));
             });
         }
@@ -250,6 +253,9 @@ var yafowil_datetime = (function (exports, $) {
                 let elem = $(this);
                 if (window.yafowil_array !== undefined &&
                     window.yafowil_array.inside_template(elem)) {
+                    return;
+                }
+                if (elem.data('yafowil-timepicker') !== undefined) {
                     return;
                 }
                 elem.attr('spellcheck', false);
