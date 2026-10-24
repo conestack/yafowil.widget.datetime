@@ -86,6 +86,14 @@ QUnit.module('bootstrap5 TimepickerWidget', (hooks) => {
         assert.strictEqual(popper.options.placement, 'bottom-start');
     });
 
+    QUnit.test('initialize disables spellcheck', (assert) => {
+        TimepickerWidget.initialize();
+        picker = elem.data('yafowil-timepicker');
+
+        // jQuery 4 removes an attribute set to boolean ``false``
+        assert.strictEqual(elem.attr('spellcheck'), 'false');
+    });
+
     QUnit.test('initialize - data', (assert) => {
         elem.data('time-clock', 12);
         elem.data('time-locale', 'de');
@@ -343,6 +351,24 @@ QUnit.module('bootstrap5 TimepickerWidget', (hooks) => {
             picker.validate();
             assert.strictEqual(picker.elem.val(), '03:15AM');
             assert.true(picker.hours.children[3].previously_selected);
+        });
+
+        QUnit.test('12 hour clock - 12am selects the AM 00 hour', (assert) => {
+            picker = new TimepickerWidget(elem, { clock: 12 });
+            picker.elem.val('12:30am');
+            picker.validate();
+            assert.strictEqual(picker.elem.val(), '00:30AM');
+            assert.true(picker.hours.children[0].previously_selected);
+            assert.false(picker.hours.children[12].previously_selected);
+        });
+
+        QUnit.test('12 hour clock - 12pm selects the PM 00 hour', (assert) => {
+            picker = new TimepickerWidget(elem, { clock: 12 });
+            picker.elem.val('12:30pm');
+            picker.elem.trigger('keyup');
+            assert.strictEqual(picker.elem.val(), '00:30PM');
+            assert.true(picker.hours.children[12].previously_selected);
+            assert.true(picker.minutes.children[6].previously_selected);
         });
 
         QUnit.test('no match', (assert) => {

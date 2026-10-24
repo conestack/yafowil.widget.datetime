@@ -4,6 +4,25 @@ Changes
 2.0.3 (unreleased)
 ------------------
 
+- Fix spellchecking not being disabled on the timepicker input. With jQuery 4
+  ``.attr('spellcheck', false)`` removes the attribute instead of setting
+  ``spellcheck="false"``.
+  [rnix]
+
+- Fix typing a 12 o'clock time into a 12-hour timepicker. ``12:30pm`` raised a
+  ``TypeError`` on keyup, ``12:30am`` selected the P.M. hour and rewrote the
+  input to ``00:30PM``. 12 o'clock selects the ``00`` hour of its period now.
+  [rnix]
+
+- Fix the default timepicker ``destroy`` leaving its window resize handler
+  bound.
+  [rnix]
+
+- Fix the datepicker ``destroy`` leaving its trigger button in the DOM. The
+  bootstrap5 datepicker no longer removes the server rendered input on
+  ``destroy``.
+  [rnix]
+
 - Add ``@popperjs/core`` as dev dependency for testing the bootstrap5 widget.
   [rnix]
 

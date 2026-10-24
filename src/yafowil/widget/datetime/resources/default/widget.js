@@ -73,7 +73,7 @@ var yafowil_datetime = (function (exports, $) {
             }
         }
         destroy() {
-            this.trigger.off();
+            this.trigger.remove();
             this.elem.off();
             super.destroy();
         }
@@ -250,7 +250,7 @@ var yafowil_datetime = (function (exports, $) {
                 if (elem.data('yafowil-timepicker') !== undefined) {
                     return;
                 }
-                elem.attr('spellcheck', false);
+                elem.attr('spellcheck', 'false');
                 new TimepickerWidget(elem, {
                     language: elem.data('time-locale'),
                     clock: elem.data('time-clock'),
@@ -415,6 +415,7 @@ var yafowil_datetime = (function (exports, $) {
                 }
                 const period = time.substr(5).toUpperCase();
                 this.period = period === 'PM' ? 'PM' : 'AM';
+                hour_index %= 12;
                 if (period === 'PM') hour_index += 12;
             }
             const hour_elem = this.hours.children[hour_index];
@@ -433,6 +434,7 @@ var yafowil_datetime = (function (exports, $) {
         }
         destroy() {
             $(document).off('click', this.hide_dropdown);
+            $(window).off('resize', this.place);
             this.hours.unload_all();
             this.minutes.unload_all();
             this.dd_elem.remove();

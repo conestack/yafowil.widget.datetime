@@ -92,7 +92,7 @@ export class DatepickerWidget extends Datepicker {
     }
 
     destroy() {
-        this.trigger.off();
+        this.trigger.remove();
         this.elem.off();
         super.destroy(); // vanillajs-datepicker destroy method
     }

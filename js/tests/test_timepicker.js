@@ -93,6 +93,13 @@ QUnit.module('TimepickerWidget', (hooks) => {
         assert.strictEqual(picker.clock, 24);
     });
 
+    QUnit.test('Initialize() - disables spellcheck', (assert) => {
+        TimepickerWidget.initialize();
+
+        // jQuery 4 removes an attribute set to boolean ``false``
+        assert.strictEqual(elem.attr('spellcheck'), 'false');
+    });
+
     QUnit.test('Initialize() - twice binds once', (assert) => {
         // Same reason as the datepicker: a reload that replaces an element
         // binds its parent again, and every input beside it is initialized a
@@ -232,6 +239,19 @@ QUnit.module('TimepickerWidget', (hooks) => {
         assert.verifySteps([]);
 
         TimepickerWidget.prototype.hide_dropdown = original_hide_dropdown;
+    });
+
+    QUnit.test('destroy unbinds window resize', (assert) => {
+        TimepickerWidget.initialize();
+        picker = elem.data('yafowil-timepicker');
+
+        picker.destroy();
+        // ``place`` resets the transform first thing, a bound resize
+        // handler would overwrite this
+        picker.dd_elem.css('transform', 'none');
+        $(window).trigger('resize');
+
+        assert.strictEqual(picker.dd_elem[0].style.transform, 'none');
     });
 
     QUnit.test('Set_time() - empty hours and minutes', (assert) => {
@@ -497,6 +517,30 @@ QUnit.module('TimepickerWidget', (hooks) => {
             assert.strictEqual(hour_elem.selected, true);
             const minute_elem = picker.minutes.children[3];
             assert.strictEqual(minute_elem.selected, true);
+        });
+        QUnit.test('validate() - 12am selects the AM 00 hour', (assert) => {
+            elem.data('time-clock', 12);
+            TimepickerWidget.initialize();
+            picker = elem.data('yafowil-timepicker');
+
+            picker.elem.val('12:30am');
+            picker.validate();
+
+            assert.strictEqual(picker.elem.val(), '00:30AM');
+            assert.strictEqual(picker.hours.children[0].selected, true);
+            assert.strictEqual(picker.hours.children[12].selected, false);
+        });
+        QUnit.test('validate() - 12pm selects the PM 00 hour', (assert) => {
+            elem.data('time-clock', 12);
+            TimepickerWidget.initialize();
+            picker = elem.data('yafowil-timepicker');
+
+            picker.elem.val('12:30pm');
+            picker.elem.trigger('keyup');
+
+            assert.strictEqual(picker.elem.val(), '00:30PM');
+            assert.strictEqual(picker.hours.children[12].selected, true);
+            assert.strictEqual(picker.minutes.children[6].selected, true);
         });
         QUnit.test('validate() - no match', (assert) => {
             const data_clock = 12;

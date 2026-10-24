@@ -129,11 +129,10 @@ export class DatepickerWidget extends Datepicker {
      * Cleans up event handlers and destroys picker instance.
      */
     destroy() {
-        this.trigger.off('mousedown touchstart', this.toggle_picker);
-        this.trigger.off();
+        this.trigger.remove();
         this.elem.off('changeDate', this.on_change_date);
         super.destroy(); // vanillajs-datepicker destroy method
-        this.elem.off().removeData().remove();
+        this.elem.off().removeData();
     }
 }
 

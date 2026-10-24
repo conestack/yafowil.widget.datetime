@@ -81,11 +81,10 @@ var yafowil_datetime = (function (exports, $, Popper) {
             }
         }
         destroy() {
-            this.trigger.off('mousedown touchstart', this.toggle_picker);
-            this.trigger.off();
+            this.trigger.remove();
             this.elem.off('changeDate', this.on_change_date);
             super.destroy();
-            this.elem.off().removeData().remove();
+            this.elem.off().removeData();
         }
     }
     DatepickerWidget.locale_options = {
@@ -312,7 +311,7 @@ var yafowil_datetime = (function (exports, $, Popper) {
                 if (elem.data('yafowil-timepicker') !== undefined) {
                     return;
                 }
-                elem.attr('spellcheck', false);
+                elem.attr('spellcheck', 'false');
                 new TimepickerWidget(elem, {
                     language: elem.data('time-locale'),
                     clock: elem.data('time-clock'),
@@ -516,6 +515,7 @@ var yafowil_datetime = (function (exports, $, Popper) {
                 }
                 const period = time.substr(5).toUpperCase();
                 this.period = period === 'PM' ? 'PM' : 'AM';
+                hour_index %= 12;
                 if (period === 'PM') hour_index += 12;
             }
             const hour_elem = this.hours.children[hour_index];

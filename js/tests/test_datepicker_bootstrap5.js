@@ -28,7 +28,7 @@ QUnit.module('bootstrap5 DatepickerWidget', (hooks) => {
         container.append(elem);
     });
     hooks.afterEach(() => {
-        if (picker && $.contains(document, picker.elem[0])) {
+        if (picker && $.contains(document, picker.trigger[0])) {
             picker.destroy();
         }
         picker = null;
@@ -134,7 +134,11 @@ QUnit.module('bootstrap5 DatepickerWidget', (hooks) => {
 
         picker.destroy();
 
-        assert.notOk($.contains(document, elem[0]));
+        // the input is rendered server side, destroy removes only what the
+        // widget created
+        assert.notOk($.contains(document, trigger[0]));
+        assert.strictEqual(container.find('button.datepicker-trigger').length, 0);
+        assert.ok($.contains(document, elem[0]));
         assert.strictEqual(elem.data('yafowil-datepicker'), undefined);
         trigger.trigger('mousedown');
         elem.trigger('changeDate');
@@ -145,7 +149,7 @@ QUnit.module('bootstrap5 DatepickerWidget', (hooks) => {
         DatepickerWidget.initialize();
         picker = elem.data('yafowil-datepicker');
         picker.unload();
-        assert.notOk($.contains(document, elem[0]));
+        assert.notOk($.contains(document, picker.trigger[0]));
     });
 
     QUnit.module('treibstoff', (hooks) => {
@@ -186,7 +190,7 @@ QUnit.module('bootstrap5 DatepickerWidget', (hooks) => {
                     'yafowil 2.1',
                 ],
             ]);
-            assert.notOk($.contains(document, elem[0]));
+            assert.notOk($.contains(document, picker.trigger[0]));
         });
     });
 

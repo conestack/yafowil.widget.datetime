@@ -318,7 +318,7 @@ export class TimepickerWidget {
             if (elem.data('yafowil-timepicker') !== undefined) {
                 return;
             }
-            elem.attr('spellcheck', false);
+            elem.attr('spellcheck', 'false');
             new TimepickerWidget(elem, {
                 language: elem.data('time-locale'),
                 clock: elem.data('time-clock'),
@@ -613,6 +613,8 @@ export class TimepickerWidget {
             }
             const period = time.substr(5).toUpperCase();
             this.period = period === 'PM' ? 'PM' : 'AM';
+            // the hour buttons of a period are 00-11, 12 is the 00 button
+            hour_index %= 12;
             if (period === 'PM') hour_index += 12;
         }
 

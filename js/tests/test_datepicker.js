@@ -171,6 +171,17 @@ QUnit.module('DatepickerWidget', (hooks) => {
         DatepickerWidget.prototype.toggle_picker = original_toggle_picker;
     });
 
+    QUnit.test('destroy removes the trigger and keeps the input', (assert) => {
+        DatepickerWidget.initialize();
+        picker = elem.data('yafowil-datepicker');
+
+        picker.destroy();
+
+        assert.notOk($.contains(document, picker.trigger[0]));
+        assert.strictEqual(container.find('button.datepicker-trigger').length, 0);
+        assert.ok($.contains(document, elem[0]));
+    });
+
     QUnit.test('mousedown', (assert) => {
         DatepickerWidget.initialize();
         picker = elem.data('yafowil-datepicker');
