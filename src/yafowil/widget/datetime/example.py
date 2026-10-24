@@ -20,11 +20,14 @@ Date input.
 
 def date_example():
     form = factory('fieldset', name='yafowil.widget.datetime.date')
-    form['date'] = factory('#field:datetime', props={
-        'label': 'Enter date or use date picker',
-        'required': 'Date Field is required',
-        'datepicker': True,
-    })
+    form['date'] = factory(
+        '#field:datetime',
+        props={
+            'label': 'Enter date or use date picker',
+            'required': 'Date Field is required',
+            'datepicker': True,
+        },
+    )
     return {
         'widget': form,
         'doc': DOC_DATE,
@@ -53,12 +56,15 @@ Set the 'clock' property to either 12 or 24 hours format (defaults to 24).
 
 def time_example():
     form = factory('fieldset', name='yafowil.widget.datetime.time')
-    form['time'] = factory('#field:time', props={
-        'label': 'Select time',
-        'required': 'Time Field is required',
-        'timepicker': True,
-        'clock': '12'
-    })
+    form['time'] = factory(
+        '#field:time',
+        props={
+            'label': 'Select time',
+            'required': 'Time Field is required',
+            'timepicker': True,
+            'clock': '12',
+        },
+    )
     return {
         'widget': form,
         'doc': DOC_TIME,
@@ -88,18 +94,17 @@ Set the 'minutes_step' property to a number between 1 and 60 (defaults to 5).
 
 def minutes_example():
     form = factory('fieldset', name='yafowil.widget.datetime.minutes_step')
-    form['time'] = factory('#field:time', props={
-        'label': 'Select time',
-        'required': 'Time Field is required',
-        'timepicker': True,
-        'clock': '24',
-        'minutes_step': '15'
-    })
-    return {
-        'widget': form,
-        'doc': DOC_MINUTES,
-        'title': 'Minutes'
-    }
+    form['time'] = factory(
+        '#field:time',
+        props={
+            'label': 'Select time',
+            'required': 'Time Field is required',
+            'timepicker': True,
+            'clock': '24',
+            'minutes_step': '15',
+        },
+    )
+    return {'widget': form, 'doc': DOC_MINUTES, 'title': 'Minutes'}
 
 
 DOC_DATETIME = """
@@ -123,19 +128,18 @@ Date and time input.
 
 def datetime_example():
     form = factory('fieldset', name='yafowil.widget.datetime.datetime')
-    form['datetime'] = factory('#field:datetime', props={
-        'label': 'Enter date and time',
-        'required': 'Datetime Field is required',
-        'locale': 'de',
-        'datepicker': True,
-        'time': True,
-        'timepicker': True
-    })
-    return {
-        'widget': form,
-        'doc': DOC_DATETIME,
-        'title': 'Datetime'
-    }
+    form['datetime'] = factory(
+        '#field:datetime',
+        props={
+            'label': 'Enter date and time',
+            'required': 'Datetime Field is required',
+            'locale': 'de',
+            'datepicker': True,
+            'time': True,
+            'timepicker': True,
+        },
+    )
+    return {'widget': form, 'doc': DOC_DATETIME, 'title': 'Datetime'}
 
 
 DOC_DISPLAY = """
@@ -165,18 +169,19 @@ widget attribute.
 def display_example():
     value = datetime.datetime.now()
     form = factory('fieldset', name='yafowil.widget.datetime.display')
-    form['datetime'] = factory('#field:datetime', value=value, mode='display', props={
-        'label': 'Datetime Picker in Display Mode',
-        'locale': 'de',
-        'datepicker': True,
-        'time': True,
-        'timepicker': True
-    })
-    return {
-        'widget': form,
-        'doc': DOC_DISPLAY,
-        'title': 'Display Mode'
-    }
+    form['datetime'] = factory(
+        '#field:datetime',
+        value=value,
+        mode='display',
+        props={
+            'label': 'Datetime Picker in Display Mode',
+            'locale': 'de',
+            'datepicker': True,
+            'time': True,
+            'timepicker': True,
+        },
+    )
+    return {'widget': form, 'doc': DOC_DISPLAY, 'title': 'Display Mode'}
 
 
 def get_example():
@@ -185,5 +190,5 @@ def get_example():
         time_example(),
         minutes_example(),
         datetime_example(),
-        display_example()
+        display_example(),
     ]

@@ -1,6 +1,6 @@
+from bda.intellidatetime import convert
 from bda.intellidatetime import DateTimeConversionError
 from bda.intellidatetime import LocalePattern
-from bda.intellidatetime import convert
 from datetime import datetime
 from node.utils import UNSET
 from yafowil.base import ExtractionError
@@ -23,10 +23,10 @@ _ = TSF('yafowil.widget.datetime')
 def time_data_defs(widget, data):
     format_ = attr_value('format', widget, data)
     if format_ not in ['number', 'string', 'tuple']:
-        raise ValueError(u"Unknown format '{}'".format(format_))
+        raise ValueError(f"Unknown format '{format_}'")
     unit = attr_value('unit', widget, data)
     if unit not in ['minutes', 'hours']:
-        raise ValueError(u"Unknown unit '{}'".format(unit))
+        raise ValueError(f"Unknown unit '{unit}'")
     return format_, unit
 
 
@@ -37,7 +37,7 @@ def time_extractor(widget, data):
     if extracted == UNSET or extracted == '':
         return UNSET
     if len(extracted) > 5:
-        message = _('input_not_valid_time', default=u'Not a valid time input.')
+        message = _('input_not_valid_time', default='Not a valid time input.')
         raise ExtractionError(message)
     elif len(extracted) == 5:
         hours = extracted[:2]
@@ -48,45 +48,32 @@ def time_extractor(widget, data):
     else:
         extracted = extracted.split(':')
         if len(extracted) != 2:
-            message = _(
-                'failed_to_parse_time',
-                default=u'Failed to parse time input.'
-            )
+            message = _('failed_to_parse_time', default='Failed to parse time input.')
             raise ExtractionError(message)
         hours, minutes = extracted
     try:
         hours = int(hours)
     except ValueError:
-        message = _(
-            'hours_not_a_number',
-            default=u'Hours not a number.'
-        )
+        message = _('hours_not_a_number', default='Hours not a number.')
         raise ExtractionError(message)
     try:
         minutes = int(minutes)
     except ValueError:
-        message = _(
-            'minutes_not_a_number',
-            default=u'Minutes not a number.'
-        )
+        message = _('minutes_not_a_number', default='Minutes not a number.')
         raise ExtractionError(message)
     daytime = attr_value('daytime', widget, data)
     timepicker = attr_value('timepicker', widget, data)
     if daytime or timepicker:
         if hours < 0 or hours > 23:
-            message = _(
-                'invalid_hours_range',
-                default=u'Hours must be in range 0..23.'
-            )
+            message = _('invalid_hours_range', default='Hours must be in range 0..23.')
             raise ExtractionError(message)
         if minutes < 0 or minutes > 59:
             message = _(
-                'invalid_minutes_range',
-                default=u'Minutes must be in range 0..59.'
+                'invalid_minutes_range', default='Minutes must be in range 0..59.'
             )
             raise ExtractionError(message)
     if format_ == 'string':
-        return '{:02d}:{:02d}'.format(hours, minutes)
+        return f'{hours:02d}:{minutes:02d}'
     if format_ == 'tuple':
         return (hours, minutes)
     if unit == 'hours':
@@ -98,7 +85,7 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
     tag = data.tag
     widgetname = widget.dottedpath
     if postfix:
-        widgetname = '{}.{}'.format(widgetname, postfix)
+        widgetname = f'{widgetname}.{postfix}'
     if value is True:
         value = ''
     if not value and data.request:
@@ -120,11 +107,7 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
         class_.append(attr_value('timepicker_class', widget, data))
         attrs['data-time-locale'] = attr_value('locale', widget, data)
         attrs['data-time-clock'] = attr_value('clock', widget, data)
-        attrs['data-time-minutes_step'] = attr_value(
-            'minutes_step',
-            widget,
-            data
-        )
+        attrs['data-time-minutes_step'] = attr_value('minutes_step', widget, data)
     if css_class:
         attrs['class_'] = cssclasses(widget, data, additional=class_)
     else:
@@ -133,12 +116,16 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
             data,
             classattr=None,
             additional=class_,
-            ignores=['required_class', 'class_add']
+            ignores=['required_class', 'class_add'],
         )
     tags = tag('input', **attrs)
     wrapper_class = attr_value('timepicker_wrapper_class', widget, data)
-    wrapper_class = cssclasses(widget, data, classattr='timepicker_wrapper_class',
-                              ignores=['required_class', 'class_add'])
+    wrapper_class = cssclasses(
+        widget,
+        data,
+        classattr='timepicker_wrapper_class',
+        ignores=['required_class', 'class_add'],
+    )
     return data.tag('div', tags, **{'class': wrapper_class})
 
 
@@ -153,18 +140,26 @@ def time_value(format_, unit, time):
         if unit == 'hours':
             hours = int(time)
             minutes = int(round((time - int(time)) * 60.0))
-            time = '{:02d}:{:02d}'.format(hours, minutes)
+            time = f'{hours:02d}:{minutes:02d}'
         else:
             hours = time // 60
             minutes = time % 60
-            time = '{:02d}:{:02d}'.format(hours, minutes)
+            time = f'{hours:02d}:{minutes:02d}'
     return time
 
 
 @managedprops(
-    'format', 'unit', 'disabled', 'timepicker', 'timepicker_class', 'clock',
-    'minutes_step', 'locale', 'timepicker_wrapper_class', 'placeholder',
-    *css_managed_props
+    'format',
+    'unit',
+    'disabled',
+    'timepicker',
+    'timepicker_class',
+    'clock',
+    'minutes_step',
+    'locale',
+    'timepicker_wrapper_class',
+    'placeholder',
+    *css_managed_props,
 )
 def time_edit_renderer(widget, data):
     format_, unit = time_data_defs(widget, data)
@@ -179,12 +174,12 @@ def time_display_renderer(widget, data):
     if not value:
         value = attr_value('empty_display_value', widget, data)
         if not value:
-            return u''
+            return ''
     display_class = attr_value('display_class', widget, data)
     attrs = {
         'id': cssid(widget, 'display'),
-        'class_': f'display-{attr_value("class", widget, data)}' +
-                  (f' {display_class}' if display_class is not None else '')
+        'class_': f'display-{attr_value("class", widget, data)}'
+        + (f' {display_class}' if display_class is not None else ''),
     }
     return data.tag('div', time_value(format_, unit, value), **attrs)
 
@@ -195,10 +190,11 @@ factory.register(
         generic_extractor,
         generic_required_extractor,
         time_extractor,
-        generic_emptyvalue_extractor
+        generic_emptyvalue_extractor,
     ],
     edit_renderers=[time_edit_renderer],
-    display_renderers=[time_display_renderer])
+    display_renderers=[time_display_renderer],
+)
 
 factory.doc['blueprint']['time'] = """\
 Add-on blueprint `yafowil.widget.datetime
@@ -278,7 +274,7 @@ format hint 'hh:mm'.
 def datetime_extractor(widget, data):
     time = None
     if attr_value('time', widget, data):
-        time = data.request.get('{}.time'.format(widget.dottedpath))
+        time = data.request.get(f'{widget.dottedpath}.time')
     required = attr_value('required', widget, data)
     if not required and not data.extracted and not time:
         return None
@@ -287,10 +283,7 @@ def datetime_extractor(widget, data):
     try:
         return convert(data.extracted, time=time, tzinfo=tzinfo, locale=locale)
     except DateTimeConversionError:
-        message = _(
-            'input_not_valid_date',
-            default=u'Not a valid date input.'
-        )
+        message = _('input_not_valid_date', default='Not a valid date input.')
         raise ExtractionError(message)
 
 
@@ -305,12 +298,12 @@ def format_date(dt, locale, delim):
     pattern = LocalePattern().date(locale)
     ret = ''
     for char in pattern.split(' '):
-        ret = '{}{}{}'.format(ret, delim, getattr(dt, _mapping[char]))
+        ret = f'{ret}{delim}{getattr(dt, _mapping[char])}'
     return ret.strip(delim)
 
 
 def format_time(dt):
-    return '{:02d}:{:02d}'.format(dt.hour, dt.minute)
+    return f'{dt.hour:02d}:{dt.minute:02d}'
 
 
 def render_datetime_input(widget, data, date, time):
@@ -325,7 +318,7 @@ def render_datetime_input(widget, data, date, time):
         'name_': widget.dottedpath,
         'id': cssid(widget, 'input'),
         'size': 10,
-        'disabled': 'disabled' if disabled else None
+        'disabled': 'disabled' if disabled else None,
     }
     additional_classes = [attr_value('dateinput_class', widget, data)]
     datepicker = attr_value('datepicker', widget, data)
@@ -334,8 +327,9 @@ def render_datetime_input(widget, data, date, time):
         additional_classes.append(datepicker_class)
         attrs['data-date-locale'] = attr_value('locale', widget, data)
     attrs['class_'] = cssclasses(widget, data, additional=additional_classes)
-    wrapper_class = cssclasses(widget, data, classattr='wrapper_class',
-                                ignores=['required_class', 'class_add'])
+    wrapper_class = cssclasses(
+        widget, data, classattr='wrapper_class', ignores=['required_class', 'class_add']
+    )
     date_wrapper_class = attr_value('datepicker_wrapper_class', widget, data)
     tags = tag('input', **attrs)
     dateinput = data.tag('div', tags, **{'class': date_wrapper_class})
@@ -346,10 +340,18 @@ def render_datetime_input(widget, data, date, time):
 
 
 @managedprops(
-    'locale', 'delimiter', 'time', 'disabled', 'timepicker',
-    'timepicker_class', 'datepicker', 'datepicker_class',
-    'timepicker_wrapper_class', 'datepicker_wrapper_class', 'wrapper_class',
-    *css_managed_props
+    'locale',
+    'delimiter',
+    'time',
+    'disabled',
+    'timepicker',
+    'timepicker_class',
+    'datepicker',
+    'datepicker_class',
+    'timepicker_wrapper_class',
+    'datepicker_wrapper_class',
+    'wrapper_class',
+    *css_managed_props,
 )
 def datetime_edit_renderer(widget, data):
     locale = attr_value('locale', widget, data)
@@ -380,7 +382,7 @@ def datetime_display_renderer(widget, data, value=None):
     if not value:
         value = attr_value('empty_display_value', widget, data)
         if not value:
-            return u''
+            return ''
     else:
         format_ = widget.attrs['format']
         if callable(format_):
@@ -390,8 +392,8 @@ def datetime_display_renderer(widget, data, value=None):
     display_class = attr_value('display_class', widget, data)
     attrs = {
         'id': cssid(widget, 'display'),
-        'class_': f'display-{attr_value("class", widget, data)}' +
-                  (f' {display_class}' if display_class is not None else '')
+        'class_': f'display-{attr_value("class", widget, data)}'
+        + (f' {display_class}' if display_class is not None else ''),
     }
     return data.tag('div', value, **attrs)
 
@@ -402,10 +404,11 @@ factory.register(
         generic_extractor,
         generic_required_extractor,
         datetime_extractor,
-        generic_emptyvalue_extractor
+        generic_emptyvalue_extractor,
     ],
     edit_renderers=[datetime_edit_renderer],
-    display_renderers=[datetime_display_renderer])
+    display_renderers=[datetime_display_renderer],
+)
 
 factory.doc['blueprint']['datetime'] = """\
 Add-on blueprint `yafowil.widget.datetime

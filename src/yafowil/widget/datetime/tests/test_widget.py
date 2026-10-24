@@ -13,29 +13,29 @@ def np(path):
 
 
 class TestDatetimeWidget(YafowilTestCase):
-
     def setUp(self):
         super(TestDatetimeWidget, self).setUp()
         from yafowil.widget import datetime
         from yafowil.widget.datetime import widget
+
         reload(widget)
         datetime.register()
 
     def test_datetime_basics(self):
         # Render very basic widget
-        widget = factory(
-            'datetime',
-            name='dt')
-        self.assertEqual(widget(), (
-            '<div><input class="dateinput datetime" id="input-dt" name="dt" '
-            'size="10" type="text" value="" /></div>'
-        ))
+        widget = factory('datetime', name='dt')
+        self.assertEqual(
+            widget(),
+            (
+                '<div><input class="dateinput datetime" id="input-dt" name="dt" '
+                'size="10" type="text" value="" /></div>'
+            ),
+        )
 
         # Base extraction
         data = widget.extract({})
         self.assertEqual(
-            [data.name, data.value, data.extracted, data.errors],
-            ['dt', UNSET, None, []]
+            [data.name, data.value, data.extracted, data.errors], ['dt', UNSET, None, []]
         )
 
     def test_datetime_datepicker_class(self):
@@ -46,12 +46,16 @@ class TestDatetimeWidget(YafowilTestCase):
             name='dt',
             props={
                 'datepicker': True,
-            })
-        self.assertEqual(widget(), (
-            '<div><input class="dateinput datepicker datetime" '
-            'data-date-locale=\'en\' id="input-dt" name="dt" size="10" '
-            'type="text" value="" /></div>'
-        ))
+            },
+        )
+        self.assertEqual(
+            widget(),
+            (
+                '<div><input class="dateinput datepicker datetime" '
+                'data-date-locale=\'en\' id="input-dt" name="dt" size="10" '
+                'type="text" value="" /></div>'
+            ),
+        )
 
     def test_datetime_without_time_input(self):
         # Widget without time input
@@ -60,49 +64,62 @@ class TestDatetimeWidget(YafowilTestCase):
             name='dt',
             props={
                 'required': 'No date given',
-            })
-        self.assertEqual(widget(), (
-            '<div><input class="dateinput datetime required" id="input-dt" '
-            'name="dt" size="10" type="text" value="" /></div>'
-        ))
+            },
+        )
+        self.assertEqual(
+            widget(),
+            (
+                '<div><input class="dateinput datetime required" id="input-dt" '
+                'name="dt" size="10" type="text" value="" /></div>'
+            ),
+        )
 
         # Widget extraction
         request = {'dt': ''}
         data = widget.extract(request)
         self.assertEqual(
             [data.name, data.value, data.extracted, data.errors],
-            ['dt', UNSET, '', [ExtractionError('No date given')]]
+            ['dt', UNSET, '', [ExtractionError('No date given')]],
         )
 
         # Widget renders empty value
-        self.assertEqual(widget(data), (
-            '<div><input class="dateinput datetime required" id="input-dt" '
-            'name="dt" size="10" type="text" value="" /></div>'
-        ))
+        self.assertEqual(
+            widget(data),
+            (
+                '<div><input class="dateinput datetime required" id="input-dt" '
+                'name="dt" size="10" type="text" value="" /></div>'
+            ),
+        )
 
         # Widget extraction with non-date input
         request = {'dt': 'xyz'}
         data = widget.extract(request)
         self.assertEqual(
             [data.name, data.value, data.extracted, data.errors],
-            ['dt', UNSET, 'xyz', [ExtractionError('Not a valid date input.')]]
+            ['dt', UNSET, 'xyz', [ExtractionError('Not a valid date input.')]],
         )
-        self.assertEqual(widget(data), (
-            '<div><input class="dateinput datetime required" id="input-dt" '
-            'name="dt" size="10" type="text" value="xyz" /></div>'
-        ))
+        self.assertEqual(
+            widget(data),
+            (
+                '<div><input class="dateinput datetime required" id="input-dt" '
+                'name="dt" size="10" type="text" value="xyz" /></div>'
+            ),
+        )
 
         # Valid widget extraction. Returns datetime instance
         request = {'dt': '1.1.2010'}
         data = widget.extract(request)
         self.assertEqual(
             [data.name, data.value, data.extracted, data.errors],
-            ['dt', UNSET, datetime.datetime(2010, 1, 1, 0, 0), []]
+            ['dt', UNSET, datetime.datetime(2010, 1, 1, 0, 0), []],
         )
-        self.assertEqual(widget(data), (
-            '<div><input class="dateinput datetime required" id="input-dt" '
-            'name="dt" size="10" type="text" value="1.1.2010" /></div>'
-        ))
+        self.assertEqual(
+            widget(data),
+            (
+                '<div><input class="dateinput datetime required" id="input-dt" '
+                'name="dt" size="10" type="text" value="1.1.2010" /></div>'
+            ),
+        )
 
     def test_datetime_advanced(self):
         # Widget with more advanced configuration. Widget now renders time
@@ -119,8 +136,10 @@ class TestDatetimeWidget(YafowilTestCase):
                 'time': True,
                 'timepicker': True,
                 'tzinfo': None,
-            })
-        self.checkOutput("""
+            },
+        )
+        self.checkOutput(
+            """
         <div>
           <div class="datetime-picker">
             <div>
@@ -131,18 +150,21 @@ class TestDatetimeWidget(YafowilTestCase):
             </div>
           </div>
         </div>
-        """, fxml('<div>{}</div>'.format(widget())))
+        """,
+            fxml(f'<div>{widget()}</div>'),
+        )
 
         # Widget extraction, no date input was given
         request = {'dt': '', 'dt.time': ''}
         data = widget.extract(request)
         self.assertEqual(
             [data.name, data.value, data.extracted, data.errors],
-            ['dt', UNSET, '', [ExtractionError('No date given')]]
+            ['dt', UNSET, '', [ExtractionError('No date given')]],
         )
 
         # Widget renders empty value
-        self.checkOutput("""
+        self.checkOutput(
+            """
         <div>
           <div class="datetime-picker">
             <div>
@@ -153,16 +175,19 @@ class TestDatetimeWidget(YafowilTestCase):
             </div>
           </div>
         </div>
-        """, fxml('<div>{}</div>'.format(widget(data))))
+        """,
+            fxml(f'<div>{widget(data)}</div>'),
+        )
 
         # Widget extraction with non-datetime input
         request = {'dt': 'xyz', 'dt.time': 'x'}
         data = widget.extract(request)
         self.assertEqual(
             [data.name, data.value, data.extracted, data.errors],
-            ['dt', UNSET, 'xyz', [ExtractionError('Not a valid date input.')]]
+            ['dt', UNSET, 'xyz', [ExtractionError('Not a valid date input.')]],
         )
-        self.checkOutput("""
+        self.checkOutput(
+            """
         <div>
           <div class="datetime-picker">
             <div>
@@ -173,16 +198,19 @@ class TestDatetimeWidget(YafowilTestCase):
             </div>
           </div>
         </div>
-        """, fxml('<div>{}</div>'.format(widget(data))))
+        """,
+            fxml(f'<div>{widget(data)}</div>'),
+        )
 
         # Valid widget extraction. Returns datetime instance
         request = {'dt': '1.1.2010', 'dt.time': '10:15'}
         data = widget.extract(request)
         self.assertEqual(
             [data.name, data.value, data.extracted, data.errors],
-            ['dt', UNSET, datetime.datetime(2010, 1, 1, 10, 15), []]
+            ['dt', UNSET, datetime.datetime(2010, 1, 1, 10, 15), []],
         )
-        self.checkOutput("""
+        self.checkOutput(
+            """
         <div>
           <div class="datetime-picker">
             <div>
@@ -193,7 +221,9 @@ class TestDatetimeWidget(YafowilTestCase):
             </div>
           </div>
         </div>
-        """, fxml('<div>{}</div>'.format(widget(data))))
+        """,
+            fxml(f'<div>{widget(data)}</div>'),
+        )
 
     def test_datetime_locale_callable(self):
         # Locale might be a callable
@@ -203,16 +233,14 @@ class TestDatetimeWidget(YafowilTestCase):
             self.locale_callback_called = True
             return 'de'
 
-        widget = factory(
-            'datetime',
-            name='dt',
-            props={
-                'locale': callable_locale
-            })
-        self.assertEqual(widget(), (
-            '<div><input class="dateinput datetime" id="input-dt" name="dt" '
-            'size="10" type="text" value="" /></div>'
-        ))
+        widget = factory('datetime', name='dt', props={'locale': callable_locale})
+        self.assertEqual(
+            widget(),
+            (
+                '<div><input class="dateinput datetime" id="input-dt" name="dt" '
+                'size="10" type="text" value="" /></div>'
+            ),
+        )
         self.assertTrue(self.locale_callback_called)
 
         del self.locale_callback_called
@@ -225,8 +253,10 @@ class TestDatetimeWidget(YafowilTestCase):
             value=datetime.datetime(2011, 5, 1),
             props={
                 'time': True,
-            })
-        self.checkOutput("""
+            },
+        )
+        self.checkOutput(
+            """
         <div>
           <div class="datetime-picker">
             <div>
@@ -237,19 +267,19 @@ class TestDatetimeWidget(YafowilTestCase):
             </div>
           </div>
         </div>
-        """, fxml('<div>{}</div>'.format(widget())))
+        """,
+            fxml(f'<div>{widget()}</div>'),
+        )
 
     def test_datetime_display(self):
         # display date and time
         widget = factory(
-            'datetime',
-            name='dt',
-            value=datetime.datetime(2011, 5, 1),
-            mode='display')
-        self.assertEqual(widget(), (
-            '<div class="display-datetime" '
-            'id="display-dt">2011.05.01 00:00</div>'
-        ))
+            'datetime', name='dt', value=datetime.datetime(2011, 5, 1), mode='display'
+        )
+        self.assertEqual(
+            widget(),
+            ('<div class="display-datetime" id="display-dt">2011.05.01 00:00</div>'),
+        )
 
         # display date only
         widget = factory(
@@ -259,30 +289,22 @@ class TestDatetimeWidget(YafowilTestCase):
             props={
                 'format': '%Y.%m.%d',
             },
-            mode='display')
+            mode='display',
+        )
         self.assertEqual(
-            widget(),
-            '<div class="display-datetime" id="display-dt">2011.05.01</div>'
+            widget(), '<div class="display-datetime" id="display-dt">2011.05.01</div>'
         )
 
         # no value, displays nothing
-        widget = factory(
-            'datetime',
-            name='dt',
-            mode='display')
+        widget = factory('datetime', name='dt', mode='display')
         self.assertEqual(widget(), '')
 
         # no value, display empty value
         widget = factory(
-            'datetime',
-            name='dt',
-            props={
-                'empty_display_value': 'N/A'
-            },
-            mode='display')
+            'datetime', name='dt', props={'empty_display_value': 'N/A'}, mode='display'
+        )
         self.assertEqual(
-            widget(),
-            '<div class="display-datetime" id="display-dt">N/A</div>'
+            widget(), '<div class="display-datetime" id="display-dt">N/A</div>'
         )
 
         # no value, display empty value via callback
@@ -292,13 +314,11 @@ class TestDatetimeWidget(YafowilTestCase):
         widget = factory(
             'datetime',
             name='dt',
-            props={
-                'empty_display_value': empty_display_value
-            },
-            mode='display')
+            props={'empty_display_value': empty_display_value},
+            mode='display',
+        )
         self.assertEqual(
-            widget(),
-            '<div class="display-datetime" id="display-dt">N/A from CB</div>'
+            widget(), '<div class="display-datetime" id="display-dt">N/A from CB</div>'
         )
 
         # display with formatter callback
@@ -312,11 +332,15 @@ class TestDatetimeWidget(YafowilTestCase):
             props={
                 'format': custom_formatter,
             },
-            mode='display')
-        self.assertEqual(widget(), (
-            '<div class="display-datetime" id="display-dt">at year 2011 at '
-            'month 05 at day 01</div>'
-        ))
+            mode='display',
+        )
+        self.assertEqual(
+            widget(),
+            (
+                '<div class="display-datetime" id="display-dt">at year 2011 at '
+                'month 05 at day 01</div>'
+            ),
+        )
 
     def test_datetime_emptyvalue(self):
         # Test widget with emptyvalue
@@ -324,11 +348,8 @@ class TestDatetimeWidget(YafowilTestCase):
         widget = factory(
             'datetime',
             name='dt',
-            props={
-                'locale': 'de',
-                'time': True,
-                'emptyvalue': emptyvalue
-            })
+            props={'locale': 'de', 'time': True, 'emptyvalue': emptyvalue},
+        )
         request = {'dt': '1.1.2018', 'dt.time': '12:30'}
         data = widget.extract(request)
         self.assertEqual(data.extracted, datetime.datetime(2018, 1, 1, 12, 30))
@@ -338,19 +359,19 @@ class TestDatetimeWidget(YafowilTestCase):
 
     def test_time_basics(self):
         # Render base widget
-        widget = factory(
-            'time',
-            name='t')
-        self.assertEqual(widget(), (
-            '<div><input class="time timeinput" id="input-t" name="t" '
-            'placeholder="hh:mm" size="5" type="text" value="" /></div>'
-        ))
+        widget = factory('time', name='t')
+        self.assertEqual(
+            widget(),
+            (
+                '<div><input class="time timeinput" id="input-t" name="t" '
+                'placeholder="hh:mm" size="5" type="text" value="" /></div>'
+            ),
+        )
 
         # Extract empty
         data = widget.extract({})
         self.assertEqual(
-            [data.name, data.value, data.extracted, data.errors],
-            ['t', UNSET, UNSET, []]
+            [data.name, data.value, data.extracted, data.errors], ['t', UNSET, UNSET, []]
         )
 
     def test_time_placeholder(self):
@@ -367,118 +388,90 @@ class TestDatetimeWidget(YafowilTestCase):
         self.assertNotIn('placeholder', widget())
 
     def test_time_extraction(self):
-        widget = factory(
-            'time',
-            name='t')
+        widget = factory('time', name='t')
 
         # Invalid time input
         data = widget.extract({'t': 'abcdef'})
-        self.assertEqual(
-            data.errors,
-            [ExtractionError('Not a valid time input.')]
-        )
+        self.assertEqual(data.errors, [ExtractionError('Not a valid time input.')])
 
         # Parsing Failure
         data = widget.extract({'t': 'abc'})
-        self.assertEqual(
-            data.errors,
-            [ExtractionError('Failed to parse time input.')]
-        )
+        self.assertEqual(data.errors, [ExtractionError('Failed to parse time input.')])
 
         # Hours not a number
         data = widget.extract({'t': 'aa00'})
-        self.assertEqual(
-            data.errors,
-            [ExtractionError('Hours not a number.')]
-        )
+        self.assertEqual(data.errors, [ExtractionError('Hours not a number.')])
 
         # Minutes not a number
         data = widget.extract({'t': '00:aa'})
-        self.assertEqual(
-            data.errors,
-            [ExtractionError('Minutes not a number.')]
-        )
+        self.assertEqual(data.errors, [ExtractionError('Minutes not a number.')])
 
         # Extract hours and minute without delimiter. Only wotks for
         # 4-character values. Widget format is ``string`` by default
         data = widget.extract({'t': '0101'})
         self.assertEqual(
             [data.name, data.value, data.extracted, data.errors],
-            ['t', UNSET, '01:01', []]
+            ['t', UNSET, '01:01', []],
         )
 
         # Extract with delimiter
         data = widget.extract({'t': '1:2'})
         self.assertEqual(
             [data.name, data.value, data.extracted, data.errors],
-            ['t', UNSET, '01:02', []]
+            ['t', UNSET, '01:02', []],
         )
 
     def test_time_daytime_extraction(self):
         # Validate day time. triggers if ``daytime`` or ``timepicker``
         # set to ``True``
-        widget = factory(
-            'time',
-            name='t',
-            value='02:02',
-            props={
-                'daytime': True
-            })
+        widget = factory('time', name='t', value='02:02', props={'daytime': True})
         data = widget.extract({'t': '25:1'})
-        self.assertEqual(
-            data.errors,
-            [ExtractionError('Hours must be in range 0..23.')]
-        )
+        self.assertEqual(data.errors, [ExtractionError('Hours must be in range 0..23.')])
         data = widget.extract({'t': '1:61'})
         self.assertEqual(
-            data.errors,
-            [ExtractionError('Minutes must be in range 0..59.')]
+            data.errors, [ExtractionError('Minutes must be in range 0..59.')]
         )
 
-        widget = factory(
-            'time',
-            name='t',
-            value='02:02',
-            props={
-                'timepicker': True
-            })
+        widget = factory('time', name='t', value='02:02', props={'timepicker': True})
         data = widget.extract({'t': '26:1'})
-        self.assertEqual(
-            data.errors,
-            [ExtractionError('Hours must be in range 0..23.')]
-        )
+        self.assertEqual(data.errors, [ExtractionError('Hours must be in range 0..23.')])
         data = widget.extract({'t': '1:62'})
         self.assertEqual(
-            data.errors,
-            [ExtractionError('Minutes must be in range 0..59.')]
+            data.errors, [ExtractionError('Minutes must be in range 0..59.')]
         )
 
         # Additional CSS class is rendered for timepicker if ``timepicker`` set
-        self.assertEqual(widget(), (
-            '<div><input class="time timeinput timepicker" data-time-clock=\'24\' '
-            'data-time-locale=\'en\' data-time-minutes_step=\'5\' '
-            'id="input-t" name="t" placeholder="hh:mm" size="5" type="text" value="02:02" /></div>'
-        ))
+        self.assertEqual(
+            widget(),
+            (
+                '<div><input class="time timeinput timepicker" data-time-clock=\'24\' '
+                "data-time-locale='en' data-time-minutes_step='5' "
+                'id="input-t" name="t" placeholder="hh:mm" size="5" type="text" value="02:02" /></div>'
+            ),
+        )
 
     def test_time_rendering_if_preset_and_extracted(self):
         # Value rendering if preset and extracted
-        widget = factory(
-            'time',
-            name='t',
-            value='02:02')
-        self.assertEqual(widget(), (
-            '<div><input class="time timeinput" id="input-t" name="t" '
-            'placeholder="hh:mm" size="5" type="text" value="02:02" /></div>'
-        ))
+        widget = factory('time', name='t', value='02:02')
+        self.assertEqual(
+            widget(),
+            (
+                '<div><input class="time timeinput" id="input-t" name="t" '
+                'placeholder="hh:mm" size="5" type="text" value="02:02" /></div>'
+            ),
+        )
         data = widget.extract({'t': '1:12'})
         self.assertEqual(
             [data.name, data.value, data.extracted, data.errors],
-            ['t', '02:02', '01:12', []]
+            ['t', '02:02', '01:12', []],
         )
-        self.assertEqual(widget(data), (
-            '<div><input class="time timeinput" id="input-t" name="t" '
-            'placeholder="hh:mm" size="5" type="text" value="01:12" /></div>'
-        ))
+        self.assertEqual(
+            widget(data),
+            (
+                '<div><input class="time timeinput" id="input-t" name="t" '
+                'placeholder="hh:mm" size="5" type="text" value="01:12" /></div>'
+            ),
+        )
 
     def test_time_display(self):
         # Render display mode without value
@@ -487,161 +480,124 @@ class TestDatetimeWidget(YafowilTestCase):
 
         # Render display mode with value
         widget = factory('time', 't', value='02:02', mode='display')
-        self.assertEqual(
-            widget(),
-            '<div class="display-time" id="display-t">02:02</div>'
-        )
+        self.assertEqual(widget(), '<div class="display-time" id="display-t">02:02</div>')
 
     def test_time_invalid_format(self):
         # Invalid ``format``
-        widget = factory(
-            'time',
-            name='t',
-            props={
-                'format': 'inexistent'
-            })
+        widget = factory('time', name='t', props={'format': 'inexistent'})
         with self.assertRaises(ValueError) as arc:
             widget.extract({'t': '1:12'})
         self.assertEqual(str(arc.exception), "Unknown format 'inexistent'")
 
     def test_time_default_format(self):
         # Number ``format``. Default unit is ``hours``
-        widget = factory(
-            'time',
-            name='t',
-            props={
-                'format': 'number'
-            })
+        widget = factory('time', name='t', props={'format': 'number'})
         data = widget.extract({'t': '1:12'})
         self.assertEqual(
-            [data.name, data.value, data.extracted, data.errors],
-            ['t', UNSET, 1.2, []]
+            [data.name, data.value, data.extracted, data.errors], ['t', UNSET, 1.2, []]
         )
 
     def test_time_format_without_preset_value(self):
         # Number format without preset value
-        widget = factory(
-            'time',
-            name='t',
-            props={
-                'format': 'number'
-            })
-        self.assertEqual(widget(), (
-            '<div><input class="time timeinput" id="input-t" name="t" '
-            'placeholder="hh:mm" size="5" type="text" value="" /></div>'
-        ))
+        widget = factory('time', name='t', props={'format': 'number'})
+        self.assertEqual(
+            widget(),
+            (
+                '<div><input class="time timeinput" id="input-t" name="t" '
+                'placeholder="hh:mm" size="5" type="text" value="" /></div>'
+            ),
+        )
 
     def test_time_format_with_preset_value(self):
         # Number format with preset value
-        widget = factory(
-            'time',
-            name='t',
-            value=1.2,
-            props={
-                'format': 'number'
-            })
-        self.assertEqual(widget(), (
-            '<div><input class="time timeinput" id="input-t" name="t" '
-            'placeholder="hh:mm" size="5" type="text" value="01:12" /></div>'
-        ))
+        widget = factory('time', name='t', value=1.2, props={'format': 'number'})
+        self.assertEqual(
+            widget(),
+            (
+                '<div><input class="time timeinput" id="input-t" name="t" '
+                'placeholder="hh:mm" size="5" type="text" value="01:12" /></div>'
+            ),
+        )
         data = widget.extract({'t': '0:12'})
         self.assertEqual('%0.1f' % data.extracted, '0.2')
-        self.assertEqual(widget(data), (
-            '<div><input class="time timeinput" id="input-t" name="t" '
-            'placeholder="hh:mm" size="5" type="text" value="00:12" /></div>'
-        ))
+        self.assertEqual(
+            widget(data),
+            (
+                '<div><input class="time timeinput" id="input-t" name="t" '
+                'placeholder="hh:mm" size="5" type="text" value="00:12" /></div>'
+            ),
+        )
 
-        widget = factory(
-            'time',
-            name='t',
-            value=0,
-            props={
-                'format': 'number'
-            })
-        self.assertEqual(widget(), (
-            '<div><input class="time timeinput" id="input-t" name="t" '
-            'placeholder="hh:mm" size="5" type="text" value="00:00" /></div>'
-        ))
+        widget = factory('time', name='t', value=0, props={'format': 'number'})
+        self.assertEqual(
+            widget(),
+            (
+                '<div><input class="time timeinput" id="input-t" name="t" '
+                'placeholder="hh:mm" size="5" type="text" value="00:00" /></div>'
+            ),
+        )
         data = widget.extract({'t': ''})
         self.assertEqual(
-            [data.name, data.value, data.extracted, data.errors],
-            ['t', 0, UNSET, []]
+            [data.name, data.value, data.extracted, data.errors], ['t', 0, UNSET, []]
         )
         data = widget.extract({'t': '0:0'})
         self.assertEqual(
-            [data.name, data.value, data.extracted, data.errors],
-            ['t', 0, 0.0, []]
+            [data.name, data.value, data.extracted, data.errors], ['t', 0, 0.0, []]
         )
-        self.assertEqual(widget(data), (
-            '<div><input class="time timeinput" id="input-t" name="t" '
-            'placeholder="hh:mm" size="5" type="text" value="00:00" /></div>'
-        ))
+        self.assertEqual(
+            widget(data),
+            (
+                '<div><input class="time timeinput" id="input-t" name="t" '
+                'placeholder="hh:mm" size="5" type="text" value="00:00" /></div>'
+            ),
+        )
 
     def test_time_format_display(self):
         widget = factory(
-            'time',
-            name='t',
-            value=1.2,
-            mode='display',
-            props={
-                'format': 'number'
-            })
-        self.assertEqual(
-            widget(),
-            '<div class="display-time" id="display-t">01:12</div>'
+            'time', name='t', value=1.2, mode='display', props={'format': 'number'}
         )
+        self.assertEqual(widget(), '<div class="display-time" id="display-t">01:12</div>')
 
     def test_time_format_invalid_unit(self):
         # Invalid ``unit``
         widget = factory(
-            'time',
-            name='t',
-            props={
-                'format': 'number',
-                'unit': 'inexistent'
-            })
+            'time', name='t', props={'format': 'number', 'unit': 'inexistent'}
+        )
         with self.assertRaises(ValueError) as arc:
             widget.extract({'t': '1:12'})
         self.assertEqual(str(arc.exception), "Unknown unit 'inexistent'")
 
     def test_time_format_minutes_unit(self):
         # Minutes ``unit``
-        widget = factory(
-            'time',
-            name='t',
-            props={
-                'format': 'number',
-                'unit': 'minutes'
-            })
+        widget = factory('time', name='t', props={'format': 'number', 'unit': 'minutes'})
         data = widget.extract({'t': '1:12'})
         self.assertEqual(
-            [data.name, data.value, data.extracted, data.errors],
-            ['t', UNSET, 72, []]
+            [data.name, data.value, data.extracted, data.errors], ['t', UNSET, 72, []]
         )
 
     def test_time_format_unit_with_preset_value(self):
         # Minutes unit with preset value
         widget = factory(
-            'time',
-            name='t',
-            value=12,
-            props={
-                'format': 'number',
-                'unit': 'minutes'
-            })
-        self.assertEqual(widget(), (
-            '<div><input class="time timeinput" id="input-t" name="t" '
-            'placeholder="hh:mm" size="5" type="text" value="00:12" /></div>'
-        ))
+            'time', name='t', value=12, props={'format': 'number', 'unit': 'minutes'}
+        )
+        self.assertEqual(
+            widget(),
+            (
+                '<div><input class="time timeinput" id="input-t" name="t" '
+                'placeholder="hh:mm" size="5" type="text" value="00:12" /></div>'
+            ),
+        )
         data = widget.extract({'t': '2:30'})
         self.assertEqual(
-            [data.name, data.value, data.extracted, data.errors],
-            ['t', 12, 150, []]
+            [data.name, data.value, data.extracted, data.errors], ['t', 12, 150, []]
         )
-        self.assertEqual(widget(data), (
-            '<div><input class="time timeinput" id="input-t" name="t" '
-            'placeholder="hh:mm" size="5" type="text" value="02:30" /></div>'
-        ))
+        self.assertEqual(
+            widget(data),
+            (
+                '<div><input class="time timeinput" id="input-t" name="t" '
+                'placeholder="hh:mm" size="5" type="text" value="02:30" /></div>'
+            ),
+        )
 
     def test_time_display_format_unit_with_preset_value(self):
         widget = factory(
@@ -649,82 +605,67 @@ class TestDatetimeWidget(YafowilTestCase):
             name='t',
             value=12,
             mode='display',
-            props={
-                'format': 'number',
-                'unit': 'minutes'
-            })
-        self.assertEqual(
-            widget(),
-            '<div class="display-time" id="display-t">00:12</div>'
+            props={'format': 'number', 'unit': 'minutes'},
         )
+        self.assertEqual(widget(), '<div class="display-time" id="display-t">00:12</div>')
 
     def test_time_format_tuple(self):
         # Format tuple. Preset and extraction value is (hh, mm)
-        widget = factory(
-            'time',
-            name='t',
-            props={
-                'format': 'tuple'
-            })
-        self.assertEqual(widget(), (
-            '<div><input class="time timeinput" id="input-t" name="t" '
-            'placeholder="hh:mm" size="5" type="text" value="" /></div>'
-        ))
+        widget = factory('time', name='t', props={'format': 'tuple'})
+        self.assertEqual(
+            widget(),
+            (
+                '<div><input class="time timeinput" id="input-t" name="t" '
+                'placeholder="hh:mm" size="5" type="text" value="" /></div>'
+            ),
+        )
         data = widget.extract({'t': '2:30'})
         self.assertEqual(
             [data.name, data.value, data.extracted, data.errors],
-            ['t', UNSET, (2, 30), []]
+            ['t', UNSET, (2, 30), []],
         )
 
-        widget = factory(
-            'time',
-            name='t',
-            value=(5, 30),
-            props={
-                'format': 'tuple'
-            })
-        self.assertEqual(widget(), (
-            '<div><input class="time timeinput" id="input-t" name="t" '
-            'placeholder="hh:mm" size="5" type="text" value="05:30" /></div>'
-        ))
+        widget = factory('time', name='t', value=(5, 30), props={'format': 'tuple'})
+        self.assertEqual(
+            widget(),
+            (
+                '<div><input class="time timeinput" id="input-t" name="t" '
+                'placeholder="hh:mm" size="5" type="text" value="05:30" /></div>'
+            ),
+        )
         data = widget.extract({'t': '2:30'})
-        self.assertEqual(widget(data=data), (
-            '<div><input class="time timeinput" id="input-t" name="t" '
-            'placeholder="hh:mm" size="5" type="text" value="02:30" /></div>'
-        ))
+        self.assertEqual(
+            widget(data=data),
+            (
+                '<div><input class="time timeinput" id="input-t" name="t" '
+                'placeholder="hh:mm" size="5" type="text" value="02:30" /></div>'
+            ),
+        )
 
-        widget = factory(
-            'time',
-            name='t',
-            value=(0, 0),
-            props={
-                'format': 'tuple'
-            })
-        self.assertEqual(widget(), (
-            '<div><input class="time timeinput" id="input-t" name="t" '
-            'placeholder="hh:mm" size="5" type="text" value="00:00" /></div>'
-        ))
+        widget = factory('time', name='t', value=(0, 0), props={'format': 'tuple'})
+        self.assertEqual(
+            widget(),
+            (
+                '<div><input class="time timeinput" id="input-t" name="t" '
+                'placeholder="hh:mm" size="5" type="text" value="00:00" /></div>'
+            ),
+        )
         data = widget.extract({'t': ''})
         self.assertEqual(
-            [data.name, data.value, data.extracted, data.errors],
-            ['t', (0, 0), UNSET, []]
+            [data.name, data.value, data.extracted, data.errors], ['t', (0, 0), UNSET, []]
         )
         data = widget.extract({'t': '1:0'})
         self.assertEqual(
             [data.name, data.value, data.extracted, data.errors],
-            ['t', (0, 0), (1, 0), []]
+            ['t', (0, 0), (1, 0), []],
         )
 
     def test_time_emptyvalue(self):
         # Test widget with emptyvalue
         emptyvalue = object()
         widget = factory(
-            'time',
-            name='t',
-            props={
-                'format': 'tuple',
-                'emptyvalue': emptyvalue
-            })
+            'time', name='t', props={'format': 'tuple', 'emptyvalue': emptyvalue}
+        )
         request = {'t': '12:30'}
         data = widget.extract(request)
         self.assertEqual(data.extracted, (12, 30))
@@ -742,14 +683,14 @@ class TestDatetimeWidget(YafowilTestCase):
         scripts = resources.scripts
         self.assertEqual(len(scripts), 3)
 
-        self.assertTrue(scripts[0].directory.endswith(np('/datetime/resources/vanillajs-datepicker')))
+        self.assertTrue(
+            scripts[0].directory.endswith(np('/datetime/resources/vanillajs-datepicker'))
+        )
         self.assertEqual(scripts[0].path, 'yafowil-datetime/vanillajs-datepicker')
         self.assertEqual(scripts[0].file_name, 'datepicker.min.js')
         self.assertTrue(os.path.exists(scripts[0].file_path))
 
-        self.assertTrue(
-            scripts[1].directory.endswith(np('/datetime/resources/locales'))
-        )
+        self.assertTrue(scripts[1].directory.endswith(np('/datetime/resources/locales')))
         self.assertEqual(scripts[1].path, 'yafowil-datetime/locales')
         self.assertEqual(scripts[1].file_name, 'de.js')
         self.assertTrue(os.path.exists(scripts[1].file_path))
