@@ -8,7 +8,6 @@ from yafowil.base import factory
 from yafowil.base import fetch_value
 from yafowil.common import generic_extractor
 from yafowil.common import generic_required_extractor
-from yafowil.compat import IS_PY2
 from yafowil.datatypes import generic_emptyvalue_extractor
 from yafowil.tsf import TSF
 from yafowil.utils import attr_value
@@ -156,10 +155,7 @@ def time_value(format_, unit, time):
             minutes = int(round((time - int(time)) * 60.0))
             time = '{:02d}:{:02d}'.format(hours, minutes)
         else:
-            if IS_PY2:
-                hours = time / 60
-            else:
-                hours = time // 60
+            hours = time // 60
             minutes = time % 60
             time = '{:02d}:{:02d}'.format(hours, minutes)
     return time
