@@ -1,15 +1,17 @@
-import * as dp from 'vanillajs-datepicker'; // required for running tests. Do not remove!
-import {DatepickerWidget} from '../src/default/datepicker.js';
-import {register_datepicker_array_subscribers} from '../src/default/datepicker.js';
 import $ from 'jquery';
+// Sets the global Datepicker base class, must be imported before the widget.
+import 'vanillajs-datepicker';
+import {
+    DatepickerWidget,
+    register_datepicker_array_subscribers,
+} from '../src/default/datepicker.js';
 
-
-QUnit.module('DatepickerWidget', hooks => {
-    let container = $('<div id="container" />');
+QUnit.module('DatepickerWidget', (hooks) => {
+    const container = $('<div id="container" />');
     let elem;
     let picker;
     let _array_subscribers = {
-        on_add: []
+        on_add: [],
     };
     let css_link;
 
@@ -19,7 +21,7 @@ QUnit.module('DatepickerWidget', hooks => {
         css_link.href = '../../src/yafowil/widget/datetime/resources/default/datepicker.min.css';
         document.head.appendChild(css_link);
         // Wait for required styles to load
-        await new Promise(resolve => {
+        await new Promise((resolve) => {
             css_link.onload = resolve;
         });
         $('body').append(container);
@@ -27,12 +29,10 @@ QUnit.module('DatepickerWidget', hooks => {
     hooks.beforeEach(() => {
         elem = $(`<input type="text" />`).addClass('datepicker');
         container.append(elem);
-    })
+    });
     hooks.afterEach(() => {
         container.empty();
-        container
-            .css('position', '')
-            .css('top', 'unset');
+        container.css('position', '').css('top', 'unset');
         picker = null;
     });
     hooks.after(() => {
@@ -42,44 +42,40 @@ QUnit.module('DatepickerWidget', hooks => {
         }
     });
 
-
-    QUnit.test('register_datepicker_array_subscribers', assert => {
+    QUnit.test('register_datepicker_array_subscribers', (assert) => {
         container.empty();
 
         // return if window.yafowil === undefined
         register_datepicker_array_subscribers();
-        assert.deepEqual(_array_subscribers['on_add'], []);
+        assert.deepEqual(_array_subscribers.on_add, []);
 
         // patch yafowil_array
         window.yafowil_array = {
-            on_array_event: function(evt_name, evt_function) {
+            on_array_event: (evt_name, evt_function) => {
                 _array_subscribers[evt_name] = evt_function;
             },
             inside_template(elem) {
                 return elem.parents('.arraytemplate').length > 0;
-            }
+            },
         };
         register_datepicker_array_subscribers();
 
         // create table DOM
-        let table = $('<table />')
-            .append($('<tr />'))
-            .append($('<td />'))
-            .appendTo('body');
-        
-        let el = $(`<input type="text" />`).addClass('datepicker');
+        const table = $('<table />').append($('<tr />')).append($('<td />')).appendTo('body');
+
+        const el = $(`<input type="text" />`).addClass('datepicker');
         $('td', table).addClass('arraytemplate');
         el.appendTo($('td', table));
 
         // invoke array on_add - returns
-        _array_subscribers['on_add'].apply(null, $('tr', table));
+        _array_subscribers.on_add.apply(null, $('tr', table));
         picker = el.data('yafowil-datepicker');
         assert.notOk(picker);
         $('td', table).removeClass('arraytemplate');
 
         // invoke array on_add
         el.attr('id', '');
-        _array_subscribers['on_add'].apply(null, $('tr', table));
+        _array_subscribers.on_add.apply(null, $('tr', table));
         picker = el.data('yafowil-datepicker');
         assert.ok(picker);
 
@@ -88,7 +84,7 @@ QUnit.module('DatepickerWidget', hooks => {
         _array_subscribers = undefined;
     });
 
-    QUnit.test('Constructor - no data', assert => {
+    QUnit.test('Constructor - no data', (assert) => {
         DatepickerWidget.initialize();
 
         picker = elem.data('yafowil-datepicker');
@@ -105,10 +101,8 @@ QUnit.module('DatepickerWidget', hooks => {
         assert.ok(picker.toggle_picker);
     });
 
-    QUnit.test('Constructor - no space on bottom', assert => {
-        container
-            .css('position', 'absolute')
-            .css('top', 'calc(100vh - 100px)');
+    QUnit.test('Constructor - no space on bottom', (assert) => {
+        container.css('position', 'absolute').css('top', 'calc(100vh - 100px)');
         DatepickerWidget.initialize();
 
         picker = elem.data('yafowil-datepicker');
@@ -116,7 +110,7 @@ QUnit.module('DatepickerWidget', hooks => {
         assert.strictEqual(picker._options.orientation, 'top');
     });
 
-    QUnit.test('initialize twice binds once', assert => {
+    QUnit.test('initialize twice binds once', (assert) => {
         // A reload that replaces an element binds its **parent** again, so
         // every input beside it is initialized a second time. Without a guard
         // the widget attaches another trigger button on each pass, and after
@@ -130,7 +124,7 @@ QUnit.module('DatepickerWidget', hooks => {
         assert.strictEqual(container.find('button.datepicker-trigger').length, 1);
     });
 
-    QUnit.test('initialize picks up a new element beside a bound one', assert => {
+    QUnit.test('initialize picks up a new element beside a bound one', (assert) => {
         // The guard must not turn into "already ran here, skip the context" -
         // binding the parent again is exactly how a newly added field gets
         // its widget.
@@ -145,12 +139,12 @@ QUnit.module('DatepickerWidget', hooks => {
         second.data('yafowil-datepicker').destroy();
     });
 
-    QUnit.test('destroy', assert => {
+    QUnit.test('destroy', (assert) => {
         // patch toggle_picker to test unbind
         const original_toggle_picker = DatepickerWidget.prototype.toggle_picker;
-        DatepickerWidget.prototype.toggle_picker = function() {
+        DatepickerWidget.prototype.toggle_picker = () => {
             assert.step('toggle_picker');
-        }
+        };
 
         // initialize widget
         DatepickerWidget.initialize();
@@ -177,7 +171,7 @@ QUnit.module('DatepickerWidget', hooks => {
         DatepickerWidget.prototype.toggle_picker = original_toggle_picker;
     });
 
-    QUnit.test('mousedown', assert => {
+    QUnit.test('mousedown', (assert) => {
         DatepickerWidget.initialize();
         picker = elem.data('yafowil-datepicker');
         assert.strictEqual($(picker.picker.element).css('display'), 'none');
@@ -193,7 +187,7 @@ QUnit.module('DatepickerWidget', hooks => {
         // assert.notOk(picker.elem.is(':focus'));
     });
 
-    QUnit.test('touchstart', assert => {
+    QUnit.test('touchstart', (assert) => {
         DatepickerWidget.initialize();
         picker = elem.data('yafowil-datepicker');
         assert.strictEqual($(picker.picker.element).css('display'), 'none');
@@ -209,7 +203,72 @@ QUnit.module('DatepickerWidget', hooks => {
         // assert.notOk(picker.elem.is(':focus'));
     });
 
-    QUnit.test('on date change', assert => {
+    QUnit.module('treibstoff', (hooks) => {
+        let attached;
+        let deprecated;
+
+        hooks.beforeEach(() => {
+            attached = [];
+            deprecated = [];
+            window.ts = {
+                ajax: {
+                    attach: (inst, el) => {
+                        attached.push({ inst, el });
+                    },
+                },
+                deprecate: (...args) => {
+                    deprecated.push(args);
+                },
+            };
+        });
+        hooks.afterEach(() => {
+            delete window.ts;
+        });
+
+        QUnit.test('widget is attached to ts.ajax', (assert) => {
+            DatepickerWidget.initialize();
+            picker = elem.data('yafowil-datepicker');
+            assert.strictEqual(attached.length, 1);
+            assert.strictEqual(attached[0].inst, picker);
+            assert.strictEqual(attached[0].el[0], elem[0]);
+            picker.destroy();
+        });
+
+        QUnit.test('unload is deprecated and destroys', (assert) => {
+            DatepickerWidget.initialize();
+            picker = elem.data('yafowil-datepicker');
+            const destroyed = [];
+            picker.destroy = () => {
+                destroyed.push(true);
+            };
+            picker.unload();
+            assert.deepEqual(deprecated, [
+                [
+                    'yafowil.widget.datepicker.unload',
+                    'yafowil.widget.datepicker.destroy',
+                    'yafowil 2.1',
+                ],
+            ]);
+            assert.deepEqual(destroyed, [true]);
+            delete picker.destroy;
+            picker.destroy();
+        });
+    });
+
+    QUnit.test('unload without ts destroys', (assert) => {
+        DatepickerWidget.initialize();
+        picker = elem.data('yafowil-datepicker');
+        const destroyed = [];
+        picker.destroy = () => {
+            destroyed.push(true);
+        };
+        picker.unload();
+        assert.deepEqual(destroyed, [true]);
+        delete picker.destroy;
+        picker.destroy();
+    });
+
+    QUnit.test('on date change', (assert) => {
         DatepickerWidget.initialize();
         picker = elem.data('yafowil-datepicker');
         picker.elem.on('change', () => {

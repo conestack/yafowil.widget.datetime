@@ -3,10 +3,9 @@ var yafowil_datetime = (function (exports, $) {
 
     class DatepickerWidget extends Datepicker {
         static initialize(context) {
-            $('input.datepicker', context).each(function() {
-                let elem = $(this);
-                if (window.yafowil_array !== undefined &&
-                    window.yafowil_array.inside_template(elem)) {
+            $('input.datepicker', context).each(function () {
+                const elem = $(this);
+                if (window.yafowil_array?.inside_template(elem)) {
                     return;
                 }
                 if (elem.data('yafowil-datepicker') !== undefined) {
@@ -15,19 +14,19 @@ var yafowil_datetime = (function (exports, $) {
                 new DatepickerWidget(elem, elem.data('date-locale'));
             });
         }
-        constructor(elem, locale, opts={}) {
-            let opts_ = {
+        constructor(elem, locale, opts = {}) {
+            const opts_ = {
                 language: locale,
                 orientation: 'bottom',
                 buttonClass: 'btn',
                 todayHighlight: true,
-                autohide: true
+                autohide: true,
             };
-            let lower_edge = elem.offset().top + elem.outerHeight() + 250;
+            const lower_edge = elem.offset().top + elem.outerHeight() + 250;
             if (lower_edge > $(document).height()) {
-                opts_.orientation = "top";
+                opts_.orientation = 'top';
             }
-            let locale_options = DatepickerWidget.locale_options;
+            const locale_options = DatepickerWidget.locale_options;
             Object.assign(opts_, locale_options[locale] || locale_options.en);
             Object.assign(opts_, opts);
             super(elem[0], opts_);
@@ -41,14 +40,16 @@ var yafowil_datetime = (function (exports, $) {
             this.trigger
                 .off('mousedown touchstart', this.toggle_picker)
                 .on('mousedown touchstart', this.toggle_picker);
-            this.trigger.on('click', (e) => {e.preventDefault();});
+            this.trigger.on('click', (e) => {
+                e.preventDefault();
+            });
             this.elem.on('changeDate', () => {
                 this.elem.trigger('change');
             });
             if (window.ts !== undefined) {
                 ts.ajax.attach(this, elem);
             }
-            let created_event = $.Event('datepicker_created', {widget: this});
+            const created_event = $.Event('datepicker_created', { widget: this });
             this.elem.trigger(created_event);
         }
         unload() {
@@ -56,7 +57,7 @@ var yafowil_datetime = (function (exports, $) {
                 ts.deprecate(
                     'yafowil.widget.datepicker.unload',
                     'yafowil.widget.datepicker.destroy',
-                    'yafowil 2.1'
+                    'yafowil 2.1',
                 );
             }
             this.destroy();
@@ -80,14 +81,14 @@ var yafowil_datetime = (function (exports, $) {
     DatepickerWidget.locale_options = {
         en: {
             weekStart: 1,
-            format: 'mm.dd.yyyy'
+            format: 'mm.dd.yyyy',
         },
         de: {
             weekStart: 1,
-            format: 'dd.mm.yyyy'
-        }
+            format: 'dd.mm.yyyy',
+        },
     };
-    function datepicker_on_array_add(inst, context) {
+    function datepicker_on_array_add(_inst, context) {
         DatepickerWidget.initialize(context);
     }
     function register_datepicker_array_subscribers() {
@@ -119,22 +120,23 @@ var yafowil_datetime = (function (exports, $) {
             this.children = [];
         }
         unload_all() {
-            for (let child of this.children) {
+            for (const child of this.children) {
                 child.elem.off('click', child.on_click);
             }
         }
         unselect_all() {
-            for (let child of this.children) {
+            for (const child of this.children) {
                 child.selected = false;
             }
         }
     }
     class TimepickerHour extends TimepickerButton {
         constructor(hours, container, value, period) {
-            super($('<div />')
-                .addClass('cell')
-                .text(new String(value).padStart(2, '0'))
-                .appendTo(container)
+            super(
+                $('<div />')
+                    .addClass('cell')
+                    .text(new String(value).padStart(2, '0'))
+                    .appendTo(container),
             );
             this.hours = hours;
             this.picker = hours.picker;
@@ -142,8 +144,8 @@ var yafowil_datetime = (function (exports, $) {
             this.on_click = this.on_click.bind(this);
             this.elem.on('click', this.on_click);
         }
-        on_click(e) {
-            let hour = this.elem.text();
+        on_click(_e) {
+            const hour = this.elem.text();
             this.hours.unselect_all();
             this.selected = true;
             this.picker.period = this.period;
@@ -152,17 +154,18 @@ var yafowil_datetime = (function (exports, $) {
     }
     class TimepickerMinute extends TimepickerButton {
         constructor(minutes, container, value) {
-            super($('<div />')
-                .addClass('cell')
-                .text(new String(value).padStart(2, '0'))
-                .appendTo(container)
+            super(
+                $('<div />')
+                    .addClass('cell')
+                    .text(new String(value).padStart(2, '0'))
+                    .appendTo(container),
             );
             this.minutes = minutes;
             this.picker = minutes.picker;
             this.on_click = this.on_click.bind(this);
             this.elem.on('click', this.on_click);
         }
-        on_click(e) {
+        on_click(_e) {
             this.minutes.unselect_all();
             this.selected = true;
             this.picker.minute = this.elem.text();
@@ -176,9 +179,7 @@ var yafowil_datetime = (function (exports, $) {
             } else if (picker.clock === 12) {
                 this.create_clock_12();
             }
-            let header = $('<div />')
-                .addClass('header')
-                .text(picker.translate('hour'));
+            const header = $('<div />').addClass('header').text(picker.translate('hour'));
             $('<div />')
                 .addClass('timepicker-hours')
                 .append(header)
@@ -195,9 +196,9 @@ var yafowil_datetime = (function (exports, $) {
         }
         create_clock_12() {
             $('<span />').addClass('am').text('A.M.').appendTo(this.elem);
-            let hours_am = $('<div />').addClass('am').appendTo(this.elem);
+            const hours_am = $('<div />').addClass('am').appendTo(this.elem);
             $('<span />').addClass('pm').text('P.M.').appendTo(this.elem);
-            let hours_pm = $('<div />').addClass('pm').appendTo(this.elem);
+            const hours_pm = $('<div />').addClass('pm').appendTo(this.elem);
             for (let i = 0; i < 12; i++) {
                 this.children.push(new TimepickerHour(this, hours_am, i, 'AM'));
             }
@@ -211,35 +212,27 @@ var yafowil_datetime = (function (exports, $) {
         constructor(picker, container, step) {
             super(picker, $('<div />').addClass('minutes-content'));
             this.step = step;
-            let count = 60 / step;
+            const count = 60 / step;
             if (count <= 32) {
-                let cols = '1fr '.repeat(Math.ceil(count / 4));
-                this.elem.css(
-                    'grid-template-columns',
-                    cols
-                );
+                const cols = '1fr '.repeat(Math.ceil(count / 4));
+                this.elem.css('grid-template-columns', cols);
             } else {
-                this.elem.css(
-                    'grid-template-columns',
-                    '1fr '.repeat(10)
-                );
+                this.elem.css('grid-template-columns', '1fr '.repeat(10));
                 if (picker.clock === 24) {
                     $('div.hours-content', picker.dd_elem).css({
                         'grid-template-columns': '1fr 1fr 1fr 1fr',
-                        'width': '110px'
+                        width: '110px',
                     });
                 } else {
                     $('div.am, div.pm', picker.dd_elem).css({
-                        'grid-template-columns': '1fr 1fr 1fr 1fr'
+                        'grid-template-columns': '1fr 1fr 1fr 1fr',
                     });
                 }
             }
             for (let i = 0; i < count; i++) {
                 this.children.push(new TimepickerMinute(this, this.elem, i * step));
             }
-            let header = $('<div />')
-                .addClass('header')
-                .text(picker.translate('minute'));
+            const header = $('<div />').addClass('header').text(picker.translate('minute'));
             $('<div />')
                 .addClass('timepicker-minutes')
                 .append(header)
@@ -249,10 +242,9 @@ var yafowil_datetime = (function (exports, $) {
     }
     class TimepickerWidget {
         static initialize(context) {
-            $('input.timepicker', context).each(function() {
-                let elem = $(this);
-                if (window.yafowil_array !== undefined &&
-                    window.yafowil_array.inside_template(elem)) {
+            $('input.timepicker', context).each(function () {
+                const elem = $(this);
+                if (window.yafowil_array?.inside_template(elem)) {
                     return;
                 }
                 if (elem.data('yafowil-timepicker') !== undefined) {
@@ -262,7 +254,7 @@ var yafowil_datetime = (function (exports, $) {
                 new TimepickerWidget(elem, {
                     language: elem.data('time-locale'),
                     clock: elem.data('time-clock'),
-                    step: elem.data('time-minutes_step')
+                    step: elem.data('time-minutes_step'),
                 });
             });
         }
@@ -283,12 +275,8 @@ var yafowil_datetime = (function (exports, $) {
                 .addClass('timepicker-trigger btn btn-default')
                 .text('...')
                 .insertAfter(elem);
-            let dd_elem = this.dd_elem = $('<div />')
-                .addClass('timepicker-dropdown')
-                .insertAfter(elem);
-            let dd_container = $('<div />')
-                .addClass('timepicker-container')
-                .appendTo(dd_elem);
+            this.dd_elem = $('<div />').addClass('timepicker-dropdown').insertAfter(elem);
+            const dd_container = $('<div />').addClass('timepicker-container').appendTo(this.dd_elem);
             this.hours = new TimepickerHours(this, dd_container);
             this.minutes = new TimepickerMinutes(this, dd_container, this.step);
             this.validate();
@@ -305,7 +293,7 @@ var yafowil_datetime = (function (exports, $) {
             this.validate = this.validate.bind(this);
             this.elem.on('keyup', this.validate);
             $(window).on('resize', this.place);
-            let created_event = $.Event('timepicker_created', {widget: this});
+            const created_event = $.Event('timepicker_created', { widget: this });
             this.elem.trigger(created_event);
             if (window.ts !== undefined) {
                 window.ts.ajax.attach(this, elem);
@@ -316,7 +304,7 @@ var yafowil_datetime = (function (exports, $) {
                 ts.deprecate(
                     'yafowil.widget.timepicker.unload',
                     'yafowil.widget.timepicker.destroy',
-                    'yafowil 2.1'
+                    'yafowil 2.1',
                 );
             }
             this.destroy();
@@ -336,24 +324,22 @@ var yafowil_datetime = (function (exports, $) {
             this.set_time();
         }
         place() {
-            let offset_left = this.elem.offset().left,
+            const offset_left = this.elem.offset().left,
                 offset_top = this.elem.offset().top,
                 dd_width = this.dd_elem.outerWidth(),
                 elem_width = this.elem.outerWidth();
-            let lower_edge = offset_top + this.elem.outerHeight() + 250;
-            let right_edge = offset_left + dd_width;
+            const lower_edge = offset_top + this.elem.outerHeight() + 250;
+            const right_edge = offset_left + dd_width;
             this.dd_elem.css('transform', 'translateX(0px)');
             if (lower_edge > $(document).height()) {
-                let height = this.dd_elem.outerHeight() + 9;
+                const height = this.dd_elem.outerHeight() + 9;
                 this.dd_elem.css('top', `-${height}px`);
             }
             if (offset_left + elem_width - dd_width < 0) {
-                let leftx = right_edge - $(window).width();
+                const leftx = right_edge - $(window).width();
                 this.dd_elem.css('transform', `translateX(-${leftx}px)`);
             } else if (right_edge > $(window).width()) {
-                this.dd_elem
-                    .css('transform',
-                        `translateX(calc(-100% + ${elem_width}px))`);
+                this.dd_elem.css('transform', `translateX(calc(-100% + ${elem_width}px))`);
             }
         }
         set_time() {
@@ -377,7 +363,7 @@ var yafowil_datetime = (function (exports, $) {
                 }
             }
         }
-        show_dropdown(e) {
+        show_dropdown(_e) {
             this.dd_elem.show();
         }
         toggle_dropdown(e) {
@@ -386,21 +372,21 @@ var yafowil_datetime = (function (exports, $) {
         }
         on_keypress(e) {
             e.preventDefault();
-            let val = this.elem.val();
-            let cursor_pos = e.target.selectionStart;
+            const val = this.elem.val();
+            const cursor_pos = e.target.selectionStart;
             if (e.key === 'Enter') {
                 this.dd_elem.hide();
                 this.elem.blur();
             }
             if (cursor_pos <= 4) {
-                if (e.key.match(new RegExp('[0-9]'))) {
+                if (e.key.match(/[0-9]/)) {
                     this.elem.val(val + e.key);
                     if (cursor_pos === 2) {
                         this.elem.val(`${val}:${e.key}`);
                     }
                 }
             } else if (cursor_pos === 5 && this.clock === 12) {
-                let correct = ['a', 'A', 'p', 'P'];
+                const correct = ['a', 'A', 'p', 'P'];
                 if (correct.includes(e.key)) {
                     this.elem.val(val + e.key);
                 }
@@ -408,16 +394,17 @@ var yafowil_datetime = (function (exports, $) {
                 if (e.key === 'm' || e.key === 'M') {
                     this.elem.val(val + e.key);
                 }
-            }    }
+            }
+        }
         validate() {
             if (!this.elem.val()) return;
             let time = this.elem.val(),
                 match_24 = new RegExp(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/),
                 match_12 = new RegExp(/^(?:0?\d|1[012]):[0-5]\d[apAP][mM]$/),
                 hour = time.substr(0, 2),
-                hour_index = parseInt(hour),
+                hour_index = parseInt(hour, 10),
                 minute = time.substr(3, 2),
-                minute_index = parseInt(minute) / this.step;
+                minute_index = parseInt(minute, 10) / this.step;
             if (this.clock === 24) {
                 if (!time.match(match_24) || time.length < 5) {
                     return;
@@ -426,13 +413,13 @@ var yafowil_datetime = (function (exports, $) {
                 if (!time.match(match_12) || time.length < 7) {
                     return;
                 }
-                let period = time.substr(5).toUpperCase();
-                this.period = (period === 'PM') ? 'PM' : 'AM';
+                const period = time.substr(5).toUpperCase();
+                this.period = period === 'PM' ? 'PM' : 'AM';
                 if (period === 'PM') hour_index += 12;
             }
-            let hour_elem = this.hours.children[hour_index];
+            const hour_elem = this.hours.children[hour_index];
             hour_elem.on_click();
-            let minute_elem = this.minutes.children[minute_index];
+            const minute_elem = this.minutes.children[minute_index];
             if (minute_elem) {
                 minute_elem.on_click();
             } else {
@@ -440,7 +427,7 @@ var yafowil_datetime = (function (exports, $) {
             }
         }
         translate(msgid) {
-            let locales = this.constructor.locales,
+            const locales = this.constructor.locales,
                 locale = locales[this.language] || locales.en;
             return locale[msgid];
         }
@@ -454,14 +441,14 @@ var yafowil_datetime = (function (exports, $) {
     TimepickerWidget.locales = {
         en: {
             hour: 'Hour',
-            minute: 'Minute'
+            minute: 'Minute',
         },
         de: {
             hour: 'Stunde',
-            minute: 'Minute'
-        }
+            minute: 'Minute',
+        },
     };
-    function timepicker_on_array_add(inst, context) {
+    function timepicker_on_array_add(_inst, context) {
         TimepickerWidget.initialize(context);
     }
     function register_timepicker_array_subscribers() {
@@ -471,7 +458,7 @@ var yafowil_datetime = (function (exports, $) {
         window.yafowil_array.on_array_event('on_add', timepicker_on_array_add);
     }
 
-    $(function() {
+    $(() => {
         if (window.ts !== undefined) {
             ts.ajax.register(DatepickerWidget.initialize, true);
             ts.ajax.register(TimepickerWidget.initialize, true);

@@ -2,12 +2,10 @@ import $ from 'jquery';
 
 // Datepicker base class is global.
 export class DatepickerWidget extends Datepicker {
-
     static initialize(context) {
-        $('input.datepicker', context).each(function() {
-            let elem = $(this);
-            if (window.yafowil_array !== undefined &&
-                window.yafowil_array.inside_template(elem)) {
+        $('input.datepicker', context).each(function () {
+            const elem = $(this);
+            if (window.yafowil_array?.inside_template(elem)) {
                 return;
             }
             // Already initialized on this element. ``initialize`` is
@@ -24,21 +22,21 @@ export class DatepickerWidget extends Datepicker {
         });
     }
 
-    constructor(elem, locale, opts={}) {
-        let opts_ = {
+    constructor(elem, locale, opts = {}) {
+        const opts_ = {
             language: locale,
             orientation: 'bottom',
             buttonClass: 'btn',
             todayHighlight: true,
-            autohide: true
+            autohide: true,
         };
 
-        let lower_edge = elem.offset().top + elem.outerHeight() + 250;
+        const lower_edge = elem.offset().top + elem.outerHeight() + 250;
         if (lower_edge > $(document).height()) {
-            opts_.orientation = "top";
+            opts_.orientation = 'top';
         }
 
-        let locale_options = DatepickerWidget.locale_options;
+        const locale_options = DatepickerWidget.locale_options;
         Object.assign(opts_, locale_options[locale] || locale_options.en);
         Object.assign(opts_, opts);
         super(elem[0], opts_);
@@ -55,7 +53,9 @@ export class DatepickerWidget extends Datepicker {
         this.trigger
             .off('mousedown touchstart', this.toggle_picker)
             .on('mousedown touchstart', this.toggle_picker);
-        this.trigger.on('click', (e) => {e.preventDefault()});
+        this.trigger.on('click', (e) => {
+            e.preventDefault();
+        });
         this.elem.on('changeDate', () => {
             this.elem.trigger('change');
         });
@@ -64,7 +64,7 @@ export class DatepickerWidget extends Datepicker {
             ts.ajax.attach(this, elem);
         }
 
-        let created_event = $.Event('datepicker_created', {widget: this});
+        const created_event = $.Event('datepicker_created', { widget: this });
         this.elem.trigger(created_event);
     }
 
@@ -73,7 +73,7 @@ export class DatepickerWidget extends Datepicker {
             ts.deprecate(
                 'yafowil.widget.datepicker.unload',
                 'yafowil.widget.datepicker.destroy',
-                'yafowil 2.1'
+                'yafowil 2.1',
             );
         }
         this.destroy();
@@ -101,19 +101,19 @@ export class DatepickerWidget extends Datepicker {
 DatepickerWidget.locale_options = {
     en: {
         weekStart: 1,
-        format: 'mm.dd.yyyy'
+        format: 'mm.dd.yyyy',
     },
     de: {
         weekStart: 1,
-        format: 'dd.mm.yyyy'
-    }
+        format: 'dd.mm.yyyy',
+    },
 };
 
 //////////////////////////////////////////////////////////////////////////////
 // yafowil.widget.array integration
 //////////////////////////////////////////////////////////////////////////////
 
-function datepicker_on_array_add(inst, context) {
+function datepicker_on_array_add(_inst, context) {
     DatepickerWidget.initialize(context);
 }
 
