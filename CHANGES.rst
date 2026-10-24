@@ -1,7 +1,7 @@
 Changes
 =======
 
-2.0.2 (unreleased)
+2.0.2 (2026-10-24)
 ------------------
 
 - Ignore a second ``initialize`` on an element that already carries a widget.
