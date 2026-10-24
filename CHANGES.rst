@@ -4,6 +4,12 @@ Changes
 2.0.3 (unreleased)
 ------------------
 
+- Fix the time input of the ``time`` and ``datetime`` widgets with
+  ``clock='12'`` being too small for the 12-hour clock value like ``03:15PM``.
+  The default placeholder of the ``time`` widget is ``hh:mmAM`` with the
+  12-hour clock instead of ``hh:mm``, a given ``placeholder`` is kept.
+  [rnix]
+
 - Fix re-rendering a form after a failed extraction. The ``time`` widget with
   ``format='number'`` raised a ``ValueError``/``TypeError``, and the
   ``datetime`` widget with a preset value rendered the preset value instead of

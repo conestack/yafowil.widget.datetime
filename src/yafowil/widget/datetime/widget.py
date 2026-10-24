@@ -156,7 +156,8 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
         widgetname = f'{widgetname}.{postfix}'
     if value is True:
         value = ''
-    if value and is_clock_12(widget, data):
+    clock_12 = is_clock_12(widget, data)
+    if value and clock_12:
         value = clock_24_to_12(value)
     if not value and data.request:
         value = data.request.get(widgetname)
@@ -167,7 +168,7 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
         'value': value,
         'name_': widgetname,
         'id': cssid(widget, 'input', postfix),
-        'size': 5,
+        'size': 7 if clock_12 else 5,
         'disabled': disabled,
         'placeholder': placeholder,
     }
@@ -342,10 +343,15 @@ factory.doc['props']['time.empty_display_value'] = """\
 Value to display if no time value set. Used if widget mode is ``display``.
 """
 
-factory.defaults['time.placeholder'] = 'hh:mm'
+
+def time_placeholder(widget, data):
+    return 'hh:mmAM' if is_clock_12(widget, data) else 'hh:mm'
+
+
+factory.defaults['time.placeholder'] = time_placeholder
 factory.doc['props']['time.placeholder'] = """\
-Placeholder text rendered on the time input field. Defaults to the translated
-format hint 'hh:mm'.
+Placeholder text rendered on the time input field. Defaults to the format hint
+'hh:mm', or 'hh:mmAM' with the 12-hour-clock.
 """
 
 

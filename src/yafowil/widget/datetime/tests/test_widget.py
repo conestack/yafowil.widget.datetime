@@ -389,6 +389,9 @@ class TestDatetimeWidget(YafowilTestCase):
         data = extract('13:00PM')
         self.assertEqual(data.errors, [ExtractionError('Not a valid time input.')])
 
+        # The time input fits the 12-hour clock format
+        self.assertIn('id="input-dt-time" name="dt.time" size="7"', widget())
+
         # Time is rendered in the format of the 12-hour timepicker
         data = extract('12:30pm')
         self.assertIn('value="00:30PM"', widget(data=data))
@@ -460,6 +463,27 @@ class TestDatetimeWidget(YafowilTestCase):
         # Empty string suppresses placeholder
         widget = factory('time', name='t', props={'placeholder': ''})
         self.assertNotIn('placeholder', widget())
+
+    def test_time_placeholder_clock_12(self):
+        # Default placeholder is the format hint of the 12-hour clock
+        widget = factory('time', name='t', props={'clock': '12'})
+        self.assertIn('placeholder="hh:mmAM"', widget())
+        widget = factory('time', name='t', props={'clock': 12})
+        self.assertIn('placeholder="hh:mmAM"', widget())
+
+        # Custom placeholder is rendered as given
+        props = {'clock': '12', 'placeholder': 'hh:mm'}
+        widget = factory('time', name='t', props=props)
+        self.assertIn('placeholder="hh:mm"', widget())
+
+        # Empty string suppresses placeholder
+        props = {'clock': '12', 'placeholder': ''}
+        widget = factory('time', name='t', props=props)
+        self.assertNotIn('placeholder', widget())
+
+        # 24-hour clock keeps the default
+        widget = factory('time', name='t', props={'clock': '24'})
+        self.assertIn('placeholder="hh:mm"', widget())
 
     def test_time_extraction(self):
         widget = factory('time', name='t')
@@ -804,7 +828,7 @@ class TestDatetimeWidget(YafowilTestCase):
             (
                 '<div><input class="time timeinput timepicker" data-time-clock=\'12\' '
                 "data-time-locale='en' data-time-minutes_step='5' "
-                'id="input-t" name="t" placeholder="hh:mm" size="5" type="text" '
+                'id="input-t" name="t" placeholder="hh:mmAM" size="7" type="text" '
                 'value="03:30PM" /></div>'
             ),
         )
@@ -859,14 +883,31 @@ class TestDatetimeWidget(YafowilTestCase):
         data = widget.extract(request)
         self.assertTrue(data.extracted is emptyvalue)
 
-    def test_translations_de(self):
-        # Compiled catalog shipped with the package
+    def translator(self, lang):
+        # Compiled catalog shipped with the package. Tests do not call
+        # ``gettext(...)``, lingua would extract these calls into the catalog
+        # template.
         locales = os.path.join(os.path.dirname(__file__), '..', 'locales')
-        catalog = gettext.translation('yafowil.widget.datetime', locales, ['de'])
+        catalog = gettext.translation('yafowil.widget.datetime', locales, [lang])
+        return catalog.gettext
+
+    def test_translations_de(self):
+        translate = self.translator('de')
         self.assertEqual(
-            catalog.gettext('invalid_minutes_range'),
+            translate('invalid_minutes_range'),
             'Minuteneingabe nicht im gültigen Bereich 0..59',
         )
+
+    def test_translations_en(self):
+        translate = self.translator('en')
+        self.assertEqual(
+            translate('invalid_minutes_range'), 'Minutes must be in range 0..59.'
+        )
+
+    def test_translations_without_unused_messages(self):
+        msgid = 'time_format_placeholder'
+        for lang in ['de', 'en']:
+            self.assertEqual(self.translator(lang)(msgid), msgid)
 
     def test_resources(self):
         factory.theme = 'default'
