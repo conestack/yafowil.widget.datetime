@@ -6,7 +6,6 @@ from yafowil.tests import fxml
 from yafowil.tests import YafowilTestCase
 import datetime
 import os
-import unittest
 
 
 def np(path):
@@ -772,7 +771,3 @@ class TestDatetimeWidget(YafowilTestCase):
         self.assertEqual(styles[1].path, 'yafowil-datetime/default')
         self.assertEqual(styles[1].file_name, 'timepicker.min.css')
         self.assertTrue(os.path.exists(styles[1].file_path))
-
-
-if __name__ == '__main__':
-    unittest.main()
