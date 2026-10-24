@@ -1,6 +1,15 @@
 import {importMapsPlugin} from '@web/dev-server-import-maps';
 import {playwrightLauncher} from '@web/test-runner-playwright';
 
+export const importMap = {
+    imports: {
+        'jquery': './node_modules/jquery/dist-module/jquery.module.js',
+        'popper': './js/tests/popper_shim.js',
+        // use full datepicker version to allow tests to run. Bundle uses datepicker.js
+        'vanillajs-datepicker': './node_modules/vanillajs-datepicker/dist/js/datepicker-full.js'
+    },
+};
+
 export default {
     nodeResolve: true,
     browsers: [
@@ -21,16 +30,7 @@ export default {
     },
     plugins: [
         importMapsPlugin({
-            inject: {
-                importMap: {
-                    imports: {
-                        'jquery': './node_modules/jquery/dist-module/jquery.module.js',
-                        'popper': './js/tests/popper_shim.js',
-                        // use full datepicker version to allow tests to run. Bundle uses datepicker.js
-                        'vanillajs-datepicker': './node_modules/vanillajs-datepicker/dist/js/datepicker-full.js'
-                    },
-                },
-            },
+            inject: {importMap},
         }),
     ],
 }

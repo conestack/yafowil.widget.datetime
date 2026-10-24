@@ -182,6 +182,30 @@ QUnit.module('DatepickerWidget', (hooks) => {
         assert.ok($.contains(document, elem[0]));
     });
 
+    QUnit.test('destroy clears the widget data and keeps foreign handlers', (assert) => {
+        DatepickerWidget.initialize();
+        picker = elem.data('yafowil-datepicker');
+        elem.on('change', () => {
+            assert.step('change');
+        });
+
+        picker.destroy();
+
+        assert.true(elem.data('yafowil-datepicker') === undefined);
+        // a date change is not forwarded anymore
+        elem.trigger('changeDate');
+        assert.verifySteps([]);
+        elem.trigger('change');
+        assert.verifySteps(['change']);
+
+        // initialize binds the input again
+        DatepickerWidget.initialize();
+        const second = elem.data('yafowil-datepicker');
+        assert.ok(second instanceof DatepickerWidget);
+        assert.true(second !== picker);
+        second.destroy();
+    });
+
     QUnit.test('mousedown', (assert) => {
         DatepickerWidget.initialize();
         picker = elem.data('yafowil-datepicker');

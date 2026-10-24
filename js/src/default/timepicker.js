@@ -397,8 +397,14 @@ export class TimepickerWidget {
     destroy() {
         $(document).off('click', this.hide_dropdown);
         $(window).off('resize', this.place);
+        this.elem
+            .off('focus', this.show_dropdown)
+            .off('keypress', this.on_keypress)
+            .off('keyup', this.validate)
+            .removeData('yafowil-timepicker');
         this.hours.unload_all();
         this.minutes.unload_all();
+        this.trigger_elem.remove();
         this.dd_elem.remove();
     }
 }

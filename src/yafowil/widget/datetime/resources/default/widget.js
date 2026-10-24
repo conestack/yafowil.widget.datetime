@@ -43,14 +43,16 @@ var yafowil_datetime = (function (exports, $) {
             this.trigger.on('click', (e) => {
                 e.preventDefault();
             });
-            this.elem.on('changeDate', () => {
-                this.elem.trigger('change');
-            });
+            this.on_change_date = this.on_change_date.bind(this);
+            this.elem.on('changeDate', this.on_change_date);
             if (window.ts !== undefined) {
                 ts.ajax.attach(this, elem);
             }
             const created_event = $.Event('datepicker_created', { widget: this });
             this.elem.trigger(created_event);
+        }
+        on_change_date() {
+            this.elem.trigger('change');
         }
         unload() {
             if (window.ts !== undefined) {
@@ -74,8 +76,9 @@ var yafowil_datetime = (function (exports, $) {
         }
         destroy() {
             this.trigger.remove();
-            this.elem.off();
+            this.elem.off('changeDate', this.on_change_date);
             super.destroy();
+            this.elem.removeData('yafowil-datepicker');
         }
     }
     DatepickerWidget.locale_options = {
@@ -435,8 +438,14 @@ var yafowil_datetime = (function (exports, $) {
         destroy() {
             $(document).off('click', this.hide_dropdown);
             $(window).off('resize', this.place);
+            this.elem
+                .off('focus', this.show_dropdown)
+                .off('keypress', this.on_keypress)
+                .off('keyup', this.validate)
+                .removeData('yafowil-timepicker');
             this.hours.unload_all();
             this.minutes.unload_all();
+            this.trigger_elem.remove();
             this.dd_elem.remove();
         }
     }

@@ -5,6 +5,7 @@ from yafowil.base import factory
 from yafowil.tests import fxml
 from yafowil.tests import YafowilTestCase
 import datetime
+import gettext
 import os
 
 
@@ -271,6 +272,28 @@ class TestDatetimeWidget(YafowilTestCase):
             fxml(f'<div>{widget()}</div>'),
         )
 
+    def test_datetime_invalid_input_rendering_with_preset_value(self):
+        # Invalid input is rendered again as entered instead of the preset value
+        widget = factory(
+            'datetime',
+            name='dt',
+            value=datetime.datetime(2011, 5, 1, 10, 0),
+            props={'locale': 'de', 'time': True, 'required': 'No date given'},
+        )
+
+        def rendered_values(request):
+            data = widget.extract(request)
+            self.assertTrue(data.errors)
+            html = widget(data=data)
+            return [part.split('"')[0] for part in html.split('value="')[1:]]
+
+        request = {'dt': 'xyz', 'dt.time': '25:00'}
+        self.assertEqual(rendered_values(request), ['xyz', '25:00'])
+        request = {'dt': '1.1.2010', 'dt.time': '25:00'}
+        self.assertEqual(rendered_values(request), ['1.1.2010', '25:00'])
+        request = {'dt': '', 'dt.time': ''}
+        self.assertEqual(rendered_values(request), ['', ''])
+
     def test_datetime_display(self):
         # display date and time
         widget = factory(
@@ -340,6 +363,57 @@ class TestDatetimeWidget(YafowilTestCase):
                 '<div class="display-datetime" id="display-dt">at year 2011 at '
                 'month 05 at day 01</div>'
             ),
+        )
+
+    def test_datetime_clock_12(self):
+        props = {'locale': 'de', 'time': True, 'timepicker': True, 'clock': '12'}
+        widget = factory('datetime', name='dt', props=props)
+
+        def extract(time):
+            return widget.extract({'dt': '1.1.2010', 'dt.time': time})
+
+        # The 12-hour timepicker writes hours 00-11 per period, 12 o'clock
+        # typed by hand is accepted as well, period is case insensitive
+        dt = datetime.datetime
+        self.assertEqual(extract('03:15PM').extracted, dt(2010, 1, 1, 15, 15))
+        self.assertEqual(extract('03:15am').extracted, dt(2010, 1, 1, 3, 15))
+        self.assertEqual(extract('00:30PM').extracted, dt(2010, 1, 1, 12, 30))
+        self.assertEqual(extract('12:30pm').extracted, dt(2010, 1, 1, 12, 30))
+        self.assertEqual(extract('3:15 pm ').extracted, dt(2010, 1, 1, 15, 15))
+        self.assertEqual(extract('12:30AM').extracted, dt(2010, 1, 1, 0, 30))
+
+        # Input without period is 24-hour time
+        self.assertEqual(extract('15:30').extracted, dt(2010, 1, 1, 15, 30))
+
+        # Out of range for a 12-hour clock
+        data = extract('13:00PM')
+        self.assertEqual(data.errors, [ExtractionError('Not a valid time input.')])
+
+        # Time is rendered in the format of the 12-hour timepicker
+        data = extract('12:30pm')
+        self.assertIn('value="00:30PM"', widget(data=data))
+
+        # Invalid input is rendered as entered
+        data = widget.extract({'dt': 'xyz', 'dt.time': '03:15PM'})
+        self.assertIn('value="03:15PM"', widget(data=data))
+
+        # Preset value, clock might be given as integer
+        props['clock'] = 12
+        widget = factory('datetime', name='dt', value=dt(2011, 5, 1, 12, 30), props=props)
+        self.assertIn('value="00:30PM"', widget())
+        self.assertEqual(extract('03:15PM').extracted, dt(2010, 1, 1, 15, 15))
+
+        # Display mode renders ``format``
+        widget = factory(
+            'datetime',
+            name='dt',
+            value=dt(2011, 5, 1, 15, 30),
+            mode='display',
+            props={'clock': '12'},
+        )
+        self.assertEqual(
+            widget(),
+            '<div class="display-datetime" id="display-dt">2011.05.01 15:30</div>',
         )
 
     def test_datetime_emptyvalue(self):
@@ -660,6 +734,118 @@ class TestDatetimeWidget(YafowilTestCase):
             ['t', (0, 0), (1, 0), []],
         )
 
+    def test_time_invalid_input_rendering(self):
+        # Invalid input is rendered again as entered in all formats
+        def rendered_value(request, value=UNSET, **props):
+            props['daytime'] = True
+            widget = factory('time', name='t', value=value, props=props)
+            data = widget.extract(request)
+            self.assertTrue(data.errors)
+            return widget(data=data).split('value="')[1].split('"')[0]
+
+        self.assertEqual(rendered_value({'t': '25:1'}, format='number'), '25:1')
+        self.assertEqual(rendered_value({'t': 'abcdef'}, 1.2, format='number'), 'abcdef')
+        self.assertEqual(
+            rendered_value({'t': '25:1'}, 12, format='number', unit='minutes'), '25:1'
+        )
+        self.assertEqual(rendered_value({'t': '25:1'}, (5, 30), format='tuple'), '25:1')
+        self.assertEqual(rendered_value({'t': '25:1'}, '02:02'), '25:1')
+
+    def test_time_clock_12_extraction(self):
+        # The 12-hour timepicker writes hours 00-11 per period
+        widget = factory('time', name='t', props={'clock': '12'})
+        self.assertEqual(widget.extract({'t': '03:15PM'}).extracted, '15:15')
+        self.assertEqual(widget.extract({'t': '03:15AM'}).extracted, '03:15')
+        self.assertEqual(widget.extract({'t': '00:30PM'}).extracted, '12:30')
+        self.assertEqual(widget.extract({'t': '00:30AM'}).extracted, '00:30')
+
+        # 12 o'clock typed by hand, period is case insensitive
+        self.assertEqual(widget.extract({'t': '12:30am'}).extracted, '00:30')
+        self.assertEqual(widget.extract({'t': '12:30pM'}).extracted, '12:30')
+        self.assertEqual(widget.extract({'t': '3:5 pm '}).extracted, '15:05')
+
+        # Input without period is 24-hour time
+        self.assertEqual(widget.extract({'t': '15:30'}).extracted, '15:30')
+
+        # Out of range for a 12-hour clock
+        data = widget.extract({'t': '13:00PM'})
+        self.assertEqual(data.errors, [ExtractionError('Not a valid time input.')])
+        data = widget.extract({'t': '03:60AM'})
+        self.assertEqual(data.errors, [ExtractionError('Not a valid time input.')])
+        data = widget.extract({'t': 'xx:00AM'})
+        self.assertEqual(data.errors, [ExtractionError('Hours not a number.')])
+
+        # Clock might be given as integer
+        widget = factory('time', name='t', props={'clock': 12})
+        self.assertEqual(widget.extract({'t': '03:15PM'}).extracted, '15:15')
+
+        # Same extracted value as for the 24-hour clock in all formats
+        props = {'clock': '12', 'format': 'tuple'}
+        widget = factory('time', name='t', props=props)
+        self.assertEqual(widget.extract({'t': '03:30PM'}).extracted, (15, 30))
+        props = {'clock': '12', 'format': 'number'}
+        widget = factory('time', name='t', props=props)
+        self.assertEqual(widget.extract({'t': '03:30PM'}).extracted, 15.5)
+        props = {'clock': '12', 'format': 'number', 'unit': 'minutes'}
+        widget = factory('time', name='t', props=props)
+        self.assertEqual(widget.extract({'t': '03:30PM'}).extracted, 930)
+
+        # The 24-hour clock does not accept a period
+        widget = factory('time', name='t', props={'clock': '24'})
+        data = widget.extract({'t': '03:15PM'})
+        self.assertEqual(data.errors, [ExtractionError('Not a valid time input.')])
+
+    def test_time_clock_12_rendering(self):
+        # Value is rendered in the format of the 12-hour timepicker
+        props = {'clock': '12', 'timepicker': True}
+        widget = factory('time', name='t', value='15:30', props=props)
+        self.assertEqual(
+            widget(),
+            (
+                '<div><input class="time timeinput timepicker" data-time-clock=\'12\' '
+                "data-time-locale='en' data-time-minutes_step='5' "
+                'id="input-t" name="t" placeholder="hh:mm" size="5" type="text" '
+                'value="03:30PM" /></div>'
+            ),
+        )
+
+        def rendered_value(value, **props):
+            props['clock'] = props.get('clock', '12')
+            widget = factory('time', name='t', value=value, props=props)
+            return widget().split('value="')[1].split('"')[0]
+
+        self.assertEqual(rendered_value('12:30'), '00:30PM')
+        self.assertEqual(rendered_value('00:05'), '00:05AM')
+        self.assertEqual(rendered_value('9:45'), '09:45AM')
+        self.assertEqual(rendered_value('23:59', clock=12), '11:59PM')
+        self.assertEqual(rendered_value((15, 30), format='tuple'), '03:30PM')
+        self.assertEqual(rendered_value(15.5, format='number'), '03:30PM')
+        self.assertEqual(rendered_value(930, format='number', unit='minutes'), '03:30PM')
+
+        # Values which are no day time are rendered unchanged
+        self.assertEqual(rendered_value('24:00'), '24:00')
+        self.assertEqual(rendered_value('03:30PM'), '03:30PM')
+        self.assertEqual(rendered_value(''), '')
+
+        # 24-hour clock renders the value as is
+        self.assertEqual(rendered_value('15:30', clock='24'), '15:30')
+
+        # Round trip
+        widget = factory('time', name='t', props=props)
+        data = widget.extract({'t': '12:30am'})
+        self.assertEqual(data.extracted, '00:30')
+        self.assertIn('value="00:30AM"', widget(data=data))
+
+        # Invalid input is rendered as entered
+        data = widget.extract({'t': '13:00PM'})
+        self.assertIn('value="13:00PM"', widget(data=data))
+
+        # Display mode does not follow the clock
+        widget = factory(
+            'time', name='t', value='15:30', mode='display', props={'clock': '12'}
+        )
+        self.assertEqual(widget(), '<div class="display-time" id="display-t">15:30</div>')
+
     def test_time_emptyvalue(self):
         # Test widget with emptyvalue
         emptyvalue = object()
@@ -672,6 +858,15 @@ class TestDatetimeWidget(YafowilTestCase):
         request = {'t': ''}
         data = widget.extract(request)
         self.assertTrue(data.extracted is emptyvalue)
+
+    def test_translations_de(self):
+        # Compiled catalog shipped with the package
+        locales = os.path.join(os.path.dirname(__file__), '..', 'locales')
+        catalog = gettext.translation('yafowil.widget.datetime', locales, ['de'])
+        self.assertEqual(
+            catalog.gettext('invalid_minutes_range'),
+            'Minuteneingabe nicht im gültigen Bereich 0..59',
+        )
 
     def test_resources(self):
         factory.theme = 'default'

@@ -145,6 +145,27 @@ QUnit.module('bootstrap5 DatepickerWidget', (hooks) => {
         assert.verifySteps([]);
     });
 
+    QUnit.test('destroy keeps foreign handlers and data', (assert) => {
+        DatepickerWidget.initialize();
+        picker = elem.data('yafowil-datepicker');
+        elem.data('foreign', 'value');
+        elem.on('change', () => {
+            assert.step('change');
+        });
+
+        picker.destroy();
+
+        elem.trigger('change');
+        assert.verifySteps(['change']);
+        assert.strictEqual(elem.data('foreign'), 'value');
+
+        // initialize binds the input again, destroyed in afterEach
+        DatepickerWidget.initialize();
+        assert.ok(elem.data('yafowil-datepicker') instanceof DatepickerWidget);
+        assert.true(elem.data('yafowil-datepicker') !== picker);
+        picker = elem.data('yafowil-datepicker');
+    });
+
     QUnit.test('unload without ts destroys', (assert) => {
         DatepickerWidget.initialize();
         picker = elem.data('yafowil-datepicker');

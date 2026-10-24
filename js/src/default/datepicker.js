@@ -56,9 +56,8 @@ export class DatepickerWidget extends Datepicker {
         this.trigger.on('click', (e) => {
             e.preventDefault();
         });
-        this.elem.on('changeDate', () => {
-            this.elem.trigger('change');
-        });
+        this.on_change_date = this.on_change_date.bind(this);
+        this.elem.on('changeDate', this.on_change_date);
 
         if (window.ts !== undefined) {
             ts.ajax.attach(this, elem);
@@ -66,6 +65,10 @@ export class DatepickerWidget extends Datepicker {
 
         const created_event = $.Event('datepicker_created', { widget: this });
         this.elem.trigger(created_event);
+    }
+
+    on_change_date() {
+        this.elem.trigger('change');
     }
 
     unload() {
@@ -93,8 +96,9 @@ export class DatepickerWidget extends Datepicker {
 
     destroy() {
         this.trigger.remove();
-        this.elem.off();
+        this.elem.off('changeDate', this.on_change_date);
         super.destroy(); // vanillajs-datepicker destroy method
+        this.elem.removeData('yafowil-datepicker');
     }
 }
 

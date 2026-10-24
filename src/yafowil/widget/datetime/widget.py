@@ -15,6 +15,7 @@ from yafowil.utils import css_managed_props
 from yafowil.utils import cssclasses
 from yafowil.utils import cssid
 from yafowil.utils import managedprops
+import re
 
 
 _ = TSF('yafowil.widget.datetime')
@@ -30,27 +31,33 @@ def time_data_defs(widget, data):
     return format_, unit
 
 
-@managedprops('format', 'unit', 'daytime', 'clock')
-def time_extractor(widget, data):
-    format_, unit = time_data_defs(widget, data)
-    extracted = data.extracted
-    if extracted == UNSET or extracted == '':
-        return UNSET
-    if len(extracted) > 5:
+def is_clock_12(widget, data):
+    # ``clock`` defaults to the string ``'24'``, integers are accepted as well
+    return str(attr_value('clock', widget, data)) == '12'
+
+
+def parse_time(value):
+    """Parse hours and minutes of a time input.
+
+    :param value: Time input string, ``HH:MM``, ``HHMM`` or ``H:M``.
+    :return: Tuple of hours and minutes as integers.
+    :raises ExtractionError: If ``value`` cannot be parsed.
+    """
+    if len(value) > 5:
         message = _('input_not_valid_time', default='Not a valid time input.')
         raise ExtractionError(message)
-    elif len(extracted) == 5:
-        hours = extracted[:2]
-        minutes = extracted[3:]
-    elif len(extracted) == 4 and extracted.find(':') == -1:
-        hours = extracted[:2]
-        minutes = extracted[2:]
+    elif len(value) == 5:
+        hours = value[:2]
+        minutes = value[3:]
+    elif len(value) == 4 and value.find(':') == -1:
+        hours = value[:2]
+        minutes = value[2:]
     else:
-        extracted = extracted.split(':')
-        if len(extracted) != 2:
+        value = value.split(':')
+        if len(value) != 2:
             message = _('failed_to_parse_time', default='Failed to parse time input.')
             raise ExtractionError(message)
-        hours, minutes = extracted
+        hours, minutes = value
     try:
         hours = int(hours)
     except ValueError:
@@ -61,6 +68,67 @@ def time_extractor(widget, data):
     except ValueError:
         message = _('minutes_not_a_number', default='Minutes not a number.')
         raise ExtractionError(message)
+    return hours, minutes
+
+
+_period_suffix = re.compile(r'\s*([AP]M)\s*$', re.IGNORECASE)
+
+
+def clock_12_to_24(value):
+    """Convert a 12-hour clock time input to the 24-hour format ``HH:MM``.
+
+    The timepicker writes hours 00-11 per period, e.g. ``00:30PM`` for half
+    past noon. 12 o'clock typed by hand is accepted as well, ``12:30AM`` is
+    ``00:30`` and ``12:30PM`` is ``12:30``. The period is case insensitive.
+
+    :param value: Time input string.
+    :return: The converted time, or ``value`` unchanged if it has no ``AM`` or
+        ``PM`` suffix.
+    :raises ExtractionError: If ``value`` is no valid 12-hour clock time.
+    """
+    match = _period_suffix.search(value)
+    if not match:
+        return value
+    hours, minutes = parse_time(value[: match.start()])
+    if not (0 <= hours <= 12 and 0 <= minutes <= 59):
+        message = _('input_not_valid_time', default='Not a valid time input.')
+        raise ExtractionError(message)
+    hours %= 12
+    if match.group(1).upper() == 'PM':
+        hours += 12
+    return f'{hours:02d}:{minutes:02d}'
+
+
+_time_24 = re.compile(r'^([01]?\d|2[0-3]):([0-5]\d)$')
+
+
+def clock_24_to_12(value):
+    """Convert a 24-hour clock time to the format of the 12-hour timepicker.
+
+    Hours are 00-11 per period as written by the timepicker, ``12:30`` is
+    ``00:30PM``.
+
+    :param value: Time value to render.
+    :return: The converted time, or ``value`` unchanged if it is no 24-hour
+        clock time ``H:MM`` or ``HH:MM``.
+    """
+    match = _time_24.match(str(value))
+    if not match:
+        return value
+    hours = int(match.group(1))
+    period = 'PM' if hours >= 12 else 'AM'
+    return f'{hours % 12:02d}:{match.group(2)}{period}'
+
+
+@managedprops('format', 'unit', 'daytime', 'clock')
+def time_extractor(widget, data):
+    format_, unit = time_data_defs(widget, data)
+    extracted = data.extracted
+    if extracted == UNSET or extracted == '':
+        return UNSET
+    if is_clock_12(widget, data):
+        extracted = clock_12_to_24(extracted)
+    hours, minutes = parse_time(extracted)
     daytime = attr_value('daytime', widget, data)
     timepicker = attr_value('timepicker', widget, data)
     if daytime or timepicker:
@@ -88,6 +156,8 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
         widgetname = f'{widgetname}.{postfix}'
     if value is True:
         value = ''
+    if value and is_clock_12(widget, data):
+        value = clock_24_to_12(value)
     if not value and data.request:
         value = data.request.get(widgetname)
     disabled = 'disabled' if attr_value('disabled', widget, data) else None
@@ -137,6 +207,9 @@ def time_value(format_, unit, time):
     elif format_ == 'number':
         if time is UNSET or time == '':
             return ''
+        if isinstance(time, str):
+            # input of a failed extraction is rendered as entered
+            return time
         if unit == 'hours':
             hours = int(time)
             minutes = int(round((time - int(time)) * 60.0))
@@ -244,8 +317,14 @@ property above to True results in day time range validation.
 
 factory.defaults['time.clock'] = '24'
 factory.doc['props']['time.clock'] = """\
-Defines which clock to use in timepicker. Either `24` for 24-hour-clock or `12`
-for 12-hour-clock. Defaults to `24`
+Defines which clock to use in timepicker and time input. Either `24` for
+24-hour-clock or `12` for 12-hour-clock. Defaults to `24`.
+
+With the 12-hour-clock, the time input renders the value the way the
+timepicker writes it, e.g. ``03:15PM``, and ``00:30PM`` for half past noon.
+Extraction accepts this format and 12 o'clock typed by hand like ``12:30am``.
+Input without ``AM`` or ``PM`` is read as 24-hour-clock time. Display mode
+renders the 24-hour-clock time.
 """
 
 factory.defaults['time.locale'] = 'en'
@@ -275,6 +354,8 @@ def datetime_extractor(widget, data):
     time = None
     if attr_value('time', widget, data):
         time = data.request.get(f'{widget.dottedpath}.time')
+    if time and is_clock_12(widget, data):
+        time = clock_12_to_24(time)
     required = attr_value('required', widget, data)
     if not required and not data.extracted and not time:
         return None
@@ -358,7 +439,8 @@ def datetime_edit_renderer(widget, data):
     delim = attr_value('delimiter', widget, data)
     time = attr_value('time', widget, data)
     date = None
-    if data.value and isinstance(data.value, datetime):
+    # input of a failed extraction is rendered as entered, not the preset value
+    if data.value and isinstance(data.value, datetime) and not data.errors:
         date = format_date(data.value, locale, delim)
         if time:
             time = format_time(data.value)
@@ -488,8 +570,11 @@ Flag whether date picker is enabled.
 
 factory.defaults['datetime.clock'] = '24'
 factory.doc['props']['datetime.clock'] = """\
-Defines which clock to use in timepicker. Either `24` for 24-hour-clock or `12`
-for 12-hour-clock. Defaults to `24`
+Defines which clock to use in timepicker and time input. Either `24` for
+24-hour-clock or `12` for 12-hour-clock. Defaults to `24`.
+
+See ``time.clock`` for the 12-hour-clock format. Display mode renders
+``format``.
 """
 
 factory.defaults['datetime.minutes_step'] = '5'

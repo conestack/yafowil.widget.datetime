@@ -4,6 +4,37 @@ Changes
 2.0.3 (unreleased)
 ------------------
 
+- Fix re-rendering a form after a failed extraction. The ``time`` widget with
+  ``format='number'`` raised a ``ValueError``/``TypeError``, and the
+  ``datetime`` widget with a preset value rendered the preset value instead of
+  the input. Both render the input as entered now.
+  [rnix]
+
+- Fix the German translation of ``invalid_minutes_range``, the range is
+  ``0..59``, not ``0..23``.
+  [rnix]
+
+- Fix ``clock='12'`` in the ``time`` and ``datetime`` widgets. Values written
+  by the 12-hour timepicker like ``03:15PM`` were rejected by the ``time``
+  widget, and the ``datetime`` widget silently dropped ``PM``. Both accept the
+  picker format and 12 o'clock typed by hand (``12:30am``) now, case
+  insensitive, and extract the same value as with the 24-hour clock. The time
+  input renders the value in the format of the 12-hour timepicker, e.g.
+  ``00:30PM`` for half past noon. ``clock`` may be given as string or integer.
+  Display mode is unchanged.
+  [rnix]
+
+- Fix the timepicker ``destroy`` leaving the trigger button, the ``focus``,
+  ``keypress`` and ``keyup`` handlers on the input and the
+  ``yafowil-timepicker`` data. The server rendered input is kept.
+  [rnix]
+
+- Fix the default datepicker ``destroy`` keeping the ``yafowil-datepicker``
+  data, ``initialize`` skipped the input afterwards. The datepicker
+  ``destroy`` no longer removes foreign event handlers and data from the
+  input, only its own.
+  [rnix]
+
 - Fix spellchecking not being disabled on the timepicker input. With jQuery 4
   ``.attr('spellcheck', false)`` removes the attribute instead of setting
   ``spellcheck="false"``.

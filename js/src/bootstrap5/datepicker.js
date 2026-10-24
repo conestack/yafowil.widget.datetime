@@ -132,7 +132,7 @@ export class DatepickerWidget extends Datepicker {
         this.trigger.remove();
         this.elem.off('changeDate', this.on_change_date);
         super.destroy(); // vanillajs-datepicker destroy method
-        this.elem.off().removeData();
+        this.elem.removeData('yafowil-datepicker');
     }
 }
 

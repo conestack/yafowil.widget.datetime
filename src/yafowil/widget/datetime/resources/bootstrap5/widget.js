@@ -84,7 +84,7 @@ var yafowil_datetime = (function (exports, $, Popper) {
             this.trigger.remove();
             this.elem.off('changeDate', this.on_change_date);
             super.destroy();
-            this.elem.off().removeData();
+            this.elem.removeData('yafowil-datepicker');
         }
     }
     DatepickerWidget.locale_options = {
@@ -534,9 +534,15 @@ var yafowil_datetime = (function (exports, $, Popper) {
         }
         destroy() {
             $(document).off('click', this.hide_dropdown);
+            this.elem
+                .off('focus', this.show_dropdown)
+                .off('keypress', this.on_keypress)
+                .off('keyup', this.validate)
+                .removeData('yafowil-timepicker');
             this.popper.destroy();
             this.hours.unload_all();
             this.minutes.unload_all();
+            this.trigger_elem.remove();
             this.dd_elem.remove();
         }
     }

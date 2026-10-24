@@ -371,6 +371,17 @@ QUnit.module('bootstrap5 TimepickerWidget', (hooks) => {
             assert.true(picker.minutes.children[6].previously_selected);
         });
 
+        QUnit.test('12 hour clock - server rendered value', (assert) => {
+            // markup of the Python widget with ``clock='12'``, half past noon
+            elem.attr('data-time-clock', '12').val('00:30PM');
+            TimepickerWidget.initialize();
+            picker = elem.data('yafowil-timepicker');
+            assert.strictEqual(picker.clock, 12);
+            assert.strictEqual(picker.elem.val(), '00:30PM');
+            assert.true(picker.hours.children[12].previously_selected);
+            assert.true(picker.minutes.children[6].previously_selected);
+        });
+
         QUnit.test('no match', (assert) => {
             picker = new TimepickerWidget(elem, {});
             picker.elem.val('1:35U');
@@ -427,6 +438,49 @@ QUnit.module('bootstrap5 TimepickerWidget', (hooks) => {
         hour.elem.trigger('click');
         assert.strictEqual(picker.hour, '');
         picker = null;
+    });
+
+    QUnit.test('destroy removes the trigger, input handlers and data', (assert) => {
+        TimepickerWidget.initialize();
+        picker = elem.data('yafowil-timepicker');
+        const popper = picker.popper;
+        const trigger_elem = picker.trigger_elem;
+        elem.on('change', () => {
+            assert.step('change');
+        });
+
+        picker.destroy();
+
+        // the input is rendered server side, destroy removes only what the
+        // widget created
+        assert.ok($.contains(document, elem[0]));
+        assert.notOk($.contains(document, trigger_elem[0]));
+        assert.strictEqual(container.find('button.timepicker-trigger').length, 0);
+        assert.true(elem.data('yafowil-timepicker') === undefined);
+
+        // focus does not show the dropdown
+        elem.trigger('focus');
+        assert.strictEqual(popper.updates, 0);
+
+        // typing is not intercepted
+        const keypress = $.Event('keypress', { key: '1' });
+        elem.trigger(keypress);
+        assert.false(keypress.isDefaultPrevented());
+
+        // keyup does not validate, a validated time triggers change
+        elem.val('10:15').trigger('keyup');
+        assert.verifySteps([]);
+
+        // foreign handlers stay bound
+        elem.trigger('change');
+        assert.verifySteps(['change']);
+
+        // initialize binds the input again, destroyed in afterEach
+        elem.val('');
+        TimepickerWidget.initialize();
+        assert.ok(elem.data('yafowil-timepicker') instanceof TimepickerWidget);
+        assert.true(elem.data('yafowil-timepicker') !== picker);
+        picker = elem.data('yafowil-timepicker');
     });
 
     QUnit.test('unload without ts destroys', (assert) => {

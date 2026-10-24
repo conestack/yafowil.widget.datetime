@@ -642,14 +642,21 @@ export class TimepickerWidget {
     }
 
     /**
-     * Unloads the timepicker by removing event listeners, destroying the
-     * popper instance and removing the dropdown elem.
+     * Unloads the timepicker by removing event listeners and widget data,
+     * destroying the popper instance and removing the trigger and dropdown
+     * elements. The server rendered input is kept.
      */
     destroy() {
         $(document).off('click', this.hide_dropdown);
+        this.elem
+            .off('focus', this.show_dropdown)
+            .off('keypress', this.on_keypress)
+            .off('keyup', this.validate)
+            .removeData('yafowil-timepicker');
         this.popper.destroy();
         this.hours.unload_all();
         this.minutes.unload_all();
+        this.trigger_elem.remove();
         this.dd_elem.remove();
     }
 }

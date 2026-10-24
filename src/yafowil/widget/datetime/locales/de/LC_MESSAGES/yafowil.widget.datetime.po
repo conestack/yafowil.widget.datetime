@@ -48,7 +48,7 @@ msgstr "Stundeneingabe nicht im gültigen Bereich 0..23"
 #. Default: Minutes must be in range 0..59.
 #: src/yafowil/widget/datetime/widget.py:84
 msgid "invalid_minutes_range"
-msgstr "Minuteneingabe nicht im gültigen Bereich 0..23"
+msgstr "Minuteneingabe nicht im gültigen Bereich 0..59"
 
 #. Default: Not a valid date input.
 #: src/yafowil/widget/datetime/widget.py:285
