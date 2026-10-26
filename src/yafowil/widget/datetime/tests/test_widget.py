@@ -419,6 +419,30 @@ class TestDatetimeWidget(YafowilTestCase):
             '<div class="display-datetime" id="display-dt">2011.05.01 15:30</div>',
         )
 
+    def test_datetime_placeholder(self):
+        # No placeholder by default
+        widget = factory('datetime', name='dt', props={'time': True})
+        self.assertNotIn('placeholder', widget())
+
+        # ``placeholder`` is rendered on the date input only
+        props = {'time': True, 'placeholder': 'dd.mm.yyyy'}
+        widget = factory('datetime', name='dt', props=props)
+        rendered = widget()
+        self.assertIn('id="input-dt" name="dt" placeholder="dd.mm.yyyy"', rendered)
+        self.assertEqual(rendered.count('placeholder'), 1)
+
+        # ``time_placeholder`` is rendered on the time input only
+        props = {'time': True, 'time_placeholder': 'hh:mm'}
+        widget = factory('datetime', name='dt', props=props)
+        rendered = widget()
+        self.assertIn('id="input-dt-time" name="dt.time" placeholder="hh:mm"', rendered)
+        self.assertEqual(rendered.count('placeholder'), 1)
+
+        # Empty string suppresses placeholder
+        props = {'time': True, 'placeholder': '', 'time_placeholder': ''}
+        widget = factory('datetime', name='dt', props=props)
+        self.assertNotIn('placeholder', widget())
+
     def test_datetime_emptyvalue(self):
         # Test widget with emptyvalue
         emptyvalue = object()

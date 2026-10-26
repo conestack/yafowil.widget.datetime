@@ -149,7 +149,9 @@ def time_extractor(widget, data):
     return hours * 60 + minutes
 
 
-def render_time_input(widget, data, value, postfix=None, css_class=False):
+def render_time_input(
+    widget, data, value, postfix=None, css_class=False, placeholder_attr='placeholder'
+):
     tag = data.tag
     widgetname = widget.dottedpath
     if postfix:
@@ -162,7 +164,7 @@ def render_time_input(widget, data, value, postfix=None, css_class=False):
     if not value and data.request:
         value = data.request.get(widgetname)
     disabled = 'disabled' if attr_value('disabled', widget, data) else None
-    placeholder = attr_value('placeholder', widget, data) or None
+    placeholder = attr_value(placeholder_attr, widget, data) or None
     attrs = {
         'type': 'text',
         'value': value,
@@ -397,7 +399,9 @@ def render_datetime_input(widget, data, date, time):
     tag = data.tag
     timeinput = ''
     if time:
-        timeinput = render_time_input(widget, data, time, postfix='time')
+        timeinput = render_time_input(
+            widget, data, time, postfix='time', placeholder_attr='time_placeholder'
+        )
     disabled = attr_value('disabled', widget, data)
     attrs = {
         'type': 'text',
@@ -406,6 +410,7 @@ def render_datetime_input(widget, data, date, time):
         'id': cssid(widget, 'input'),
         'size': 10,
         'disabled': 'disabled' if disabled else None,
+        'placeholder': attr_value('placeholder', widget, data) or None,
     }
     additional_classes = [attr_value('dateinput_class', widget, data)]
     datepicker = attr_value('datepicker', widget, data)
@@ -438,6 +443,8 @@ def render_datetime_input(widget, data, date, time):
     'timepicker_wrapper_class',
     'datepicker_wrapper_class',
     'wrapper_class',
+    'placeholder',
+    'time_placeholder',
     *css_managed_props,
 )
 def datetime_edit_renderer(widget, data):
@@ -562,6 +569,16 @@ Flag whether time input should be rendered.
 
 ``time`` may be a callable taking widget and data as parameters expect to
 return a boolean.
+"""
+
+factory.defaults['datetime.placeholder'] = None
+factory.doc['props']['datetime.placeholder'] = """\
+Placeholder text rendered on the date input field.
+"""
+
+factory.defaults['datetime.time_placeholder'] = None
+factory.doc['props']['datetime.time_placeholder'] = """\
+Placeholder text rendered on the time input field.
 """
 
 factory.defaults['datetime.timepicker'] = False

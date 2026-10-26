@@ -4,6 +4,12 @@ Changes
 2.0.3 (unreleased)
 ------------------
 
+- Fix ``placeholder`` of the ``datetime`` widget being rendered on the time
+  input instead of the date input. ``placeholder`` is rendered on the date
+  input now, the new ``time_placeholder`` property on the time input. Both
+  default to no placeholder.
+  [rnix]
+
 - Fix the time input of the ``time`` and ``datetime`` widgets with
   ``clock='12'`` being too small for the 12-hour clock value like ``03:15PM``.
   The default placeholder of the ``time`` widget is ``hh:mmAM`` with the
