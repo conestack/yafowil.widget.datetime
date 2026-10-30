@@ -149,6 +149,21 @@ def time_extractor(widget, data):
     return hours * 60 + minutes
 
 
+def is_empty_input(widget, data):
+    """Whether the input of ``widget`` was submitted empty.
+
+    An empty input is rendered empty, not as the preset value.
+
+    Interim solution, it might be dropped in favor of a fix in yafowil core,
+    see "Rendering after extraction" in ``TODO.rst`` of yafowil.
+
+    :param widget: The yafowil widget.
+    :param data: The runtime data.
+    :return: ``True`` if the request contains an empty value for ``widget``.
+    """
+    return bool(data.request) and data.request.get(widget.dottedpath) == ''
+
+
 def render_time_input(
     widget, data, value, postfix=None, css_class=False, placeholder_attr='placeholder'
 ):
@@ -239,7 +254,10 @@ def time_value(format_, unit, time):
 )
 def time_edit_renderer(widget, data):
     format_, unit = time_data_defs(widget, data)
-    time = time_value(format_, unit, fetch_value(widget, data))
+    if is_empty_input(widget, data):
+        time = ''
+    else:
+        time = time_value(format_, unit, fetch_value(widget, data))
     return render_time_input(widget, data, time, css_class=True)
 
 
@@ -451,6 +469,8 @@ def datetime_edit_renderer(widget, data):
     locale = attr_value('locale', widget, data)
     delim = attr_value('delimiter', widget, data)
     time = attr_value('time', widget, data)
+    if is_empty_input(widget, data):
+        return render_datetime_input(widget, data, '', time)
     date = None
     # input of a failed extraction is rendered as entered, not the preset value
     if data.value and isinstance(data.value, datetime) and not data.errors:

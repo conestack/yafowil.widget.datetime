@@ -294,6 +294,24 @@ class TestDatetimeWidget(YafowilTestCase):
         request = {'dt': '', 'dt.time': ''}
         self.assertEqual(rendered_values(request), ['', ''])
 
+    def test_datetime_empty_input_rendering_with_preset_value(self):
+        # Empty input is rendered empty instead of the preset value
+        def rendered_values(request, **props):
+            props['time'] = True
+            value = datetime.datetime(2011, 5, 1, 10, 0)
+            widget = factory('datetime', name='dt', value=value, props=props)
+            data = widget.extract(request)
+            self.assertFalse(data.errors)
+            html = widget(data=data)
+            return [part.split('"')[0] for part in html.split('value="')[1:]]
+
+        request = {'dt': '', 'dt.time': ''}
+        self.assertEqual(rendered_values(request), ['', ''])
+        self.assertEqual(rendered_values(request, emptyvalue=object()), ['', ''])
+
+        # Missing input renders the preset value
+        self.assertEqual(rendered_values({}), ['5.1.2011', '10:00'])
+
     def test_datetime_display(self):
         # display date and time
         widget = factory(
@@ -798,6 +816,22 @@ class TestDatetimeWidget(YafowilTestCase):
         )
         self.assertEqual(rendered_value({'t': '25:1'}, (5, 30), format='tuple'), '25:1')
         self.assertEqual(rendered_value({'t': '25:1'}, '02:02'), '25:1')
+
+    def test_time_empty_input_rendering_with_preset_value(self):
+        # Empty input is rendered empty instead of the preset value in all formats
+        def rendered_value(request, value, **props):
+            widget = factory('time', name='t', value=value, props=props)
+            data = widget.extract(request)
+            self.assertFalse(data.errors)
+            return widget(data=data).split('value="')[1].split('"')[0]
+
+        self.assertEqual(rendered_value({'t': ''}, '02:02'), '')
+        self.assertEqual(rendered_value({'t': ''}, 1.2, format='number'), '')
+        self.assertEqual(rendered_value({'t': ''}, (5, 30), format='tuple'), '')
+        self.assertEqual(rendered_value({'t': ''}, '02:02', emptyvalue=object()), '')
+
+        # Missing input renders the preset value
+        self.assertEqual(rendered_value({}, '02:02'), '02:02')
 
     def test_time_clock_12_extraction(self):
         # The 12-hour timepicker writes hours 00-11 per period

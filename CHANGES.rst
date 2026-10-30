@@ -4,6 +4,11 @@ Changes
 2.0.3 (unreleased)
 ------------------
 
+- Fix the ``datetime`` and ``time`` widgets rendering the preset value after
+  the extraction of an empty, not required input. An empty input is rendered
+  empty now.
+  [rnix]
+
 - Fix ``placeholder`` of the ``datetime`` widget being rendered on the time
   input instead of the date input. ``placeholder`` is rendered on the date
   input now, the new ``time_placeholder`` property on the time input. Both
