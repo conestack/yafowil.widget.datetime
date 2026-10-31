@@ -1,7 +1,7 @@
 Changes
 =======
 
-2.0.3 (unreleased)
+2.0.3 (2026-10-31)
 ------------------
 
 - Fix the ``datetime`` and ``time`` widgets rendering the preset value after
