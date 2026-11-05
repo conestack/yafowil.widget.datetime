@@ -24,7 +24,7 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
 ]
 dependencies = [
-    "yafowil>3.99",
+    "yafowil>4.1.99",
     "bda.intellidatetime>1.2.99",
 ]
 
