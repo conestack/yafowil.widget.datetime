@@ -275,7 +275,7 @@ def time_display_renderer(widget, data):
         'class_': f'display-{attr_value("class", widget, data)}'
         + (f' {display_class}' if display_class is not None else ''),
     }
-    return data.tag('div', time_value(format_, unit, value), **attrs)
+    return data.tag('div', data.tag.escape(time_value(format_, unit, value)), **attrs)
 
 
 factory.register(
@@ -510,7 +510,7 @@ def datetime_display_renderer(widget, data, value=None):
         'class_': f'display-{attr_value("class", widget, data)}'
         + (f' {display_class}' if display_class is not None else ''),
     }
-    return data.tag('div', value, **attrs)
+    return data.tag('div', data.tag.escape(value), **attrs)
 
 
 factory.register(

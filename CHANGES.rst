@@ -4,7 +4,10 @@ Changes
 2.0.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Encode the value in display mode of ``datetime`` and ``time``. This includes
+  the result of a callable ``format`` and ``empty_display_value``. Requires
+  ``yafowil`` 4.2.0.
+  [rnix]
 
 
 2.0.3 (2026-10-31)

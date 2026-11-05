@@ -362,6 +362,30 @@ class TestDatetimeWidget(YafowilTestCase):
             widget(), '<div class="display-datetime" id="display-dt">N/A from CB</div>'
         )
 
+    def test_datetime_display_encodes_value(self):
+        def format_(widget, data):
+            return '<b>x</b>&'
+
+        expected = (
+            '<div class="display-datetime" id="display-dt">'
+            '&lt;b&gt;x&lt;/b&gt;&amp;</div>'
+        )
+        widget = factory(
+            'datetime',
+            name='dt',
+            value=datetime.datetime(2011, 5, 1),
+            props={'format': format_},
+            mode='display',
+        )
+        self.assertEqual(widget(), expected)
+        widget = factory(
+            'datetime',
+            name='dt',
+            props={'empty_display_value': '<b>x</b>&'},
+            mode='display',
+        )
+        self.assertEqual(widget(), expected)
+
         # display with formatter callback
         def custom_formatter(widget, data):
             return data.value.strftime('at year %Y at month %m at day %d')
@@ -621,6 +645,13 @@ class TestDatetimeWidget(YafowilTestCase):
         # Render display mode with value
         widget = factory('time', 't', value='02:02', mode='display')
         self.assertEqual(widget(), '<div class="display-time" id="display-t">02:02</div>')
+
+    def test_time_display_encodes_value(self):
+        widget = factory('time', 't', value='<b>x</b>&', mode='display')
+        self.assertEqual(
+            widget(),
+            '<div class="display-time" id="display-t">&lt;b&gt;x&lt;/b&gt;&amp;</div>',
+        )
 
     def test_time_invalid_format(self):
         # Invalid ``format``
