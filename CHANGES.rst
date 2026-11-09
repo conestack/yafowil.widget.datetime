@@ -1,7 +1,7 @@
 Changes
 =======
 
-2.0.4 (unreleased)
+2.0.4 (2026-11-09)
 ------------------
 
 - Encode the value in display mode of ``datetime`` and ``time``. This includes
